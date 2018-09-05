@@ -31,6 +31,13 @@ webroot=/usr/share/nginx/html
 # (default: webroot/nextcloud)
 ncroot="$webroot/nextcloud"
 
+# NextCloud data directory
+# If this is setup according to the blog series at https://mytechiethoughts.com
+# then this is '/var/nc_data'.  If not, please change as appropriate for your
+# environment.
+# (default: /var/nc_data)
+ncdata=/var/nc_data
+
 # name of 503-error page (default: 503-error.html)
 # MUST be in the same directory as THIS script
 err503FileName=503-backup.html
@@ -212,6 +219,17 @@ export BORG_REMOTE_PATH="$borgRemotePath"
 export BORG_RSH="ssh -i $borgRemoteSSHKeyfile"
 export BORG_REPO="$(head -1 $borgDetails)"
 export BORG_PASSPHRASE="$(tail -1 $borgDetails)"
+
+## Process borgXtraFiles into array variable
+mapfile -t xtraFiles < $borgXtraFiles
+
+## Call BorgBackup
+borg --show-rc create --list ::`date +%Y-%m-%d_%H%M%S` \
+    "${xtraFiles[@]}" \
+    "$ncdata" \
+    "$sqlDumpDir/$sqlDumpFile" 2>> $logFile
+
+
 
 # Gracefully exit
 exit 0
