@@ -8,7 +8,7 @@
 ### Events:
 ### 1. Copy 503 error page to stop NGINX from serving web clients.
 ###       (this depends on a complementary NGINX configuration)
-### 2. Put NextCloud in maintenence mode to prevent logins and changes.
+### 2. Put NextCloud in maintenance mode to prevent logins and changes.
 ### 3. SQLdump from NextCloud.
 ### 4. Borg backup all files from xtraLocations.
 ### 5. Borg backup NextCloud data and files.
@@ -18,6 +18,9 @@
 
 
 ### Script variables -- please ensure they are accurate!
+
+# web user on your system (default: www-data)
+webUser=www-data
 
 # FULL path to NGINX webroot (default: /usr/share/nginx/html)
 webroot=/usr/share/nginx/html
@@ -169,6 +172,10 @@ else
     echo -e "Script will continue processing..." >> $logFile
 fi
 
+## Put NextCloud in maintenance mode
+sudo -u ${webUser} php "${ncroot}/occ maintenance:mode --on" 2>> $logFile
+
 ## Read sqlDetails file and extract necessary information
 mapfile -t sqlParams < $sqlDetails
 
+## Dump SQL
