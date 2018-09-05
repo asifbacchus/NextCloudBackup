@@ -92,3 +92,7 @@ if [ $EUID != 0 ]; then
 fi
 
 
+## Write script execution start in log file
+echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+    "--Begin backup operations--\e[0m" >> $logFile
+
