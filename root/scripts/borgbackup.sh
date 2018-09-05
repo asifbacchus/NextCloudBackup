@@ -260,6 +260,22 @@ else
     echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
 fi
 
+## Put NextCloud back into operational mode
+echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Putting NextCloud" \
+    "in maintenance mode..." >> $logFile
+sudo -u ${webUser} php "${ncroot}/occ maintenance:mode --off" 2>> $logFile
+# verify
+if [ "$?" = "0" ]; then
+    echo -e "\e[0;36m...done\e[0m" >> $logFile
+else
+    echo -e "\e[1;31m--Error-- There was a problem taking NextCloud" \
+        "out of maintenance mode" >> $logFile
+    echo -e "This MUST be done manually or NextCloud will not" \
+        "function!\e[0m" >> $logFile
+    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m" >> $logFile
+    exit 102
+fi
+
 ## Remove 503 error page from webroot so NGINX serves web clients again
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing 503 error page" \
     "from webroot...\e[0m" >> $logFile
