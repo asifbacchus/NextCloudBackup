@@ -169,3 +169,6 @@ else
     echo -e "Script will continue processing..." >> $logFile
 fi
 
+## Read sqlDetails file and extract necessary information
+mapfile -t sqlParams < $sqlDetails
+
