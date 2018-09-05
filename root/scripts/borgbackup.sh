@@ -198,8 +198,9 @@ mapfile -t sqlParams < $sqlDetails
 
 ## Dump SQL
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
-    "Dumping SQL..." >> $logFile
-mysqldump --single-transaction -h${sqlParams[0]} -u${sqlParams[1]} -p${sqlParams[2]} ${sqlParams[3]} > "$sqlDumpDir/$sqlDumpFile"
+    "Dumping SQL...\e[0m" >> $logFile
+mysqldump --single-transaction -h${sqlParams[0]} -u${sqlParams[1]} \
+    -p${sqlParams[2]} ${sqlParams[3]} > "$sqlDumpDir/$sqlDumpFile" 2>> $logFile
 # verify
 if [ "$?" = "0" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFile
