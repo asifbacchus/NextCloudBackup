@@ -137,7 +137,7 @@ else
         echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
             "--Error-- There was a problem creating $sqlDumpDir." >> $logFile
         echo -e "\e[4;31m--Error-- Script aborted\e[0;31m.\e[0m" >> $logFile
-        exit 101
+        exit 200
     fi
 fi
 
@@ -206,7 +206,7 @@ if [ "$?" = "0" ]; then
 else
     echo -e "\e[1;31m--Error-- There was a problem dumping SQL." >> $logFile
     echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m" >> $logFile
-    exit 102
+    exit 201
 fi
 
 ## Ready for Borg
@@ -273,7 +273,7 @@ else
     echo -e "This MUST be done manually or NextCloud will not" \
         "function!\e[0m" >> $logFile
     echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m" >> $logFile
-    exit 102
+    exit 101
 fi
 
 ## Remove 503 error page from webroot so NGINX serves web clients again
