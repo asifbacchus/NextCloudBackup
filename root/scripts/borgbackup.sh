@@ -103,19 +103,19 @@ logFile=/var/log/borgbackup.log
 
 
 ## Ensure script is running as root (required) otherwise, exit
-#if [ $(id -u) -ne 0 ]; then
-#    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] This script MUST" \
-#        "be run as ROOT."
-#    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m"
-#    exit 1
-#fi
+if [ $(id -u) -ne 0 ]; then
+    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] This script MUST" \
+        "be run as ROOT."
+    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m"
+    exit 1
+fi
 
 
 ### elevate script -- used during program testing
-if [ $EUID != 0 ]; then
-    sudo "$0" "$scriptPath"
-    exit $?
-fi
+#if [ $EUID != 0 ]; then
+#    sudo "$0" "$scriptPath"
+#    exit $?
+#fi
 
 
 ## Write script execution start in log file
