@@ -81,7 +81,7 @@ logFile=/var/log/borgbackup.log
 #    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] This script MUST" \
 #        "be run as ROOT."
 #    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m"
-#    exit 1
+#    exit 100
 #fi
 
 
@@ -102,4 +102,29 @@ err503FullPath="$scriptPath/$err503FileName"
 
 ## Export logfle location for use by external programs
 export logFile="$logFile"
+
+## Check for sqlDumpDir and create if necessary
+if [ -e $sqlDumpDir ]; then
+    echo -e "\e[0m[`date +%Y-%m-%d` `date +%H:%M:%S`] Confirmed:" \
+        "sqlDumpDir exists at \e[0;33m$sqlDumpDir\e[0m" >> $logFile
+else
+    echo -e "\e[0;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Creating:" \
+        "\e[0;33m$sqlDumpDir\e[0;36m..." >> $logFile
+    mkdir $sqlDumpDir &>> $logFile
+    # confirm creation successful
+    if [ -e $sqlDumpDir ]; then
+        echo -e "...done\e[0m" >> $logFile
+    else
+        echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+            "--Error-- There was a problem creating $sqlDumpDir." >> $logFile
+        echo -e "\e[4;31m--Error-- Script aborted\e[0;31m.\e[0m" >> $logFile
+        exit 101
+    fi
+fi
+
+## Create unique filename for sqlDump file
+sqlDumpFile="backup_${DBNAME}_`date +%Y%m%d_%H%M%S`.sql"
+echo -e "\e[0m[`date +%Y-%m-%d` `date +%H:%M:%S`] mysql dump file will be" \
+    "stored at:" >> $logFile
+echo -e "\e[0;33m$sqlDumpDir/$sqlDumpFile\e[0m" >> $logFile
 
