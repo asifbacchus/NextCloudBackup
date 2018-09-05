@@ -243,6 +243,22 @@ else
     echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
 fi
 
+## Have BorgBackup prune the repo to remove old archives
+borg --show-rc prune -v --list ${borgPrune} :: 2>> $logFile
+
+# Report BorgBackup exit status
+if [ "$?" = "0" ]; then
+    echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Success--" \
+        "BorgBackup PRUNE operation completed successfully.\e[0m" >> $logFile
+elif [ "$?" = "1" ]; then
+    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
+        "BorgBackup PRUNE operation completed with WARNINGS." >> $logFile
+    echo -e "--Warning-- Please check Borg's output.\e[0m" >> $logFile
+else
+    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Error--" \
+        "BorgBackup PRUNE operation encountered a serious ERROR." >> $logFile
+    echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
+fi
 
 # Gracefully exit
 exit 0
