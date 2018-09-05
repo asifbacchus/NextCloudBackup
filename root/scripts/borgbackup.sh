@@ -96,3 +96,10 @@ fi
 echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
     "--Begin backup operations--\e[0m" >> $logFile
 
+## Parse supplied variables and determine additional script vars
+scriptPath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+err503FullPath="$scriptPath/$err503FileName"
+
+## Export logfle location for use by external programs
+export logFile="$logFile"
+
