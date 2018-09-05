@@ -229,6 +229,19 @@ borg --show-rc create --list ::`date +%Y-%m-%d_%H%M%S` \
     "$ncdata" \
     "$sqlDumpDir/$sqlDumpFile" 2>> $logFile
 
+# Report BorgBackup exit status
+if [ "$?" = "0" ]; then
+    echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Success--" \
+        "BorgBackup completed successfully.\e[0m" >> $logFile
+elif [ "$?" = "1" ]; then
+    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
+        "BorgBackup completed with WARNINGS." >> $logFile
+    echo -e "--Warning-- Please check Borg's output.\e[0m" >> $logFile
+else
+    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Error--" \
+        "BorgBackup encountered a serious ERROR." >> $logFile
+    echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
+fi
 
 
 # Gracefully exit
