@@ -36,6 +36,15 @@ err503FileName=503-backup.html
 # (default: /SQLdump)
 sqlDumpDir=/SQLdump
 
+# FULL path to SQL details file (explained in blog)
+# This is a 4 line file in the EXACT format:
+#sqlHostMachineName
+#sqlDBUsername
+#sqlDBPassword
+#sqlDBName
+#(default: /root/sqlDetails)
+sqlDetails=/root/sqlDetails
+
 # Borg BASE directory (default: /var/borgbackup)
 borgBaseDir=/var/borgbackup
 
