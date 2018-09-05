@@ -82,6 +82,13 @@ borgDetails="$borgBaseDir/repoDetails.borg"
 # (default: borgBaseDir/xtraLocations.borg)
 borgXtraFiles="$borgBaseDir/xtraLocations.borg"
 
+# FULL path to the exclude source-list (explained in blog)
+# This file lists any files and directories that should be excluded from
+# the backup.
+# MUST conform to borg patterns -- 'borg help patterns' for more information
+# (default: borgBaseDir/excludeLocations.borg)
+borgExcludeFiles="$borgBaseDir/excludeLocations.borg"
+
 # Pruning options for borg archive (see BorgBackup documentation for details)
 # This default example keeps all backups within the last 14 days, 12 weeks
 # of end-of-week backups and 6 months of end-of-month backups.
