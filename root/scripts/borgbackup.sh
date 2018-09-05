@@ -93,7 +93,7 @@ logFile=/var/log/borgbackup.log
 #    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] This script MUST" \
 #        "be run as ROOT."
 #    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m"
-#    exit 100
+#    exit 1
 #fi
 
 
@@ -180,9 +180,10 @@ sudo -u ${webUser} php "${ncroot}/occ maintenance:mode --on" 2>> $logFile
 if [ "$?" = "0" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFile
 else
-    echo -e "\e[1;33m--Warning-- There was a problem putting NextCloud" \
+    echo -e "\e[1;31m--Error-- There was a problem putting NextCloud" \
         "into maintenance mode" >> $logFile
-    echo -e "\e[1;39mScript will continue..." >> $logFile
+    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m" >> $logFile
+    exit 100
 fi
 
 ## Read sqlDetails file and extract necessary information
@@ -198,4 +199,8 @@ if [ "$?" = "0" ]; then
 else
     echo -e "\e[1;31m--Error-- There was a problem dumping SQL." >> $logFile
     echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m" >> $logFile
+    exit 102
 fi
+
+# Gracefully exit
+exit 0
