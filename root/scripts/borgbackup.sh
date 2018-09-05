@@ -232,7 +232,8 @@ export BORG_PASSPHRASE="$(tail -1 $borgDetails)"
 mapfile -t xtraFiles < $borgXtraFiles
 
 ## Call BorgBackup
-borg --show-rc create --list ::`date +%Y-%m-%d_%H%M%S` \
+borg --show-rc create --list --exclude-from $borgExcludeFiles \
+    ::`date +%Y-%m-%d_%H%M%S` \
     "${xtraFiles[@]}" \
     "$ncdata" \
     "$sqlDumpDir/$sqlDumpFile" 2>> $logFile
