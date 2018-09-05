@@ -189,7 +189,7 @@ fi
 ## Put NextCloud in maintenance mode
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Putting NextCloud" \
     "in maintenance mode..." >> $logFile
-sudo -u ${webUser} php "${ncroot}/occ maintenance:mode --on" 2>> $logFile
+sudo -u ${webUser} php ${ncroot}/occ maintenance:mode --on >> $logFile 2>&1
 # verify
 if [ "$?" = "0" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFile
@@ -271,7 +271,7 @@ fi
 ## Put NextCloud back into operational mode
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Taking NextCloud" \
     "out of maintenance mode..." >> $logFile
-sudo -u ${webUser} php "${ncroot}/occ maintenance:mode --off" 2>> $logFile
+sudo -u ${webUser} php ${ncroot}/occ maintenance:mode --off >> $logFile 2>&1
 # verify
 if [ "$?" = "0" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFile
