@@ -185,9 +185,17 @@ else
     echo -e "\e[1;39mScript will continue..." >> $logFile
 fi
 
-        
-
 ## Read sqlDetails file and extract necessary information
 mapfile -t sqlParams < $sqlDetails
 
 ## Dump SQL
+echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+    "Dumping SQL..." >> $logFile
+mysqldump --single-transaction -h${sqlParams[0]} -u${sqlParams[1]} -p${sqlParams[2]} ${sqlParams[3]} > "$sqlDumpDir/$sqlDumpFile"
+# verify
+if [ "$?" = "0" ]; then
+    echo -e "\e[0;36m...done\e[0m" >> $logFile
+else
+    echo -e "\e[1;31m--Error-- There was a problem dumping SQL." >> $logFile
+    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m" >> $logFile
+fi
