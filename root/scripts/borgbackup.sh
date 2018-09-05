@@ -260,5 +260,22 @@ else
     echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
 fi
 
+## Remove 503 error page from webroot so NGINX serves web clients again
+echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing 503 error page" \
+    "from webroot...\e[0m" >> $logFile
+rm -f "$webroot/$err503FileName" &>> $logFile
+# verify actually removed
+if [ -e "$webroot/$err503FileName" ]; then
+    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
+        "Error removing 503 error page from webroot." >> $logFile
+    echo -e "--Warning-- NGINX will NOT server webclients until this file is" \
+        "removed.\e[0m" >> $logFile
+    echo -e "Script will continue processing..." >> $logFile
+else
+    echo -e "\e[0;36m...done\e[0m" >> $logFile
+fi
+
+
+
 # Gracefully exit
 exit 0
