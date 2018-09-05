@@ -291,6 +291,18 @@ else
     echo -e "\e[0;36m...done\e[0m" >> $logFile
 fi
 
+## Remove sqlDump file
+echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing sqlDump" \
+    "file...\e[0m" >> $logFile
+rm -f "$sqlDumpDir/$sqlDumpFile" &>> $logFile
+# verify actually removed
+if [ -e "$sqlDumpDir/$sqlDumpFile" ]; then
+    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
+        "Error removing sqldump file.  Please remove manually.\e[0m" >> $logFile
+    echo -e "Script will continue processing..." >> $logFile
+else
+    echo -e "\e[0;36m...done\e[0m" >> $logFile
+fi
 
 
 # Gracefully exit
