@@ -64,6 +64,12 @@ borgRemoteSSHKeyfile=/var/borgbackup/rsync.key
 # Borg remote path (default for rsync: borg1)
 borgRemotePath=borg1
 
+# Borg 'checkpoint' interval in seconds
+# This determines when snapshots are taken so that interrupted backups
+# can be restored from that point in time
+# (default: 300 seconds = 5 minutes)
+borgCheckpoint=300
+
 # FULL path to Borg repo details file (explained in blog)
 # This is a 2 line file in the EXACT format:
 # repo-name in format user@server.tld:repo
@@ -233,7 +239,7 @@ mapfile -t xtraFiles < $borgXtraFiles
 
 ## Call BorgBackup
 borg --show-rc create --list --exclude-from $borgExcludeFiles \
-    ::`date +%Y-%m-%d_%H%M%S` \
+    --checkpoint-interval $borgCheckpoint ::`date +%Y-%m-%d_%H%M%S` \
     "${xtraFiles[@]}" \
     "$ncdata" \
     "$sqlDumpDir/$sqlDumpFile" 2>> $logFile
