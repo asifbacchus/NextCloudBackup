@@ -304,6 +304,10 @@ else
     echo -e "\e[0;36m...done\e[0m" >> $logFile
 fi
 
+## Log completion of script
+echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+    "--Backup operations completed--\e[0m" >> $logFile
+
 
 # Gracefully exit
 exit 0
