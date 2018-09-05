@@ -202,5 +202,16 @@ else
     exit 102
 fi
 
+## Ready for Borg
+echo -e "\e[1;39m[`date +%Y-%m-%d` `date +%H:%M:%S`] Pre-backup tasks" \
+    "completed... calling BorgBackup" >> $logFile
+
+## Generate and export variables required for BorgBackup
+export BORG_BASE_DIR="$borgBaseDir"
+export BORG_REMOTE_PATH="$borgRemotePath"
+export BORG_RSH="ssh -i $borgRemoteSSHKeyfile"
+export BORG_REPO="$(head -1 $borgDetails)"
+export BORG_PASSPHRASE="$(tail -1 $borgDetails)"
+
 # Gracefully exit
 exit 0
