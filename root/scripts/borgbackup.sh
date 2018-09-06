@@ -124,11 +124,35 @@ if [ $(id -u) -ne 0 ]; then
 fi
 
 
-### elevate script -- used during program testing
+## elevate script -- used during program testing
 #if [ $EUID != 0 ]; then
 #    sudo "$0" "$@"
 #    exit $?
 #fi
+
+
+### Functions:
+
+function quit {
+    if [ -z "$1" ]; then
+        # exit gracefully
+        echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+            "--Backup operations completed SUCCESSFULLY--\e[0m" >> $logFile
+        exit 0
+    elif [ "$2" = "warn" ]; then
+        # exit with warning code
+        echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+            "--Script exiting with WARNING (code: $1)--\e[0m" >> $logFile
+        exit "$1"
+    else
+        # exit with error code
+        echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+            "--Script exiting with ERROR (code: $1)--\e[0m" >> $logFile
+        exit "$1"
+    fi
+}
+
+### End of functions
 
 
 ## Write script execution start in log file
