@@ -2,7 +2,7 @@
 
 #######
 ### Backup NextCloud13 installation to external repo using Borg Backup
-### Assuming both NextCloud & Borg setups as outlined in their respecitive
+### Assuming both NextCloud & Borg setup as outlined in their respecitive
 ### series at https://mytechiethoughts.com
 ###
 ### Events:
@@ -14,6 +14,16 @@
 ### 5. Borg backup NextCloud data and files.
 ### 6. Put NextCloud back into operating mode.
 ### 7. Delete 503 error page so NGINX can serve web clients again.
+###
+### Usage: ./borgbackup [verbose:normal(default):quiet]
+### Options:
+###   verbose - All logging turned on, including a list of each file being
+###       backed up/skipped/etc. (This can lead to very large logs)
+###   normal - This is the default setting. If nothing is specified, this
+###       setting will be used. Errors, warnings & summary of borgbackup will
+###       be logged.
+###   quiet - Minimal logging. Errors and warnings only and confirmation of
+###       of backup success.
 #######
 
 
@@ -26,16 +36,14 @@ webUser=www-data
 webroot=/usr/share/nginx/html
 
 # FULL path to NextCloud root directory
-# By default, this is a folder within your webroot. If you setup is different
-# then provide the FULL path here
-# (default: webroot/nextcloud)
+# By default, this is a folder within your webroot. If your setup is different
+# then provide the FULL path here. (default: webroot/nextcloud)
 ncroot="$webroot/nextcloud"
 
 # NextCloud data directory
 # If this is setup according to the blog series at https://mytechiethoughts.com
 # then this is '/var/nc_data'.  If not, please change as appropriate for your
-# environment.
-# (default: /var/nc_data)
+# environment. (default: /var/nc_data)
 ncdata=/var/nc_data
 
 # name of 503-error page (default: 503-error.html)
@@ -48,7 +56,7 @@ sqlDumpDir=/SQLdump
 
 # FULL path to SQL details file (explained in blog)
 # This is a 4 line file in the EXACT format:
-#sqlHostMachineName
+#sqlServerHostName
 #sqlDBUsername
 #sqlDBPassword
 #sqlDBName
@@ -74,17 +82,15 @@ borgCheckpoint=300
 # This is a 2 line file in the EXACT format:
 # repo-name in format user@server.tld:repo
 # passphrase
-# This ensures no sensitive details are stored in this script :-)
 # (default: borgBaseDir/repoDetails.borg)
 borgDetails="$borgBaseDir/repoDetails.borg"
 
 # FULL path to the extra source-list file (explained in blog)
 # This file lists any extra files and directories that should be included
-# in the backup along with the standard mailcow files/directories this script
-# will be including.
+# in the backup in addition to NextCloud program and data files.
 # One source-entry per line.
 # No spaces, comments or any other extraneous information, just the files/dirs
-#    Directories must end with tailing slash
+#    Directories must end with tailing slash (i.e. directory/name/)
 # (default: borgBaseDir/xtraLocations.borg)
 borgXtraFiles="$borgBaseDir/xtraLocations.borg"
 
@@ -100,7 +106,8 @@ borgExcludeFiles="$borgBaseDir/excludeLocations.borg"
 # of end-of-week backups and 6 months of end-of-month backups.
 borgPrune='--keep-within=14d --keep-weekly=12 --keep-monthly=6'
 
-# desired name and location of log file for this script
+# desired name and location of log file for this script (will be created)
+# NOTE: This file can get quite large, ensure logrotate is setup!
 # (default: /var/log/mailcow_backup.log)
 logFile=/var/log/borgbackup.log
 
