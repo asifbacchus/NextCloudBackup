@@ -321,39 +321,43 @@ export BORG_PASSPHRASE="$(tail -1 $borgDetails)"
 mapfile -t xtraFiles < $borgXtraFiles
 
 ## Call BorgBackup
-borg --show-rc create --list --exclude-from $borgExcludeFiles \
+borg --show-rc create ${borgCreateParams} --exclude-from $borgExcludeFiles \
     --checkpoint-interval $borgCheckpoint ::`date +%Y-%m-%d_%H%M%S` \
     "${xtraFiles[@]}" \
     "$ncdata" \
-    "$sqlDumpDir/$sqlDumpFile" 2>> $logFile
+    "$sqlDumpDir/$sqlDumpFile" >> $logFile 2>&1
+
+borgCreateResult=$(echo "$?")
 
 # Report BorgBackup exit status
-if [ "$?" = "0" ]; then
-    echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Success--" \
+if [ "$borgCreateResult" = "0" ]; then
+    echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`] --SUCCESS--" \
         "BorgBackup completed successfully.\e[0m" >> $logFile
-elif [ "$?" = "1" ]; then
-    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
+elif [ "$borgCreateResult" = "1" ]; then
+    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING--" \
         "BorgBackup completed with WARNINGS." >> $logFile
     echo -e "--Warning-- Please check Borg's output.\e[0m" >> $logFile
 else
-    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Error--" \
+    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR--" \
         "BorgBackup encountered a serious ERROR." >> $logFile
     echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
 fi
 
 ## Have BorgBackup prune the repo to remove old archives
-borg --show-rc prune -v --list ${borgPrune} :: 2>> $logFile
+borg --show-rc prune -v ${borgPruneParams} ${borgPrune} :: >> $logFile 2>&1
+
+borgPruneResult=$(echo "$?")
 
 # Report BorgBackup exit status
-if [ "$?" = "0" ]; then
-    echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Success--" \
+if [ "$borgPruneResult" = "0" ]; then
+    echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`] --SUCCESS--" \
         "BorgBackup PRUNE operation completed successfully.\e[0m" >> $logFile
-elif [ "$?" = "1" ]; then
-    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
+elif [ "$borgPruneResult" = "1" ]; then
+    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING--" \
         "BorgBackup PRUNE operation completed with WARNINGS." >> $logFile
     echo -e "--Warning-- Please check Borg's output.\e[0m" >> $logFile
 else
-    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Error--" \
+    echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR--" \
         "BorgBackup PRUNE operation encountered a serious ERROR." >> $logFile
     echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
 fi
