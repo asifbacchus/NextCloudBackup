@@ -126,7 +126,7 @@ fi
 
 ### elevate script -- used during program testing
 #if [ $EUID != 0 ]; then
-#    sudo "$0" "$scriptPath"
+#    sudo "$0" "$@"
 #    exit $?
 #fi
 
