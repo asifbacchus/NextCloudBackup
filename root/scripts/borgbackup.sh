@@ -385,7 +385,6 @@ echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing 503 error page" \
     "from webroot...\e[0m" | tee -a $logFileVerbose $logFileNormal > /dev/null
 rm -f "$webroot/$err503FileName" 2>&1 | tee -a $logFileVerbose $logFileNormal \
     > /dev/null
-echo -e "\e[0;36m...done\e[0m"
 # verify actually removed
 checkExist find "" "$webroot/$err503FileName"
 checkResult="$?"
@@ -394,24 +393,28 @@ if [ "$checkResult" = "0" ]; then
         "Problem encountered removing 503 error page from webroot." \
         "Manually remove this file or NGINX will not serve web" \
         "clients.--" >> $logFile
-    echo -e "Script will continue processing..." >> $logFile
+    echo -e "Script will continue processing..." >> $logFileVerbose
     exitWarning+=('103')
 else
-    echo -e "\e[0;36m...done\e[0m" >> $logFile
+    echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose $logFileNormal \
+        > /dev/null
 fi
 
 ## Remove sqlDump file
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing sqlDump" \
-    "file...\e[0m" >> $logFile
-rm -f "$sqlDumpDir/$sqlDumpFile" &>> $logFile
+    "file...\e[0m" >> $logFileVerbose
+rm -f "$sqlDumpDir/$sqlDumpFile" >> $logFile 2>&1
 # verify actually removed
-if [ -e "$sqlDumpDir/$sqlDumpFile" ]; then
-    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
-        "Error removing sqldump file.  Please remove manually.\e[0m" >> $logFile
-    echo -e "Script will continue processing..." >> $logFile
+checkExist find "" "$sqlDumpDir/$sqlDumpFile"
+checkResult="$?"
+if [ "$checkResult" = "0" ]; then
+    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
+        "Error removing sqldump file.  Please remove manually.\e[0m--" >> $logFileVerbose
+    echo -e "Script will continue processing..." >> $logFileVerbose
 else
-    echo -e "\e[0;36m...done\e[0m" >> $logFile
+    echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
 fi
+
 
 ## Log completion of script
 echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
