@@ -160,7 +160,8 @@ function checkExist {
         elif [ "$2" = "createDir" ]; then
             echo -e "\e[1;36mCreating: ${3}...\e[0m" | tee -a $logFileVerbose \
                 $logFileNormal > /dev/null
-            mkdir -p "$3" | tee -a $logFileVerbose $logFileNormal > /dev/null
+            mkdir -p "$3" 2>&1 | tee -a $logFileVerbose $logFileNormal \
+                > /dev/null
             echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose \
                 $logFileNormal > /dev/null
             return 1
