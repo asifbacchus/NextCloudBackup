@@ -336,11 +336,11 @@ if [ "$borgCreateResult" = "0" ]; then
 elif [ "$borgCreateResult" = "1" ]; then
     echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING--" \
         "BorgBackup completed with WARNINGS." >> $logFile
-    echo -e "--Warning-- Please check Borg's output.\e[0m" >> $logFile
+    echo -e "--WARNING-- Please check Borg's output.\e[0m" >> $logFile
 else
     echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR--" \
         "BorgBackup encountered a serious ERROR." >> $logFile
-    echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
+    echo -e "--ERROR-- Please check Borg's output.\e[0m" >> $logFile
 fi
 
 ## Have BorgBackup prune the repo to remove old archives
@@ -355,11 +355,11 @@ if [ "$borgPruneResult" = "0" ]; then
 elif [ "$borgPruneResult" = "1" ]; then
     echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING--" \
         "BorgBackup PRUNE operation completed with WARNINGS." >> $logFile
-    echo -e "--Warning-- Please check Borg's output.\e[0m" >> $logFile
+    echo -e "--WARNING-- Please check Borg's output.\e[0m" >> $logFile
 else
     echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR--" \
         "BorgBackup PRUNE operation encountered a serious ERROR." >> $logFile
-    echo -e "--Error-- Please check Borg's output.\e[0m" >> $logFile
+    echo -e "--ERROR-- Please check Borg's output.\e[0m" >> $logFile
 fi
 
 ## Put NextCloud back into operational mode
