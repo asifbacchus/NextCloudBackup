@@ -392,7 +392,7 @@ checkResult="$?"
 if [ "$checkResult" = "0" ]; then
     echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
         "Problem encountered removing 503 error page from webroot." \
-        "Manually remove this file to allow NGINX to serve web" \
+        "Manually remove this file or NGINX will not serve web" \
         "clients.--" >> $logFile
     echo -e "Script will continue processing..." >> $logFile
     exitWarning+=('103')
