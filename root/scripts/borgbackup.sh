@@ -52,7 +52,7 @@ err503FileName=503-backup.html
 
 # desired directory for SQLdump -- will be created if necessary
 # (default: /SQLdump)
-sqlDumpDir=/SQLdump
+sqlDumpDir=/SQLdump/dump
 
 # FULL path to SQL details file (explained in blog)
 # This is a 4 line file in the EXACT format:
@@ -159,7 +159,7 @@ function checkExist {
             return 0
         elif [ "$2" = "createDir" ]; then
             echo -e "\e[1;36mCreating: ${3}...\e[0m" >> $logFileVerbose
-            mkdir -p "$3"
+            mkdir -p "$3" >> $logFileVerbose 2>&1
             echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
             return 1
         elif [ "$2" = "warn" ]; then
@@ -228,6 +228,7 @@ if [ "$checkResult" = "1" ]; then
     checkExist verify $sqlDumpDir
 fi
 
+quit
 
 if [ -e $sqlDumpDir ]; then
     echo -e "\e[0m[`date +%Y-%m-%d` `date +%H:%M:%S`] Confirmed:" \
