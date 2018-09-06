@@ -365,10 +365,13 @@ fi
 
 ## Put NextCloud back into operational mode
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Taking NextCloud" \
-    "out of maintenance mode..." >> $logFile
+    "out of maintenance mode...\e[0m" >> $logFile
 sudo -u ${webUser} php ${ncroot}/occ maintenance:mode --off >> $logFile 2>&1
-# verify
-if [ "$?" = "0" ]; then
+
+maintResult="$?"
+
+# verify but continue if problems since we need to cleanup before exiting
+if [ "$maintResult" = "0" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFile
 else
     echo -e "\e[1;31m--WARNING-- There was a problem taking NextCloud" \
