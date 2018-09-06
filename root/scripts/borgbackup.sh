@@ -256,8 +256,11 @@ if [ "$checkResult" = "2" ]; then
 else
     # file found, copy it to webroot
     echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Copying 503 error" \
-        "page to NGINX webroot..." >> $logFile
-    cp $err503FullPath $webroot/ 2>&1 | tee $logFileVerbose $logFileNormal \
+        "page to NGINX webroot..." | tee -a $logFileVerbose $logFileNormal \
+            > /dev/null
+    cp $err503FullPath $webroot/ 2>&1 | tee -a $logFileVerbose $logFileNormal \
+        > /dev/null
+    echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose $logFileNormal \
         > /dev/null
     # verify copy was successful
     checkExist find warn "$webroot/$err503FileName"
@@ -282,6 +285,7 @@ if [ -e $err503FullPath ]; then
     echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Copying 503 error" \
         "page to NGINX webroot..." >> $logFile
     cp $err503FullPath $webroot/ &>> $logFile
+    echo -e "\e[0;36m...done"
     # check file actually copied
     if [ -e "$webroot/$err503FileName" ]; then
         echo -e "\e[0;36m...done\e[0m" >> $logFile
