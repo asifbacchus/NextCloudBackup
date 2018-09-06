@@ -152,6 +152,37 @@ function quit {
     fi
 }
 
+function checkExist {
+    if [ "$1" = "find" ]; then
+        if [ -e "$3" ]; then
+            echo -e "\e[0mFound: \e[0;33m${1}\e[0m" >> $logFileVerbose
+            return 0
+        elif [ "$2" = "createDir" ]; then
+            echo -e "\e[1;36mCreating: ${1}...\e[0m" >> $logFileVerbose
+            mkdir -p "$1"
+            echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
+            return 1
+        elif [ "$2" = "warn" ]; then
+            echo -e "\e[1;33m---WARNING: ${1} was not found---\e[0m" | \
+                tee -a $logFileVerbose $logFileNormal >> $logFileQuiet
+            exitWarning=1
+            return 2
+        elif [ "$2" = "error" ]; then
+            echo -e "\e[1;31m---ERROR: ${1} was not found---\e[0m" | \
+                tee -a $logFileVerbose $logFileNormal >> $logFileQuiet
+            quit 101
+        fi
+    elif [ "$1" = "verify" ]; then
+        if [ -e "$3" ]; then
+            echo -e "\e[0mConfirmed: \e[0;33m${1}\e[0m" >> $logFileVerbose
+            return 0
+        else
+            echo -e "\e[1;31m---ERROR: Problem creating ${1}---\e[0m" | \
+                tee -a $logFileVerbose $logFileNormal >> $logFileQuiet
+            quit 102
+        fi
+    fi
+}
 ### End of functions
 
 
