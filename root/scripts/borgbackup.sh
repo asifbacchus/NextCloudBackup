@@ -232,10 +232,11 @@ if [ "$checkResult" = "1" ]; then
 fi
 
 ## Create unique filename for sqlDump file
-sqlDumpFile="backup_${DBNAME}_`date +%Y%m%d_%H%M%S`.sql"
+sqlDumpFile="backup_`date +%Y%m%d_%H%M%S`.sql"
 echo -e "\e[0m[`date +%Y-%m-%d` `date +%H:%M:%S`] mysql dump file will be" \
     "stored at:" >> $logFile
-echo -e "\e[0;33m$sqlDumpDir/$sqlDumpFile\e[0m" >> $logFile
+echo -e "\e[0;33m$sqlDumpDir/$sqlDumpFile\e[0m" | tee -a $logFileVerbose \
+    $logFileNormal > /dev/null
 
 ## Find 503 error page and copy to NGINX webroot
 ## File must be in the same location as this script
