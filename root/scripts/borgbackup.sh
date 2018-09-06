@@ -181,7 +181,7 @@ function checkExist {
         fi
     elif [ "$1" = "verify" ]; then
         if [ -e "$2" ]; then
-            echo -e "\e[0m[`date +%Y-%m-%d` `date +%H:%M:%S`]Confirmed:" \
+            echo -e "\e[0m[`date +%Y-%m-%d` `date +%H:%M:%S`] Confirmed:" \
                 "\e[0;33m${2}\e[0m" >> $logFileVerbose
             return 0
         else
