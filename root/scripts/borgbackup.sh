@@ -293,16 +293,16 @@ mapfile -t sqlParams < $sqlDetails
 
 ## Dump SQL
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
-    "Dumping SQL...\e[0m" >> $logFile
+    "Dumping SQL...\e[0m" >> $logFileVerbose
 mysqldump --single-transaction -h${sqlParams[0]} -u${sqlParams[1]} \
-    -p${sqlParams[2]} ${sqlParams[3]} > "$sqlDumpDir/$sqlDumpFile" 2>> $logFile
+    -p${sqlParams[2]} ${sqlParams[3]} > "$sqlDumpDir/$sqlDumpFile" \
+    2>> $logFileVerbose
+dumpResult="$?"
 # verify
-if [ "$?" = "0" ]; then
-    echo -e "\e[0;36m...done\e[0m" >> $logFile
+if [ "$dumpResult" = "0" ]; then
+    echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
 else
-    echo -e "\e[1;31m--Error-- There was a problem dumping SQL." >> $logFile
-    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m" >> $logFile
-    exit 201
+    quit 200
 fi
 
 ## Ready for Borg
