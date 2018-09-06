@@ -158,18 +158,20 @@ function checkExist {
             echo -e "\e[0mFound: \e[0;33m${3}\e[0m" >> $logFileVerbose
             return 0
         elif [ "$2" = "createDir" ]; then
-            echo -e "\e[1;36mCreating: ${3}...\e[0m" >> $logFileVerbose
-            mkdir -p "$3" >> $logFileVerbose 2>&1
-            echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
+            echo -e "\e[1;36mCreating: ${3}...\e[0m" | tee -a $logFileVerbose \
+                $logFileNormal > /dev/null
+            mkdir -p "$3" | tee -a $logFileVerbose $logFileNormal > /dev/null
+            echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose \
+                $logFileNormal > /dev/null
             return 1
         elif [ "$2" = "warn" ]; then
             echo -e "\e[1;33m---WARNING: ${3} was not found---\e[0m" | \
-                tee -a $logFileVerbose $logFileNormal >> $logFileQuiet
-            exitWarning=1
+                tee -a $logFileVerbose $logFileNormal $logFileQuiet > /dev/null
+            exitWarning=101
             return 2
         elif [ "$2" = "error" ]; then
             echo -e "\e[1;31m---ERROR: ${3} was not found---\e[0m" | \
-                tee -a $logFileVerbose $logFileNormal >> $logFileQuiet
+                tee -a $logFileVerbose $logFileNormal $logFileQuiet > /dev/null
             quit 101
         fi
     elif [ "$1" = "verify" ]; then
@@ -178,7 +180,7 @@ function checkExist {
             return 0
         else
             echo -e "\e[1;31m---ERROR: Problem creating ${2}---\e[0m" | \
-                tee -a $logFileVerbose $logFileNormal >> $logFileQuiet
+                tee -a $logFileVerbose $logFileNormal $logFileQuiet > /dev/null
             quit 102
         fi
     fi
