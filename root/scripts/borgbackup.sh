@@ -248,16 +248,16 @@ checkExist find warn $err503FullPath
 checkResult="$?"
 if [ "$checkResult" = "2" ]; then
     # file not found, issue warning
-    echo -e "\e[1;33m--Warning-- The 503 file should be re-created" \
-        "ASAP." >> $logFile
-    echo -e "\e[1;33m--Warning-- Web users will NOT be notified the" \
-        "server is down.\e[0m" >> $logFile
+    echo -e "\e[1;33m--WARNING: The 503 file should be re-created" \
+        "ASAP.--" >> $logFile
+    echo -e "\e[1;33m--WARNING: Web users will NOT be notified the" \
+        "server is down.--\e[0m" >> $logFile
     echo -e "Script will continue processing..." >> $logFile
 else
     # file found, copy it to webroot
     echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Copying 503 error" \
-        "page to NGINX webroot..." | tee -a $logFileVerbose $logFileNormal \
-            > /dev/null
+        "page to NGINX webroot...\e[0m" | tee -a $logFileVerbose \
+            $logFileNormal > /dev/null
     cp $err503FullPath $webroot/ 2>&1 | tee -a $logFileVerbose $logFileNormal \
         > /dev/null
     echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose $logFileNormal \
@@ -267,11 +267,11 @@ else
     checkResult="$?"
     if [ "$checkResult" = "2" ]; then
         # file not found, issue warning
-        echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
+        echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING: " \
             "There was a problem copying the 503 error page to" \
-                "webroot." >> $logFile
-        echo -e "\e[1;33m--Warning-- Web users will NOT be notified the" \
-            "server is down.\e[0m" >> $logFile
+                "webroot.--\e[0m" >> $logFile
+        echo -e "\e[1;33m--WARNING: Web users will NOT be notified the" \
+            "server is down.--\e[0m" >> $logFile
         echo -e "Script will continue processing..." >> $logFile
     fi
 fi
