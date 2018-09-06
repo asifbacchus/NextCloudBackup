@@ -285,7 +285,7 @@ maintResult="$?"
 if [ "$mainResult" = "0" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFile
 else
-    quit 200
+    quit 500
 fi
 
 ## Read sqlDetails file and extract necessary information
