@@ -139,6 +139,29 @@ echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
 scriptPath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 err503FullPath="$scriptPath/$err503FileName"
 
+## Determine verbosity level for logging
+if [ "$1" = "verbose" ]; then
+    borgCreateParams='--list --stats'
+    borgPruneParams='--list'
+    logFileVerbose="$logFile"
+    unset logFileNormal
+    unset logFileQuiet
+elif [ "$1" = "normal" ] || [ -z "$1" ]; then
+    borgCreateParams='--stats'
+    borgPruneParams='--list'
+    unset logFileVerbose
+    logFileNormal="$logFile"
+    unset logFileQuiet
+elif [ "$1" = "quiet" ]; then
+    unset borgCreateParams
+    unset borgPruneParams
+    unset logFileVerbose
+    unset logFileNormal
+    logFileQuiet="$logFile"
+else
+    quit 2
+fi
+
 ## Export logfle location for use by external programs
 export logFile="$logFile"
 
