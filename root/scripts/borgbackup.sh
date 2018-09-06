@@ -170,7 +170,7 @@ function checkExist {
         elif [ "$2" = "warn" ]; then
             echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
                 "${3} was not found--\e[0m" >> $logFile
-            exitWarning=101
+            exitWarning+=('101')
             return 2
         elif [ "$2" = "error" ]; then
             echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR:" \
@@ -199,6 +199,7 @@ echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
 ## Parse supplied variables and determine additional script vars
 scriptPath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 err503FullPath="$scriptPath/$err503FileName"
+exitWarning=()
 
 ## Determine verbosity level for logging
 if [ "$1" = "verbose" ]; then
@@ -370,12 +371,10 @@ sudo -u ${webUser} php ${ncroot}/occ maintenance:mode --off >> $logFile 2>&1
 if [ "$?" = "0" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFile
 else
-    echo -e "\e[1;31m--Error-- There was a problem taking NextCloud" \
-        "out of maintenance mode" >> $logFile
-    echo -e "This MUST be done manually or NextCloud will not" \
-        "function!\e[0m" >> $logFile
-    echo -e "\e[4;31mScript aborted\e[0;31m.\e[0m" >> $logFile
-    exit 101
+    echo -e "\e[1;31m--WARNING-- There was a problem taking NextCloud" \
+        "out of maintenance mode. This MUST be done manually before" \
+        "NextCloud can be used." >> $logFile
+    exitWarning+=('501')
 fi
 
 ## Remove 503 error page from webroot so NGINX serves web clients again
