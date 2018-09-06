@@ -277,36 +277,6 @@ else
 fi
 
 
-if [ -e $err503FullPath ]; then
-    echo -e "\e[0m[`date +%Y-%m-%d` `date +%H:%M:%S`] Found 503 error" \
-        "page at:" >> $logFile
-    echo -e "\e[0;33m$err503FullPath\e[0m" >> $logFile
-    # copy 503 to webroot
-    echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Copying 503 error" \
-        "page to NGINX webroot..." >> $logFile
-    cp $err503FullPath $webroot/ &>> $logFile
-    echo -e "\e[0;36m...done"
-    # check file actually copied
-    if [ -e "$webroot/$err503FileName" ]; then
-        echo -e "\e[0;36m...done\e[0m" >> $logFile
-    else
-        echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
-            "There was a problem copying the 503 error page to" \
-                "webroot." >> $logFile
-        echo -e "\e[1;33m--Warning-- Web users will NOT be notified the" \
-            "server is down.\e[0m" >> $logFile
-        echo -e "Script will continue processing..." >> $logFile
-    fi
-else
-    echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --Warning--" \
-        "Could not locate 503 error page at \e[0;33m$err503FullPath" >> $logFile
-    echo -e "\e[1;33m--Warning-- This file should be re-created" \
-        "ASAP." >> $logFile
-    echo -e "\e[1;33m--Warning-- Web users will NOT be notified the" \
-        "server is down.\e[0m" >> $logFile
-    echo -e "Script will continue processing..." >> $logFile
-fi
-
 ## Put NextCloud in maintenance mode
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Putting NextCloud" \
     "in maintenance mode..." >> $logFile
