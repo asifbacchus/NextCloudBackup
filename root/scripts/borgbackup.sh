@@ -224,7 +224,6 @@ elif [ "$1" = "quiet" ]; then
     unset borgPruneParams
     unset logFileVerbose
     unset logFileNormal
-    logFileQuiet="$logFile"
 else
     quit 2
 fi
