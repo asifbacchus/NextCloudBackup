@@ -165,14 +165,34 @@ function quit {
         exit "$1"
     elif [ $"2" = "error" ]; then
         # this is a deferred exit, codes need to be listed
-        echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
-            "--Script exited with ERROR(S) (code: ${exitError[*]})--\e[0m" >> $logFile
-        exit "$1"
+        # check if there are warnings in addtion to errors
+        if [ ${#exitWarning[@]} -gt 0 ]; then
+            echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" >> $logFile
+            echo -e "\e[1;33m--Script exited with WARNING(S)" \
+                "(code: ${exitWarning[*]})--" >> $logFile
+            echo -e "\e[1;31m--Script exited with ERROR(S)" \
+                "(code: ${exitError[*]})--\e[0m" >> $logFile
+            exit "$1"
+        else
+            echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+                "--Script exited with ERROR(S) (code: ${exitError[*]})" \
+                "--\e[0m" >> $logFile
+            exit "$1"
+        fi
     else
         # exit immediately with error code
+        # check if there are warnings in addition to errors
+        if [ ${#exitWarning[@]} -gt 0 ]; then
+            echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" >> $logFile
+            echo -e "\e[1;33m--Script exited with WARNING(S)" \
+                "(code: ${exitWarning[*]})--" >> $logFile
+            echo -e "\e[1;31m--Script exited with ERROR (code: $1)" \
+                "--\e[0m" >> $logFile
+        else
         echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
             "--Script exited with ERROR (code: $1)--\e[0m" >> $logFile
         exit "$1"
+        fi
     fi
 }
 
