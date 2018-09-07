@@ -391,7 +391,7 @@ echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing 503 error page" \
 rm -f "$webroot/$err503FileName" 2>&1 | tee -a $logFileVerbose $logFileNormal \
     > /dev/null
 # verify actually removed
-checkExist find "$webroot/$err503FileName"
+checkExist find null "$webroot/$err503FileName"
 checkResult="$?"
 if [ "$checkResult" = "3" ]; then
     echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose $logFileNormal \
@@ -410,7 +410,7 @@ echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing sqlDump" \
     "file...\e[0m" >> $logFileVerbose
 rm -f "$sqlDumpDir/$sqlDumpFile" >> $logFile 2>&1
 # verify actually removed
-checkExist find "$sqlDumpDir/$sqlDumpFile"
+checkExist find null "$sqlDumpDir/$sqlDumpFile"
 checkResult="$?"
 if [ "$checkResult" = "3" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
