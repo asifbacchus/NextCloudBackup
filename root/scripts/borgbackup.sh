@@ -333,17 +333,7 @@ else
 fi
 
 ## Put NextCloud in maintenance mode
-echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Putting NextCloud" \
-    "in maintenance mode...\e[0m" >> $logFile
-sudo -u ${webUser} php ${ncroot}/occ maintenance:mode --on >> $logFile 2>&1
-# verify
-maintResult="$?"
-
-if [ "$maintResult" = "0" ]; then
-    echo -e "\e[0;36m...done\e[0m" >> $logFile
-else
-    quit 500
-fi
+ncMaint on
 
 ## Read sqlDetails file and extract necessary information
 mapfile -t sqlParams < $sqlDetails
