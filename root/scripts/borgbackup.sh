@@ -223,7 +223,7 @@ function checkExist {
             return 3
         else
             # file not found, return proper code
-            return 3
+            return 5
         fi
     elif [ "$1" = "verify" ]; then
         if [ -e "$2" ]; then
@@ -280,7 +280,7 @@ function cleanUp {
         # verify actually removed
         checkExist find null "$webroot/$err503FileName"
         checkResult="$?"
-        if [ "$checkResult" = "3" ]; then
+        if [ "$checkResult" = "5" ]; then
             echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose \
                 $logFileNormal > /dev/null
         else
@@ -298,7 +298,7 @@ function cleanUp {
         # verify actually removed
         checkExist find null "$sqlDumpDir/$sqlDumpFile"
         checkResult="$?"
-        if [ "$checkResult" = "3" ]; then
+        if [ "$checkResult" = "5" ]; then
             echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
         else
             echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
@@ -514,7 +514,7 @@ rm -f "$webroot/$err503FileName" 2>&1 | tee -a $logFileVerbose $logFileNormal \
 # verify actually removed
 checkExist find null "$webroot/$err503FileName"
 checkResult="$?"
-if [ "$checkResult" = "3" ]; then
+if [ "$checkResult" = "5" ]; then
     echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose $logFileNormal \
         > /dev/null
 else
@@ -533,7 +533,7 @@ rm -f "$sqlDumpDir/$sqlDumpFile" >> $logFile 2>&1
 # verify actually removed
 checkExist find null "$sqlDumpDir/$sqlDumpFile"
 checkResult="$?"
-if [ "$checkResult" = "3" ]; then
+if [ "$checkResult" = "5" ]; then
     echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
 else
     echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
