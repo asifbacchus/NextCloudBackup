@@ -342,10 +342,14 @@ elif [ "$borgCreateResult" = "1" ]; then
     echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING--" \
         "BorgBackup completed with WARNINGS." >> $logFile
     echo -e "--WARNING-- Please check Borg's output.\e[0m" >> $logFile
+    exitWarning+=('301')
 else
     echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR--" \
         "BorgBackup encountered a serious ERROR." >> $logFile
     echo -e "--ERROR-- Please check Borg's output.\e[0m" >> $logFile
+    # This is critical, but we still have to cleanup, so note a warning
+    # instead of abort with error
+    exitWarning+=('300')
 fi
 
 ## Have BorgBackup prune the repo to remove old archives
@@ -361,10 +365,12 @@ elif [ "$borgPruneResult" = "1" ]; then
     echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING--" \
         "BorgBackup PRUNE operation completed with WARNINGS." >> $logFile
     echo -e "--WARNING-- Please check Borg's output.\e[0m" >> $logFile
+    exitWarning+=('311')
 else
     echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR--" \
         "BorgBackup PRUNE operation encountered a serious ERROR." >> $logFile
     echo -e "--ERROR-- Please check Borg's output.\e[0m" >> $logFile
+    exitWarning+=('310')
 fi
 
 
