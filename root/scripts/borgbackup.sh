@@ -187,9 +187,6 @@ function checkExist {
                 "Problem creating ${2}--\e[0m" >> $logFile
             quit 102
         fi
-    elif [ "$1" = "noFind"]; then
-        if [ -z "$2" ]; then
-            return 0
         else
         return 105
     fi
