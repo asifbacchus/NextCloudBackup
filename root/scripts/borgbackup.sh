@@ -378,6 +378,13 @@ fi
 
 ## Put NextCloud in maintenance mode
 ncMaint on
+# check if it was successful
+if [ "$maintResult" = "0" ]; then
+    echo -e "\e[0;36m...done\e[0m" >> $logFile
+else
+    cleanUp 503
+    quit 500
+fi
 
 ## Read sqlDetails file and extract necessary information
 mapfile -t sqlParams < $sqlDetails
