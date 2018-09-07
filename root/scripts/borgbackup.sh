@@ -345,7 +345,7 @@ if [ "$checkResult" = "1" ]; then
     checkExist find $sqlDumpDir
     checkResult="$?"
     if [ "$checkResult" = "0" ]; then
-        echo -e "\e[1;39mConfirmed: \e[0;33m$sqlDumDir \e[1;39mcreated.\e[0m" \
+        echo -e "\e[1;39mConfirmed: \e[0;33m$sqlDumpDir \e[1;39mcreated.\e[0m" \
             >> $logFileVerbose
     else
         # cannot continue without a place to dump SQL
