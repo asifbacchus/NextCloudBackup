@@ -36,7 +36,6 @@
 ### 101 - File/directory not found
 ### 102 - Could not create file/directory
 ### 103 - Could not remove file/directory
-### 105 - <debugging return code> checkExist function has no coded response
 ### 200 - Problem dumping SQL
 ### 300 - Borg create: CRITICAL error, check a verbose log
 ### 301 - Borg create: warnings issued, check a verbose log
