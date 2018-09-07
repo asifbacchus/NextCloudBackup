@@ -244,6 +244,50 @@ function ncMaint {
         return 200
     fi
 }
+
+function cleanUp {
+    # This function cleans up files copied/created by this script
+    if [ "$1" = "503" ]; then
+        # Cleanup 503 file in webroot to restore NGINX operation
+        echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+            "Removing 503 error page from webroot...\e[0m" | \
+            tee -a $logFileVerbose $logFileNormal > /dev/null
+        rm -f "$webroot/$err503FileName" 2>&1 | \
+            tee -a $logFileVerbose $logFileNormal > /dev/null
+        # verify actually removed
+        checkExist find null "$webroot/$err503FileName"
+        checkResult="$?"
+        if [ "$checkResult" = "3" ]; then
+            echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose \
+                $logFileNormal > /dev/null
+        else
+            echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
+                "Problem encountered removing 503 error page from webroot." \
+                "Manually remove this file or NGINX will not serve web" \
+                "clients.--" >> $logFile
+            exitWarning+=('103')
+        fi        
+    elif [ "$1" = "sqlDump" ]; then
+        # Remove sqlDumpFile
+        echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing sqlDump" \
+            "file...\e[0m" >> $logFileVerbose
+        rm -f "$sqlDumpDir/$sqlDumpFile" >> $logFile 2>&1
+        # verify actually removed
+        checkExist find null "$sqlDumpDir/$sqlDumpFile"
+        checkResult="$?"
+        if [ "$checkResult" = "3" ]; then
+            echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
+        else
+            echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
+                "Problem removing sqldump file.  Please remove manually.\e[0m" \
+                >> $logFileVerbose
+            exitWarning+=('103')
+        fi
+    else
+        # this code shouldn't be executed, provide checkable return code
+        return 200
+    fi
+}
 ### End of functions
 
 
