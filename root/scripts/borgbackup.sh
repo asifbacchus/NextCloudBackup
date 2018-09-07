@@ -342,7 +342,15 @@ checkExist find createDir $sqlDumpDir
 checkResult="$?"
 if [ "$checkResult" = "1" ]; then
     # verify creation successful
-    checkExist verify $sqlDumpDir
+    checkExist find $sqlDumpDir
+    checkResult="$?"
+    if [ "$checkResult" = "0" ]; then
+        echo -e "\e[1;39mConfirmed: \e[0;33m$sqlDumDir \e[1;39mcreated.\e[0m" \
+            >> $logFileVerbose
+    else
+        # cannot continue without a place to dump SQL
+        quit 102
+    fi
 fi
 
 ## Create unique filename for sqlDump file
