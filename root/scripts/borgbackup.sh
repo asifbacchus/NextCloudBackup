@@ -225,20 +225,8 @@ function checkExist {
             # file not found, return proper code
             return 5
         fi
-    elif [ "$1" = "verify" ]; then
-        if [ -e "$2" ]; then
-            echo -e "\e[0m[`date +%Y-%m-%d` `date +%H:%M:%S`] Confirmed:" \
-                "\e[0;33m${2}\e[0m" >> $logFileVerbose
-            return 0
-        else
-            echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR:" \
-                "Problem creating ${2}--\e[0m" >> $logFile
-            cleanUp 503
-            cleanUp sqlDump
-            quit 102
-        fi
-        else
-            # this code shouldn't be executed, provide checkable return code
+    else
+        # this code shouldn't be executed, provide checkable return code
         return 200
     fi
 }
