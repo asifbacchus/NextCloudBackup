@@ -216,7 +216,8 @@ function checkExist {
             quit 102
         fi
         else
-        return 105
+            # this code shouldn't be executed, provide checkable return code
+        return 200
     fi
 }
 
@@ -240,8 +241,8 @@ function ncMaint {
         maintResult="$?"
         return $maintResult
     else
-        # this code shouldn't be executed, so note the situation for debugging
-        return 901
+        # this code shouldn't be executed, provide checkable return code
+        return 200
     fi
 }
 ### End of functions
