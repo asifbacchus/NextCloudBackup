@@ -219,6 +219,8 @@ function checkExist {
         elif [ "$2" = "error" ]; then
             echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR:" \
                 "${3} was not found--\e[0m" >> $logFile
+            cleanup 503
+            cleanup sqlDump
             quit 101
         else
             # file not found, return proper code
@@ -232,6 +234,8 @@ function checkExist {
         else
             echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR:" \
                 "Problem creating ${2}--\e[0m" >> $logFile
+            cleanUp 503
+            cleanUp sqlDump
             quit 102
         fi
         else
