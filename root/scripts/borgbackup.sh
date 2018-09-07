@@ -162,12 +162,17 @@ function quit {
     elif [ "$2" = "warn" ]; then
         # exit with warning code
         echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
-            "--Script exiting with WARNING(S) (code: ${exitWarning[*]})--\e[0m" >> $logFile
+            "--Script exited with WARNING(S) (code: ${exitWarning[*]})--\e[0m" >> $logFile
+        exit "$1"
+    elif [ $"2" = "error" ]; then
+        # this is a deferred exit, codes need to be listed
+        echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+            "--Script exited with ERROR(S) (code: ${exitError[*]})--\e[0m" >> $logFile
         exit "$1"
     else
-        # exit with error code
+        # exit immediately with error code
         echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
-            "--Script exiting with ERROR (code: $1)--\e[0m" >> $logFile
+            "--Script exited with ERROR (code: $1)--\e[0m" >> $logFile
         exit "$1"
     fi
 }
@@ -225,6 +230,7 @@ echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
 scriptPath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 err503FullPath="$scriptPath/$err503FileName"
 exitWarning=()
+exitError=()
 
 ## Determine verbosity level for logging
 if [ "$1" = "verbose" ]; then
@@ -451,6 +457,8 @@ fi
 ## Log completion of script
 if [ ${#exitWarning[@]} -gt 0 ]; then
     quit 101 warn
+elif [ ${#exitError[@]} -gt 0 ]; then
+    quit 100 error
 else
     quit
 fi
