@@ -411,14 +411,15 @@ echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing sqlDump" \
     "file...\e[0m" >> $logFileVerbose
 rm -f "$sqlDumpDir/$sqlDumpFile" >> $logFile 2>&1
 # verify actually removed
-checkExist find "" "$sqlDumpDir/$sqlDumpFile"
+checkExist find "$sqlDumpDir/$sqlDumpFile"
 checkResult="$?"
-if [ "$checkResult" = "0" ]; then
+if [ "$checkResult" = "3" ]; then
+    echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
+else
     echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
         "Error removing sqldump file.  Please remove manually.\e[0m--" >> $logFileVerbose
     echo -e "Script will continue processing..." >> $logFileVerbose
-else
-    echo -e "\e[0;36m...done\e[0m" >> $logFileVerbose
+    exitWarning+=('103')
 fi
 
 
