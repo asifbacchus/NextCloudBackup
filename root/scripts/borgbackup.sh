@@ -392,18 +392,18 @@ echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Removing 503 error page" \
 rm -f "$webroot/$err503FileName" 2>&1 | tee -a $logFileVerbose $logFileNormal \
     > /dev/null
 # verify actually removed
-checkExist find "" "$webroot/$err503FileName"
+checkExist find "$webroot/$err503FileName"
 checkResult="$?"
-if [ "$checkResult" = "0" ]; then
+if [ "$checkResult" = "3" ]; then
+    echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose $logFileNormal \
+        > /dev/null
+else
     echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
         "Problem encountered removing 503 error page from webroot." \
         "Manually remove this file or NGINX will not serve web" \
         "clients.--" >> $logFile
     echo -e "Script will continue processing..." >> $logFileVerbose
     exitWarning+=('103')
-else
-    echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose $logFileNormal \
-        > /dev/null
 fi
 
 ## Remove sqlDump file
