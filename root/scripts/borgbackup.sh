@@ -187,6 +187,14 @@ function checkExist {
                 "Problem creating ${2}--\e[0m" >> $logFile
             quit 102
         fi
+    elif [ "$1" = "noFind"]; then
+        if [ -z "$2" ]; then
+            return 0
+        else
+            return 1
+    fi
+    else
+        return 105
     fi
 }
 ### End of functions
@@ -362,6 +370,7 @@ else
         "BorgBackup PRUNE operation encountered a serious ERROR." >> $logFile
     echo -e "--ERROR-- Please check Borg's output.\e[0m" >> $logFile
 fi
+
 
 ## Put NextCloud back into operational mode
 echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`] Taking NextCloud" \
