@@ -176,6 +176,9 @@ function checkExist {
             echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR:" \
                 "${3} was not found--\e[0m" >> $logFile
             quit 101
+        else
+            # file not found, return proper code
+            return 3
         fi
     elif [ "$1" = "verify" ]; then
         if [ -e "$2" ]; then
