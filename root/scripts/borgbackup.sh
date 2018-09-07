@@ -142,7 +142,7 @@ function quit {
     elif [ "$2" = "warn" ]; then
         # exit with warning code
         echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
-            "--Script exiting with WARNING (code: $1)--\e[0m" >> $logFile
+            "--Script exiting with WARNING(S) (code: ${exitWarning[*]})--\e[0m" >> $logFile
         exit "$1"
     else
         # exit with error code
@@ -423,9 +423,11 @@ fi
 
 
 ## Log completion of script
-echo -e "\e[1;32m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
-    "--Backup operations completed--\e[0m" >> $logFile
+if [ ${#exitWarning[@]} -gt 0 ]; then
+    quit 100 warn
+else
+    quit
+fi
 
-
-# Gracefully exit
-exit 0
+# end of script -- this exit should not be necessary
+exit 999
