@@ -340,13 +340,15 @@ checkExist find createDir $sqlDumpDir
 checkResult="$?"
 if [ "$checkResult" = "1" ]; then
     # verify creation successful
-    checkExist find $sqlDumpDir
+    checkExist find null $sqlDumpDir
     checkResult="$?"
     if [ "$checkResult" = "0" ]; then
-        echo -e "\e[1;39mConfirmed: \e[0;33m$sqlDumpDir \e[1;39mcreated.\e[0m" \
-            >> $logFileVerbose
+        echo -e "\e[0;36m...done" | tee -a $logFileVerbose \
+            $logFileNormal > /dev/null
     else
         # cannot continue without a place to dump SQL
+        echo -e "\e[1;31m[`date +%Y-%m-%d` `date +%H:%M:%S`] --ERROR:" \
+            "Unable to create ${sqlDumpDir}--" >> $logFile
         quit 102
     fi
 fi
