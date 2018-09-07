@@ -208,8 +208,6 @@ function checkExist {
                 /dev/null
             mkdir -p "$3" 2>&1 | tee -a $logFileVerbose $logFileNormal \
                 > /dev/null
-            echo -e "\e[0;36m...done\e[0m" | tee -a $logFileVerbose \
-                $logFileNormal > /dev/null
             return 1
         elif [ "$2" = "warn" ]; then
             echo -e "\e[1;33m[`date +%Y-%m-%d` `date +%H:%M:%S`] --WARNING:" \
