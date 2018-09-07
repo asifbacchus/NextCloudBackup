@@ -24,6 +24,25 @@
 ###       be logged.
 ###   quiet - Minimal logging. Errors and warnings only and confirmation of
 ###       of backup success.
+###
+### Exit codes:
+### Some error codes can be warnings or errors, review the log file for details.
+### Although the log notes some things as warnings, they may be quite serious.
+### Your logcheck system should report all '--WARNING: ... --' tags.
+### 1 - Script was not run as ROOT (only error not in log, stderr/stdout only)
+### 2 - Unknown verbosity level specified on script invocation
+### 100 - Script has exited with warnings (codes listed in log on exit line)
+### 101 - File/directory not found
+### 102 - Could not create file/directory
+### 103 - Could not remove file/directory
+### 105 - <debugging return code> checkExist function has no coded response
+### 200 - Problem dumping SQL
+### 300 - Borg create: CRITICAL error, check a verbose log
+### 301 - Borg create: warnings issued, check a verbose log
+### 310 - Borg prune: CRTIICAL error, check a verbose log
+### 311 - Borg prune: warnings issued, check a verbose log
+### 500 - Could not enter NextCloud maintenance mode
+### 501 - Could not exit NextCloud maintenance mode
 #######
 
 
