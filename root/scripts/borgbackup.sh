@@ -219,6 +219,31 @@ function checkExist {
         return 105
     fi
 }
+
+function ncMaint {
+    if [ "$1" = "on" ]; then
+        ## Put NextCloud in maintenance mode
+        echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+            "Putting NextCloud in maintenance mode...\e[0m" >> $logFile
+        sudo -u ${webUser} php ${ncroot}/occ maintenance:mode --on \
+            >> $logFile 2>&1
+        # return result
+        maintResult="$?"
+        return $maintResult
+    elif [ "$1" = "off" ]; then
+        ## Return NextCloud to normal operating mode
+        echo -e "\e[1;36m[`date +%Y-%m-%d` `date +%H:%M:%S`]" \
+            "Exiting NextCloud maintenance mode...\e[0m" >> $logFile
+        sudo -u ${webUser} php ${ncroot}/occ maintenance:mode --off \
+            >> $logFile 2>&1
+        # return result
+        maintResult="$?"
+        return $maintResult
+    else
+        # this code shouldn't be executed, so note the situation for debugging
+        return 901
+    fi
+}
 ### End of functions
 
 
