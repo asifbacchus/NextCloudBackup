@@ -191,9 +191,6 @@ function checkExist {
         if [ -z "$2" ]; then
             return 0
         else
-            return 1
-    fi
-    else
         return 105
     fi
 }
