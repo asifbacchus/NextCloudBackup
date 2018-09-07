@@ -31,7 +31,8 @@
 ### Your logcheck system should report all '--WARNING: ... --' tags.
 ### 1 - Script was not run as ROOT (only error not in log, stderr/stdout only)
 ### 2 - Unknown verbosity level specified on script invocation
-### 100 - Script has exited with warnings (codes listed in log on exit line)
+### 100 - Script has exited with ERRORS (codes listed in log on exit line)
+### 101 - Script has exited with warnings (codes listed in log on exit line)
 ### 101 - File/directory not found
 ### 102 - Could not create file/directory
 ### 103 - Could not remove file/directory
@@ -449,7 +450,7 @@ fi
 
 ## Log completion of script
 if [ ${#exitWarning[@]} -gt 0 ]; then
-    quit 100 warn
+    quit 101 warn
 else
     quit
 fi
