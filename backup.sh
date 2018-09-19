@@ -50,6 +50,10 @@ scriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 scriptName="$( basename ${0} )"
 logFile="$scriptPath/${scriptName%.*}.log"
 
+# set script parameters to null and initialize array variables
+unset PARAMS
+errorExplain=()
+
 
 ### Process script parameters
 
