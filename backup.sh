@@ -1,5 +1,18 @@
 #!/bin/bash
 
+
+### Text formatting presets
+normal="\e[0m"
+bold="\e[1m"
+default="\e[39m"
+red="\e[31m"
+green="\e[32m"
+yellow="\e[33m"
+magenta="\e[35m"
+cyan="\e[36m"
+stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
+
+
 ### Functions ###
 
 ### scriptHelp -- display usage information for this script
