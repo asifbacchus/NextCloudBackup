@@ -131,6 +131,11 @@ if [ $(id -u) -ne 0 ]; then
 fi
 
 
+### Check for mandatory parameters
+if [ -z "$sqlDumpDir" ] || [[ "$sqlDumpDir" == -* ]]; then
+    quit 101
+fi
+
 ### Set logging verbosity based on invocation parameters
 if [ "$logLevel" = "normal" ]; then
     borgCreateParams='--stats'
