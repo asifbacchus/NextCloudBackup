@@ -18,7 +18,7 @@ stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 ### scriptHelp -- display usage information for this script
 function scriptHelp {
     echo "In the future, I will be something helpful!"
-    # exit with code 98 -- there is no use logging this
+    # exit with code 1 -- there is no use logging this
     exit 1
 }
 
