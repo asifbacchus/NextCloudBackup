@@ -56,7 +56,7 @@ errorExplain=()
 
 
 ### Error codes
-
+errorExplain[2]="This script MUST be run as ROOT."
 
 
 ### Process script parameters
@@ -82,10 +82,9 @@ while getopts ':l:' PARAMS; do
 done
 
 
-### Verify script running as root, otherwise exit (un-logged)
+### Verify script running as root, otherwise exit
 if [ $(id -u) -ne 0 ]; then
-    echo -e "${bold}${red}This script must be run as root. Aborted.${normal}"
-    exit 2
+    quit 2
 fi
 
 
