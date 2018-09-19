@@ -136,13 +136,13 @@ fi
 if [ "$logLevel" = "normal" ]; then
     borgCreateParams='--stats'
     borgPruneParams="--list"
-    unset logFileVerbose
+    logFileVerbose="/dev/null"
     logFileNormal="$logFile"
 elif [ "$logLevel" = "verbose" ]; then
     borgCreateParams='--list --stats'
     borgPruneParams='--list'
     logFileVerbose="$logFile"
-    unset logFileNormal
+    logFileNormal="/dev/null"
 fi
 
 
