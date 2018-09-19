@@ -82,6 +82,11 @@ while getopts ':l:' PARAMS; do
 done
 
 
+### Log start of script operations
+echo -e "${bold}${stamp}-- Start $scriptName execution ---" >> "$logFile"
+
+
+
 
 # This code should not be executed since the 'quit' function should terminate
 # this script.  Therefore, exit with code 99 if we get to this point.
