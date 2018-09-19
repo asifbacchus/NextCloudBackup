@@ -119,6 +119,10 @@ fi
 echo -e "${bold}${stamp}-- Start $scriptName execution ---" >> "$logFile"
 
 
+### Export logFile variable for use by Borg
+export logFile="$logFile"
+
+
 
 
 # This code should not be executed since the 'quit' function should terminate
