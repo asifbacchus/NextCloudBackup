@@ -60,7 +60,7 @@ errorExplain=()
 # if no parameters provided, then show the help page and exit with error
 if [ -z $1 ]; then
     # show script help page
-    scriptHelp
+    scriptHelp 1
 fi
 
 # use GetOpts to process parameters
@@ -72,7 +72,7 @@ while getopts ':l:' PARAMS; do
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
-            scriptHelp
+            scriptHelp 1
             ;;
     esac
 done
