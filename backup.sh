@@ -52,6 +52,11 @@ logFile="$scriptPath/${scriptName%.*}.log"
 
 # set script parameters to null and initialize array variables
 unset PARAMS
+unset logLevel
+unset logFileNormal
+unset logFileVerbose
+unset borgCreateParams
+unset borgPruneParams
 errorExplain=()
 
 
@@ -68,11 +73,19 @@ if [ -z $1 ]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:' PARAMS; do
+while getopts ':l:nv' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
             logFile="${OPTARG}"
+            ;;
+        n)
+            # standard logging (script errors, Borg summary)
+            logLevel="normal"
+            ;;
+        v)
+            # verbose logging (script errors, Borg details)
+            logLevel="verbose"
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
@@ -85,6 +98,20 @@ done
 ### Verify script running as root, otherwise exit
 if [ $(id -u) -ne 0 ]; then
     quit 2
+fi
+
+
+### Set logging verbosity based on invocation parameters
+if [ "$logLevel" = "normal" ]; then
+    borgCreateParams='--stats'
+    borgPruneParams="--list"
+    unset logFileVerbose
+    logFileNormal="$logFile"
+elif [ "$logLevel" = "verbose" ]; then
+    borgCreateParams='--list --stats'
+    borgPruneParams='--list'
+    logFileVerbose="$logFile"
+    unset logFileNormal
 fi
 
 
