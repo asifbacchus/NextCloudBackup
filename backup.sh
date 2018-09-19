@@ -87,6 +87,7 @@ unset logFileNormal
 unset logFileVerbose
 unset borgCreateParams
 unset borgPruneParams
+unset sqlDumpDir
 errorExplain=()
 
 
@@ -131,11 +132,6 @@ if [ $(id -u) -ne 0 ]; then
 fi
 
 
-### Check for mandatory parameters
-if [ -z "$sqlDumpDir" ] || [[ "$sqlDumpDir" == -* ]]; then
-    quit 101
-fi
-
 ### Set logging verbosity based on invocation parameters
 if [ "$logLevel" = "normal" ]; then
     borgCreateParams='--stats'
@@ -158,6 +154,10 @@ echo -e "${bold}${stamp}-- Start $scriptName execution ---" >> "$logFile"
 export logFile="$logFile"
 
 
+### Create sqlDump temporary directory
+sqlDumpDir=$( mktemp -d )
+echo -e "${cyan}${stamp} Created temp dir for SQLdump: $sqlDumpDir" \
+    >> "$logFileVerbose"
 
 
 # This code should not be executed since the 'quit' function should terminate
