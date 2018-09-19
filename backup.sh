@@ -21,6 +21,23 @@ function scriptHelp {
     quit 98
 }
 
+### quit -- exit the script after logging any errors, warnings, etc. and 
+### cleaning up as necessary
+function quit {
+    if [ -z "$1" ]; then
+        # exit cleanly
+        echo -e "${bold}${green}${stamp} -- [SUCCESS] Script completed" \
+            "--$normal"
+        exit 0
+    else
+        # log error code and exit with said code
+        echo -e "${bold}${red}${stamp} -- [ERROR] Script exited with code $1" \
+            " --$normal"
+        echo -e "${red}${errorExplain[$1]}$normal"
+        exit "$1"
+    fi
+}
+
 ### End of Functions ###
 
 
