@@ -66,6 +66,10 @@ while getopts 'l:' PARAMS; do
             # use provided location for logFile
             logFile="${OPTARG}"
             ;;
+        ?)
+            # unrecognized parameters trigger scriptHelp
+            scriptHelp
+            ;;
     esac
 done
 
