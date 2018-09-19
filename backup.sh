@@ -56,11 +56,11 @@ logFile="$scriptPath/${scriptName%.*}.log"
 # if no parameters provided, then show the help page and exit with error
 if [ -z $1 ]; then
     # show script help page
-    scriptHelp 1
+    scriptHelp
 fi
 
 # use GetOpts to process parameters
-while getopts 'l:' PARAMS; do
+while getopts ':l:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
