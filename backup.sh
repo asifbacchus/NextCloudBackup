@@ -39,6 +39,36 @@ function quit {
     fi
 }
 
+function checkExist {
+    if [ "$1" = "ff" ]; then
+        # find file
+        if [ -e "$2" ]; then
+            # found
+            echo -e "${normal}${stamp} File found: ${yellow}${2}${normal}" \
+                >> $logFileVerbose
+            return 0
+        else
+            # not found
+            echo -e "${red}${stamp} File NOT found: ${yellow}${2}${normal}" \
+                >> $logFileVerbose
+            return 1
+        fi
+    elif [ "$1" = "fd" ]; then
+        # find directory
+        if [ -d "$2" ]; then
+            # found
+            echo -e "${normal}${stamp} Dir found: ${yellow}${2}${normal}" \
+                >> $logFileVerbose
+            return 0
+        else
+            # not found
+            echo -e "${red}${stamp} Dir NOT found: ${yellow}${2}${normal}" \
+                >> $logFileVerbose
+            return 1
+        fi
+    fi
+}
+
 ### End of Functions ###
 
 
