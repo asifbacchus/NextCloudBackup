@@ -154,10 +154,14 @@ echo -e "${bold}${stamp}-- Start $scriptName execution ---" >> "$logFile"
 export logFile="$logFile"
 
 
-### Create sqlDump temporary directory
+### Create sqlDump temporary directory and sqlDumpFile name
 sqlDumpDir=$( mktemp -d )
 echo -e "${cyan}${stamp} Created temp dir for SQLdump: $sqlDumpDir" \
     >> "$logFileVerbose"
+sqlDumpFile="backup-`date +%Y%m%d_%H%M%S`.sql"
+echo -e "${normal}${stamp} mySQL dump file will be stored at:" \
+    "${bold}${yellow}${sqlDumpDir}/${sqlDumpFile}${normal}" \
+    | tee -a "$logFileNormal" "$logFileVerbose"
 
 
 # This code should not be executed since the 'quit' function should terminate
