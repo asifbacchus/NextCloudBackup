@@ -28,13 +28,13 @@ function quit {
     if [ -z "$1" ]; then
         # exit cleanly
         echo -e "${bold}${green}${stamp} -- [SUCCESS] Script completed" \
-            "--$normal"
+            "--$normal" >> "$logFile"
         exit 0
     else
         # log error code and exit with said code
         echo -e "${bold}${red}${stamp} -- [ERROR] Script exited with code $1" \
-            " --$normal"
-        echo -e "${red}${errorExplain[$1]}$normal"
+            " --$normal" >> "$logFile"
+        echo -e "${red}${errorExplain[$1]}$normal" >> "$logFile"
         exit "$1"
     fi
 }
