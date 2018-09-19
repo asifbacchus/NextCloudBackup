@@ -55,6 +55,10 @@ unset PARAMS
 errorExplain=()
 
 
+### Error codes
+errorExplain[1]="Missing or invalid parameters on script invocation."
+
+
 ### Process script parameters
 
 # if no parameters provided, then show the help page and exit with error
