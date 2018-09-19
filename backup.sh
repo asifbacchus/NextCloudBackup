@@ -18,8 +18,8 @@ stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 ### scriptHelp -- display usage information for this script
 function scriptHelp {
     echo "In the future, I will be something helpful!"
-    # exit with error code IF passed
-    quit $1
+    # exit with code 98 -- there is no use logging this
+    exit 98
 }
 
 ### quit -- exit the script after logging any errors, warnings, etc. and 
@@ -56,7 +56,7 @@ errorExplain=()
 
 
 ### Error codes
-errorExplain[1]="Missing or invalid parameters on script invocation."
+
 
 
 ### Process script parameters
@@ -64,7 +64,7 @@ errorExplain[1]="Missing or invalid parameters on script invocation."
 # if no parameters provided, then show the help page and exit with error
 if [ -z $1 ]; then
     # show script help page
-    scriptHelp 1
+    scriptHelp
 fi
 
 # use GetOpts to process parameters
@@ -76,7 +76,7 @@ while getopts ':l:' PARAMS; do
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
-            scriptHelp 1
+            scriptHelp
             ;;
     esac
 done
