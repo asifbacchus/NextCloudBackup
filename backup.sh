@@ -19,7 +19,7 @@ stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 function scriptHelp {
     echo "In the future, I will be something helpful!"
     # exit with code 98 -- there is no use logging this
-    exit 98
+    exit 1
 }
 
 ### quit -- exit the script after logging any errors, warnings, etc. and 
@@ -80,6 +80,13 @@ while getopts ':l:' PARAMS; do
             ;;
     esac
 done
+
+
+### Verify script running as root, otherwise exit (un-logged)
+if [ $(id -u) -ne 0 ]; then
+    echo -e "${bold}${red}This script must be run as root. Aborted.${normal}"
+    exit 2
+fi
 
 
 ### Log start of script operations
