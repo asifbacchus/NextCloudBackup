@@ -18,8 +18,8 @@ stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 ### scriptHelp -- display usage information for this script
 function scriptHelp {
     echo "In the future, I will be something helpful!"
-    # do NOT use quit function, just exit with error code
-    exit 98
+    # exit with error code IF passed
+    quit $1
 }
 
 ### quit -- exit the script after logging any errors, warnings, etc. and 
