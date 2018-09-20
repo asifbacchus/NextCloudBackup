@@ -230,6 +230,8 @@ else
 fi
 
 
+### Exit script
+quit
 
 # This code should not be executed since the 'quit' function should terminate
 # this script.  Therefore, exit with code 99 if we get to this point.
