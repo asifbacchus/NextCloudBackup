@@ -7,7 +7,8 @@ bold="\e[1m"
 default="\e[39m"
 red="\e[31m"
 green="\e[32m"
-yellow="\e[33m"
+yellow="\e[1;33m"
+ltYellow="\e[93m"
 magenta="\e[35m"
 cyan="\e[36m"
 stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
@@ -27,10 +28,10 @@ function scriptHelp {
 function quit {
     # list generated warnings, if any
     if [ ${#exitWarn[@]} -gt 0 ]; then
-        echo -e "${bold}${yellow}${stamp} Script generated the following" \
+        echo -e "${yellow}${stamp} Script generated the following" \
             "warnings:${normal}" >> "$logFile"
         for warn in "${exitWarn[@]}"; do
-            echo -e "${yellow}${warn}: ${warningExplain[$warn]}${normal}" \
+            echo -e "${ltYellow}${warn}: ${warningExplain[$warn]}${normal}" \
                 >> "$logFile"
         done
     fi
@@ -54,12 +55,12 @@ function checkExist {
         if [ -e "$2" ]; then
             # found
             echo -e "${normal}${stamp} File found:" \
-                "${bold}${yellow}${2}${normal}" >> "$logFileVerbose"
+                "${ltYellow}${2}${normal}" >> "$logFileVerbose"
             return 0
         else
             # not found
             echo -e "${red}${stamp} File NOT found:"\
-                "${bold}${yellow}${2}${normal}" >> "$logFileVerbose"
+                "${ltYellow}${2}${normal}" >> "$logFileVerbose"
             return 1
         fi
     elif [ "$1" = "fd" ]; then
@@ -67,12 +68,12 @@ function checkExist {
         if [ -d "$2" ]; then
             # found
             echo -e "${normal}${stamp} Dir found:" \
-                "${bold}${yellow}${2}${normal}" >> "$logFileVerbose"
+                "${ltYellow}${2}${normal}" >> "$logFileVerbose"
             return 0
         else
             # not found
             echo -e "${red}${stamp} Dir NOT found:" \
-                "${bold}${yellow}${2}${normal}" >> "$logFileVerbose"
+                "{ltYellow}${2}${normal}" >> "$logFileVerbose"
             return 1
         fi
     fi
@@ -111,7 +112,7 @@ warningExplain[5032]="The specified 503 error page could not be found"
 warningExplain[5033]="No webroot path was specified (-w parameter missing)"
 warningExplain[5034]="The specified webroot could not be found"
 warningExplain[5035]="Error copying 503 error page to webroot"
-warn503="${bold}${yellow}Web users will NOT be informed the server is down!${normal}"
+warn503="${bold}${ltYellow}Web users will NOT be informed the server is down!${normal}"
 
 ### Process script parameters
 
@@ -172,7 +173,7 @@ export logFile="$logFile"
 sqlDumpDir=$( mktemp -d )
 sqlDumpFile="backup-`date +%Y%m%d_%H%M%S`.sql"
 echo -e "${normal}${stamp} mySQL dump file will be stored at:" >> "$logFile"
-echo -e "${bold}${yellow}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
+echo -e "${ltYellow}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
 
 
 ### 503 error page
@@ -180,7 +181,7 @@ echo -e "${bold}${yellow}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
 # Verify 503 existance
 if [ -z "$location503" ]; then
     # no 503 file has been provided
-    echo -e "${bold}${yellow}${stamp} -- [WARNING] code 5031 --${normal}" \
+    echo -e "${yellow}${stamp} -- [WARNING] code 5031 --${normal}" \
         >> "$logFile"
     echo -e "$warn503" >> "$logFile"
     exitWarn+=('5031')
@@ -189,7 +190,7 @@ else
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # 503 file specified could not be found
-        echo -e "${bold}${yellow}${stamp} -- [WARNING] code 5032 --${normal}" \
+        echo -e "${yellow}${stamp} -- [WARNING] code 5032 --${normal}" \
             >> "$logFile"
         echo -e "$warn503" >> "$logFile"
         exitWarn+=('5032')
@@ -199,7 +200,7 @@ else
         # verify webroot exists
         if [ -z "$webroot" ]; then
             # no webroot path provided
-            echo -e "${bold}${yellow}${stamp} -- [WARNING] code 5033 --"\
+            echo -e "${yellow}${stamp} -- [WARNING] code 5033 --"\
                 "${normal}" >> "$logFile"
             echo -e "$warn503" >> "$logFile"
             exitWarn+=('5033')
@@ -209,7 +210,7 @@ else
             checkResult="$?"
             if [ "$checkResult" = "1" ]; then
                 # webroot directory specified could not be found
-                echo -e "${bold}${yellow}${stamp} -- [WARNING] code 5034 --" \
+                echo -e "${yellow}${stamp} -- [WARNING] code 5034 --" \
                     "${normal}" >> "$logFile"
                 echo -e "$warn503" "$logFile"
                 exitWarn+=('5034')
@@ -219,7 +220,7 @@ else
                 copyResult="$?"
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
-                        echo -e "${bold}${yellow}${stamp} -- [WARNING] code" \
+                        echo -e "${yellow}${stamp} -- [WARNING] code" \
                             "5035 --${normal}" >> "$logFile"
                         echo -e "$warn503" >> "$logFile"
                         exitWarn+=('5035')
