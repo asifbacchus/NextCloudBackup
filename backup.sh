@@ -30,7 +30,7 @@ function quit {
         echo -e "${yellow}${stamp} Script generated the following" \
             "warnings:${normal}" >> "$logFile"
         for warn in "${exitWarn[@]}"; do
-            echo -e "\t${ltYellow}${warn}: ${warningExplain[$warn]}${normal}" \
+            echo -e "   ${ltYellow}${warn}: ${warningExplain[$warn]}${normal}" \
                 >> "$logFile"
         done
     fi
@@ -43,7 +43,7 @@ function quit {
         # log error code and exit with said code
         echo -e "${bold}${red}${stamp} -- [ERROR] Script exited with code $1" \
             " --$normal" >> "$logFile"
-        echo -e "\t${red}${errorExplain[$1]}$normal" >> "$logFile"
+        echo -e "   ${red}${errorExplain[$1]}$normal" >> "$logFile"
         exit "$1"
     fi
 }
@@ -92,7 +92,7 @@ function ncMaint {
 ### cleanup - cleanup files and directories created by this script
 function cleanup {
     # remove SQL dump file and directory
-    rm -rf "$sqlDumpDir" >> "$logfile" 2>&1
+    rm -rf "$sqlDumpDir" >> "$logFile" 2>&1
     # verify directory is gone
     checkExist fd "$sqlDumpDir"
     checkResult="$?"
@@ -101,6 +101,10 @@ function cleanup {
         echo -e "${yellow}${stamp} -- [WARNING] code 111 --${normal}" \
             >> "$logFile"
         exitWarn+=('111')
+    else
+        # directory removed
+        echo -e "${bold}${cyan}${stamp} Removed SQL temp directory${normal}" \
+            >> "$logFile"
     fi
 
     # remove 503 error page
@@ -113,6 +117,10 @@ function cleanup {
         echo -e "${yellow}${stamp} -- [WARNING] code 5030 --${normal}" \
             >> $"$logFile"
         exitWarn+=('5030')
+    else
+        # file removed
+        echo -e "${bold}${cyan}${stamp} Removed 503 error page from webroot" \
+            "${normal}" >> "$logFile"
     fi
 }
 
@@ -144,14 +152,14 @@ errorExplain[2]="This script MUST be run as ROOT."
 errorExplain[100]="Could not put NextCloud into Maintenance mode."
 
 ### Warning codes & messages
-warningExplain[111]="Could not remove temporary directory: ${sqlDumpDir}.  Please remove manually."
+warningExplain[111]="Could not remove SQL dump file and directory.  Please remove manually."
 warningExplain[5030]="Could not remove 503 error page. This MUST be removed manually before NGINX will serve webclients!"
-warningExplain[5031]="No path to a 503 error page file was specified (-5 parameter missing)"
+warningExplain[5031]="Name of a 503 error page file was not specified (-5 parameter missing)"
 warningExplain[5032]="The specified 503 error page could not be found"
-warningExplain[5033]="No webroot path was specified (-w parameter missing)"
+warningExplain[5033]="No webroot path was specified (-r parameter missing)"
 warningExplain[5034]="The specified webroot could not be found"
 warningExplain[5035]="Error copying 503 error page to webroot"
-warn503="${ltYellow}Web users will NOT be informed the server is down!${normal}"
+warn503="   ${ltYellow}Web users will NOT be informed the server is down!${normal}"
 
 ### Process script parameters
 
@@ -162,7 +170,7 @@ warn503="${ltYellow}Web users will NOT be informed the server is down!${normal}"
 #fi
 
 # use GetOpts to process parameters
-while getopts ':l:nv5:w:' PARAMS; do
+while getopts ':l:nv5:r:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -182,7 +190,7 @@ while getopts ':l:nv5:w:' PARAMS; do
             # 503 error page name
             err503File="${OPTARG}"
             ;;
-        w)
+        r)
             # path to webroot for NextCloud installation
             webroot="${OPTARG}"
             ;;
@@ -276,16 +284,17 @@ fi
 
 
 ### Put NextCloud in maintenance mode
-ncMaint on
+#ncMaint on
 # check if successful
-if [ "$maintResult" = "0" ]; then
-    echo -e "${bold}${cyan}${stamp}...done${normal}" >> "$logFile"
-else
-    cleanup 503
-    quit 100
-fi
+#if [ "$maintResult" = "0" ]; then
+#    echo -e "${bold}${cyan}${stamp}...done${normal}" >> "$logFile"
+#else
+#    cleanup 503
+#    quit 100
+#fi
 
 ### Exit script
+cleanup
 quit
 
 # This code should not be executed since the 'quit' function should terminate
