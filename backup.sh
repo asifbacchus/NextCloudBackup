@@ -29,7 +29,7 @@ function quit {
     if [ ${#exitWarn[@]} -gt 0 ]; then
         echo -e "${bold}${yellow}${stamp} Script generated the following" \
             "warnings:${normal}" >> "$logFile"
-        for warn in "${!exitWarn[@]}"; do
+        for warn in "${exitWarn[@]}"; do
             echo -e "${yellow}${warn}: ${warningExplain[$warn]}${normal}" \
                 >> "$logFile"
         done
