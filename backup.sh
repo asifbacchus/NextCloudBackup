@@ -191,6 +191,7 @@ if [ -z "$location503" ]; then
     # no 503 file has been provided
     echo -e "${bold}${yellow}${stamp} -- [WARNING] ${warningExplain[5031]}" \
         "--${normal}" >> "$logFile"
+    echo -e "$warn503" | tee -a "$logFileNormal" "$logFileVerbose" > /dev/null
     exitWarn+=('5031')
 else
     checkExist ff "$location503"
@@ -199,6 +200,8 @@ else
         # 503 file specified could not be found
         echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
             "${warningExplain[5032]} --${normal}" >> "$logFile"
+        echo -e "$warn503" | tee -a "$logFileNormal" "$logFileVerbose" \
+            > /dev/null
         exitWarn+=('5032')
     else
         # 503 file found
@@ -210,6 +213,8 @@ else
             # no webroot path provided
             echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
                 "${warningExplain[5033]} --${normal}" >> "$logFile"
+            echo -e "$warn503" | tee -a "$logFileNormal" "$logFileVerbose" \
+                > /dev/null
             exitWarn+=('5033')
         else
             # verify provided webroot path exists
@@ -219,6 +224,8 @@ else
                 # webroot directory specified could not be found
                 echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
                     "${warningExplain[5034]} --${normal}" >> "$logFile"
+                echo -e "$warn503" | tee -a "$logFileNormal" "$logFileVerbose" \
+                    > /dev/null
                 exitWarn+=('5034')
             else
                 # webroot exists and 503 exists, copy 503 to webroot
@@ -230,6 +237,8 @@ else
                     if [ "$copyResult" = "1" ]; then
                         echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
                             "${warningExplain[5035]} --${normal}" >> "$logFile"
+                        echo -e "$warn503" | tee -a "$logFileNormal" \
+                            "$logFileVerbose" > /dev/null
                         exitWarn+=('5035')
                     else
                         # copy was successful
