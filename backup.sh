@@ -82,9 +82,6 @@ logFile="$scriptPath/${scriptName%.*}.log"
 
 # set script parameters to null and initialize array variables
 unset PARAMS
-unset logLevel
-unset logFileNormal
-unset logFileVerbose
 unset borgCreateParams
 unset borgPruneParams
 unset sqlDumpDir
@@ -123,12 +120,14 @@ while getopts ':l:nv5:w:' PARAMS; do
             logFile="${OPTARG}"
             ;;
         n)
-            # standard logging (script errors, Borg summary)
-            logLevel="normal"
+            # normal output from Borg
+            borgCreateParams='--stats'
+            borgPruneParams='--list'
             ;;
         v)
-            # verbose logging (script errors, Borg details)
-            logLevel="verbose"
+            # verbose output from Borg
+            borgCreateParams='--list --stats'
+            borgPruneParams='--list'
             ;;
         5)
             # 503 error page location
@@ -152,20 +151,6 @@ if [ $(id -u) -ne 0 ]; then
 fi
 
 
-### Set logging verbosity based on invocation parameters
-if [ "$logLevel" = "normal" ]; then
-    borgCreateParams='--stats'
-    borgPruneParams="--list"
-    logFileVerbose="/dev/null"
-    logFileNormal="$logFile"
-elif [ "$logLevel" = "verbose" ]; then
-    borgCreateParams='--list --stats'
-    borgPruneParams='--list'
-    logFileVerbose="$logFile"
-    logFileNormal="/dev/null"
-fi
-
-
 ### Log start of script operations
 echo -e "${bold}${stamp}-- Start $scriptName execution ---" >> "$logFile"
 
@@ -176,12 +161,9 @@ export logFile="$logFile"
 
 ### Create sqlDump temporary directory and sqlDumpFile name
 sqlDumpDir=$( mktemp -d )
-echo -e "${cyan}${stamp} Created temp dir for SQLdump: $sqlDumpDir" \
-    >> "$logFileVerbose"
 sqlDumpFile="backup-`date +%Y%m%d_%H%M%S`.sql"
-echo -e "${normal}${stamp} mySQL dump file will be stored at:" \
-    "${bold}${yellow}${sqlDumpDir}/${sqlDumpFile}${normal}" \
-    | tee -a "$logFileNormal" "$logFileVerbose" > /dev/null
+echo -e "${normal}${stamp} mySQL dump file will be stored at:" >> "$logFile"
+echo -e "${bold}${yellow}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
 
 
 ### 503 error page
@@ -189,32 +171,28 @@ echo -e "${normal}${stamp} mySQL dump file will be stored at:" \
 # Verify 503 existance
 if [ -z "$location503" ]; then
     # no 503 file has been provided
-    echo -e "${bold}${yellow}${stamp} -- [WARNING] ${warningExplain[5031]}" \
-        "--${normal}" >> "$logFile"
-    echo -e "$warn503" | tee -a "$logFileNormal" "$logFileVerbose" > /dev/null
+    echo -e "${bold}${yellow}${stamp} -- [WARNING] code 5031 --${normal}" \
+        >> "$logFile"
+    echo -e "$warn503" >> "$logFile"
     exitWarn+=('5031')
 else
     checkExist ff "$location503"
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # 503 file specified could not be found
-        echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
-            "${warningExplain[5032]} --${normal}" >> "$logFile"
-        echo -e "$warn503" | tee -a "$logFileNormal" "$logFileVerbose" \
-            > /dev/null
+        echo -e "${bold}${yellow}${stamp} -- [WARNING] code 5032 --${normal}" \
+            >> "$logFile"
+        echo -e "$warn503" >> "$logFile"
         exitWarn+=('5032')
     else
         # 503 file found
-        echo -e "${bold}${stamp}Found: ${yellow}${location503}${normal}" \
-            >> "$logFileVerbose"
         
         # verify webroot exists
         if [ -z "$webroot" ]; then
             # no webroot path provided
-            echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
-                "${warningExplain[5033]} --${normal}" >> "$logFile"
-            echo -e "$warn503" | tee -a "$logFileNormal" "$logFileVerbose" \
-                > /dev/null
+            echo -e "${bold}${yellow}${stamp} -- [WARNING] code 5033 --"\
+                "${normal}" >> "$logFile"
+            echo -e "$warn503" >> "$logFile"
             exitWarn+=('5033')
         else
             # verify provided webroot path exists
@@ -222,29 +200,21 @@ else
             checkResult="$?"
             if [ "$checkResult" = "1" ]; then
                 # webroot directory specified could not be found
-                echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
-                    "${warningExplain[5034]} --${normal}" >> "$logFile"
-                echo -e "$warn503" | tee -a "$logFileNormal" "$logFileVerbose" \
-                    > /dev/null
+                echo -e "${bold}${yellow}${stamp} -- [WARNING] code 5034 --" \
+                    "${normal}" >> "$logFile"
+                echo -e "$warn503" "$logFile"
                 exitWarn+=('5034')
             else
                 # webroot exists and 503 exists, copy 503 to webroot
-                echo -e "${bold}${cyan}${stamp} Copying 503 error page to" \
-                    "webroot...${normal}" >> "$logFileVerbose"
                 cp "${location503}" "$webroot/" >> "$logFileVerbose" 2>&1
                 copyResult="$?"
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
-                        echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
-                            "${warningExplain[5035]} --${normal}" >> "$logFile"
-                        echo -e "$warn503" | tee -a "$logFileNormal" \
-                            "$logFileVerbose" > /dev/null
+                        echo -e "${bold}${yellow}${stamp} -- [WARNING] code" \
+                            "5035 --${normal}" >> "$logFile"
+                        echo -e "$warn503" >> "$logFile"
                         exitWarn+=('5035')
-                    else
-                        # copy was successful
-                        echo -e "${bold}${cyan}${stamp} ...done" \
-                        >> "$logFileVerbose"
-                    fi
+                    fi  # copy was successful
             fi
         fi
     fi
