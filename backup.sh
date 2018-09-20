@@ -189,58 +189,47 @@ echo -e "${normal}${stamp} mySQL dump file will be stored at:" \
 # Verify 503 existance
 if [ -z "$503Location" ]; then
     # no 503 file has been provided
-    echo -e "${bold}${yellow}${stamp} -- [WARNING] No 503 error page file" \
-        "specified --${normal}" >> "$logFile"
-    echo -e "${bold}${yellow} Web users will NOT be informed the server" \
-        "is down.${normal}" | tee -a "$logFileNormal" "$logFileVerbose" \
-        > /dev/null
+    echo -e "${bold}${yellow}${stamp} -- [WARNING] ${warningExplain[5031]}" \
+        "--${normal}" >> "$logFile"
     exitWarn+=('5031')
 else
-    checkExist "$503Location"
+    checkExist ff "$503Location"
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # 503 file specified could not be found
-        echo -e "${bold}${yellow}${stamp} -- [WARNING] 503 error page file" \
-            "specified could not be found --${normal}" >> "$logFile"
-        echo -e "${bold}${yellow} Web users will NOT be informed the server" \
-            "is down.${normal}" | tee -a "$logFileNormal" "$logFileVerbose" \
-            > /dev/null
+        echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
+            "${warningExplain[5032]} --${normal}" >> "$logFile"
         exitWarn+=('5032')
     else
-        # 503 file found, copy it to the webroot after verifying it exists
+        # 503 file found
+        echo -e "${bold}${stamp}Found: ${yellow}${503Location}${normal}" \
+            >> "$logFileVerbose"
+        
+        # verify webroot exists
         if [ -z "$webroot" ]; then
             # no webroot path provided
-            echo -e "${bold}${yellow}${stamp} -- [WARNING] No webroot path" \
-                "specified --${normal}" >> "$logFile"
-            echo -e "${bold}${yellow} Web users will NOT be informed the" \
-                "server is down.${normal}" | tee -a "$logFileNormal" \
-                "$logFileVerbose" > /dev/null
+            echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
+                "${warningExplain[5033]} --${normal}" >> "$logFile"
             exitWarn+=('5033')
         else
-            checkExist "$webroot"
+            # verify provided webroot path exists
+            checkExist fd "$webroot"
             checkResult="$?"
             if [ "$checkResult" = "1" ]; then
                 # webroot directory specified could not be found
-                echo -e "${bold}${yellow}${stamp} -- [WARNING] webroot path" \
-                    "specified could not be found --${normal}" >> "$logFile"
-                echo -e "${bold}${yellow} Web users will NOT be informed the" \
-                    "server is down.${normal}" | tee -a "$logFileNormal" \
-                    "$logFileVerbose" > /dev/null
+                echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
+                    "${warningExplain[5034]} --${normal}" >> "$logFile"
                 exitWarn+=('5034')
             else
                 # webroot exists and 503 exists, copy 503 to webroot
                 echo -e "${bold}${cyan}${stamp} Copying 503 error page to" \
-                    "webroot..." >> "$logFileVerbose"
-                cp "$503Location" "$webroot/" 2>&1 >> "$logFileVerbose"
-                copyResult=$( echo "$?" )
+                    "webroot...${normal}" >> "$logFileVerbose"
+                cp "${503Location}" "$webroot/" >> "$logFileVerbose" 2>&1
+                copyResult="$?"
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
                         echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
-                            "Error copying 503 error page file to webroot" \
-                            "--${normal}" >> "$logFile"
-                        echo -e "${bold}${yellow} Web users will NOT be" \
-                            "informed the server is down.${normal}" | tee -a \
-                            "$logFileNormal" "$logFileVerbose" > /dev/null
+                            "${warningExplain[5035]} --${normal}" >> "$logFile"
                         exitWarn+=('5035')
                     else
                         # copy was successful
