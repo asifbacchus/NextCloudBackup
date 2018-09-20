@@ -25,6 +25,15 @@ function scriptHelp {
 ### quit -- exit the script after logging any errors, warnings, etc. and 
 ### cleaning up as necessary
 function quit {
+    # list generated warnings, if any
+    if [ ${#exitWarn[@]} -gt 0 ]; then
+        echo -e "${bold}${yellow}${stamp} Script generated the following" \
+            "warnings:${normal}" >> "$logFile"
+        for warn in "${!exitWarn[@]}"; do
+            echo -e "${yellow}${warn}: ${warningExplain[$warn]}${normal}" \
+                >> "$logFile"
+        done
+    fi
     if [ -z "$1" ]; then
         # exit cleanly
         echo -e "${bold}${green}${stamp} -- [SUCCESS] Script completed" \
