@@ -54,26 +54,18 @@ function checkExist {
         # find file
         if [ -e "$2" ]; then
             # found
-            echo -e "${normal}${stamp} File found:" \
-                "${ltYellow}${2}${normal}" >> "$logFileVerbose"
             return 0
         else
             # not found
-            echo -e "${red}${stamp} File NOT found:"\
-                "${ltYellow}${2}${normal}" >> "$logFileVerbose"
             return 1
         fi
     elif [ "$1" = "fd" ]; then
         # find directory
         if [ -d "$2" ]; then
             # found
-            echo -e "${normal}${stamp} Dir found:" \
-                "${ltYellow}${2}${normal}" >> "$logFileVerbose"
             return 0
         else
             # not found
-            echo -e "${red}${stamp} Dir NOT found:" \
-                "{ltYellow}${2}${normal}" >> "$logFileVerbose"
             return 1
         fi
     fi
