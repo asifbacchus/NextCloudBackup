@@ -31,7 +31,7 @@ function quit {
         echo -e "${yellow}${stamp} Script generated the following" \
             "warnings:${normal}" >> "$logFile"
         for warn in "${exitWarn[@]}"; do
-            echo -e "${ltYellow}${warn}: ${warningExplain[$warn]}${normal}" \
+            echo -e "\t${ltYellow}${warn}: ${warningExplain[$warn]}${normal}" \
                 >> "$logFile"
         done
     fi
@@ -44,7 +44,7 @@ function quit {
         # log error code and exit with said code
         echo -e "${bold}${red}${stamp} -- [ERROR] Script exited with code $1" \
             " --$normal" >> "$logFile"
-        echo -e "${red}${errorExplain[$1]}$normal" >> "$logFile"
+        echo -e "\t${red}${errorExplain[$1]}$normal" >> "$logFile"
         exit "$1"
     fi
 }
@@ -96,7 +96,7 @@ warningExplain=()
 
 ### Error codes
 errorExplain[2]="This script MUST be run as ROOT."
-
+errorExplain[100]="Could not put NextCloud into Maintenance mode."
 
 ### Warning codes & messages
 warningExplain[5031]="No path to a 503 error page file was specified (-5 parameter missing)"
@@ -235,7 +235,7 @@ if [ "$maintResult" = "0" ]; then
     echo -e "${bold}${cyan}${stamp}...done${normal}" >> "$logFile"
 else
     cleanup 503
-    quit 200
+    quit 100
 fi
 
 ### Exit script
