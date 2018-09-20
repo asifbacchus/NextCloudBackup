@@ -23,8 +23,7 @@ function scriptHelp {
     exit 1
 }
 
-### quit -- exit the script after logging any errors, warnings, etc. and 
-### cleaning up as necessary
+### quit -- exit the script after logging any errors, warnings, etc.
 function quit {
     # list generated warnings, if any
     if [ ${#exitWarn[@]} -gt 0 ]; then
@@ -68,6 +67,25 @@ function checkExist {
             # not found
             return 1
         fi
+    fi
+}
+
+### ncMaint - perform NextCloud maintenance mode entry and exit
+function ncMaint {
+    if [ "$1" = "on" ]; then
+        echo -e "${bold}${cyan}${stamp}Putting NextCloud in maintenance" \
+            "mode..." >> "$logFile"
+        su -c "php ${ncRoot}/occ maintenance:mode --on" - ${webUser} \
+            >> "$logFile" 2>&1
+        maintResult="$?"
+        return "$maintResult"
+    elif [ "$1" = "off" ]; then
+        echo -e "${bold}${cyan}${stamp}Exiting NextCloud maintenance mode..." \
+            >> "$logFile"
+        su -c "php ${ncRoot}/occ maintenance:mode --off" - ${webUser} \
+            >> "$logFile" 2>&1
+        maintResult="$?"
+        return "$maintResult"
     fi
 }
 
