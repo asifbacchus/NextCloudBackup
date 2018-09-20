@@ -92,11 +92,20 @@ unset 503Location
 unset webroot
 errorExplain=()
 exitWarn=()
+warningExplain=()
 
 
 ### Error codes
 errorExplain[2]="This script MUST be run as ROOT."
 
+
+### Warning codes & messages
+warningExplain[5031]="No path to a 503 error page file was specified (-5 parameter missing)"
+warningExplain[5032]="The specified 503 error page could not be found"
+warningExplain[5033]="No webroot path was specified (-w parameter missing)"
+warningExplain[5034]="The specified webroot could not be found"
+warningExplain[5035]="Error copying 503 error page to webroot"
+warn503="${bold}${yellow}Web users will NOT be informed the server is down!${normal}"
 
 ### Process script parameters
 
