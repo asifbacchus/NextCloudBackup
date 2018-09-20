@@ -132,7 +132,7 @@ unset PARAMS
 unset borgCreateParams
 unset borgPruneParams
 unset sqlDumpDir
-unset location503
+unset err503File
 unset webroot
 errorExplain=()
 exitWarn=()
@@ -179,8 +179,8 @@ while getopts ':l:nv5:w:' PARAMS; do
             borgPruneParams='--list'
             ;;
         5)
-            # 503 error page location
-            location503="${OPTARG}"
+            # 503 error page name
+            err503File="${OPTARG}"
             ;;
         w)
             # path to webroot for NextCloud installation
@@ -218,14 +218,14 @@ echo -e "${ltYellow}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
 ### 503 error page
 
 # Verify 503 existance
-if [ -z "$location503" ]; then
+if [ -z "$err503File" ]; then
     # no 503 file has been provided
     echo -e "${yellow}${stamp} -- [WARNING] code 5031 --${normal}" \
         >> "$logFile"
     echo -e "$warn503" >> "$logFile"
     exitWarn+=('5031')
 else
-    checkExist ff "$location503"
+    checkExist ff "$err503File"
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # 503 file specified could not be found
@@ -255,7 +255,7 @@ else
                 exitWarn+=('5034')
             else
                 # webroot exists and 503 exists, copy 503 to webroot
-                cp "${location503}" "$webroot/" >> "$logFile" 2>&1
+                cp "${err503File}" "$webroot/" >> "$logFile" 2>&1
                 copyResult="$?"
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
