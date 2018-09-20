@@ -89,6 +89,7 @@ unset borgCreateParams
 unset borgPruneParams
 unset sqlDumpDir
 unset 503Location
+unset webroot
 errorExplain=()
 exitWarn=()
 
@@ -106,7 +107,7 @@ if [ -z $1 ]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:nv5' PARAMS; do
+while getopts ':l:nv5:w:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -123,6 +124,10 @@ while getopts ':l:nv5' PARAMS; do
         5)
             # 503 error page location
             503Location="${OPTARG}"
+            ;;
+        w)
+            # path to webroot for NextCloud installation
+            webroot="${OPTARG}"
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
