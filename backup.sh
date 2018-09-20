@@ -89,6 +89,7 @@ unset borgCreateParams
 unset borgPruneParams
 unset sqlDumpDir
 errorExplain=()
+exitWarn=()
 
 
 ### Error codes
