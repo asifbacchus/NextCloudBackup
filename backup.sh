@@ -228,6 +228,16 @@ else
 fi
 
 
+### Put NextCloud in maintenance mode
+ncMaint on
+# check if successful
+if [ "$maintResult" = "0" ]; then
+    echo -e "${bold}${cyan}${stamp}...done${normal}" >> "$logFile"
+else
+    cleanup 503
+    quit 200
+fi
+
 ### Exit script
 quit
 
