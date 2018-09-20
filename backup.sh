@@ -88,7 +88,7 @@ unset logFileVerbose
 unset borgCreateParams
 unset borgPruneParams
 unset sqlDumpDir
-unset 503Location
+unset location503
 unset webroot
 errorExplain=()
 exitWarn=()
@@ -132,7 +132,7 @@ while getopts ':l:nv5:w:' PARAMS; do
             ;;
         5)
             # 503 error page location
-            503Location="${OPTARG}"
+            location503="${OPTARG}"
             ;;
         w)
             # path to webroot for NextCloud installation
@@ -187,13 +187,13 @@ echo -e "${normal}${stamp} mySQL dump file will be stored at:" \
 ### 503 error page
 
 # Verify 503 existance
-if [ -z "$503Location" ]; then
+if [ -z "$location503" ]; then
     # no 503 file has been provided
     echo -e "${bold}${yellow}${stamp} -- [WARNING] ${warningExplain[5031]}" \
         "--${normal}" >> "$logFile"
     exitWarn+=('5031')
 else
-    checkExist ff "$503Location"
+    checkExist ff "$location503"
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # 503 file specified could not be found
@@ -202,7 +202,7 @@ else
         exitWarn+=('5032')
     else
         # 503 file found
-        echo -e "${bold}${stamp}Found: ${yellow}${503Location}${normal}" \
+        echo -e "${bold}${stamp}Found: ${yellow}${location503}${normal}" \
             >> "$logFileVerbose"
         
         # verify webroot exists
@@ -224,7 +224,7 @@ else
                 # webroot exists and 503 exists, copy 503 to webroot
                 echo -e "${bold}${cyan}${stamp} Copying 503 error page to" \
                     "webroot...${normal}" >> "$logFileVerbose"
-                cp "${503Location}" "$webroot/" >> "$logFileVerbose" 2>&1
+                cp "${location503}" "$webroot/" >> "$logFileVerbose" 2>&1
                 copyResult="$?"
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
