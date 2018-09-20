@@ -89,6 +89,33 @@ function ncMaint {
     fi
 }
 
+### cleanup - cleanup files and directories created by this script
+function cleanup {
+    # remove SQL dump file and directory
+    rm -rf "$sqlDumpDir" >> "$logfile" 2>&1
+    # verify directory is gone
+    checkExist fd "$sqlDumpDir"
+    checkResult="$?"
+    if [ "$checkResult" = "0" ]; then
+        # directory still exists
+        echo -e "${yellow}${stamp} -- [WARNING] code 111 --${normal}" \
+            >> "$logFile"
+        exitWarn+=('111')
+    fi
+
+    # remove 503 error page
+    rm -f "$webroot/$err503File" >> "$logFile" 2>&1
+    # verify file is actually gone
+    checkExist ff "$webroot/$err503File"
+    checkResult="$?"
+    if [ "$checkResult" = "0" ]; then
+        # file still exists
+        echo -e "${yellow}${stamp} -- [WARNING] code 5030 --${normal}" \
+            >> $"$logFile"
+        exitWarn+=('5030')
+    fi
+}
+
 ### End of Functions ###
 
 
@@ -117,6 +144,8 @@ errorExplain[2]="This script MUST be run as ROOT."
 errorExplain[100]="Could not put NextCloud into Maintenance mode."
 
 ### Warning codes & messages
+warningExplain[111]="Could not remove temporary directory: ${sqlDumpDir}.  Please remove manually."
+warningExplain[5030]="Could not remove 503 error page. This MUST be removed manually before NGINX will serve webclients!"
 warningExplain[5031]="No path to a 503 error page file was specified (-5 parameter missing)"
 warningExplain[5032]="The specified 503 error page could not be found"
 warningExplain[5033]="No webroot path was specified (-w parameter missing)"
