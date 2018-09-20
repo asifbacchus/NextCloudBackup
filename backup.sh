@@ -88,6 +88,7 @@ unset logFileVerbose
 unset borgCreateParams
 unset borgPruneParams
 unset sqlDumpDir
+unset 503Location
 errorExplain=()
 exitWarn=()
 
@@ -105,7 +106,7 @@ if [ -z $1 ]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:nv' PARAMS; do
+while getopts ':l:nv5' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -118,6 +119,10 @@ while getopts ':l:nv' PARAMS; do
         v)
             # verbose logging (script errors, Borg details)
             logLevel="verbose"
+            ;;
+        5)
+            # 503 error page location
+            503Location="${OPTARG}"
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
@@ -164,6 +169,30 @@ echo -e "${normal}${stamp} mySQL dump file will be stored at:" \
     "${bold}${yellow}${sqlDumpDir}/${sqlDumpFile}${normal}" \
     | tee -a "$logFileNormal" "$logFileVerbose"
 
+
+### 503 error page
+
+# Verify 503 existance
+if [ -z "$503Location" ]; then
+    # no 503 file has been provided
+    echo -e "${bold}${yellow}${stamp} -- [WARNING] No 503 error page file" \
+        "specified --${normal}" >> "$logFile"
+    echo -e "${bold}${yellow} Web users will NOT be informed the server" \
+        "is down." | tee -a "$logFileNormal" "$logFileVerbose"
+    exitWarn+=('5031')
+else
+    checkExist "$503Location"
+    checkResult="$?"
+    if [ "$checkResult" = "1" ]; then
+        # 503 file specified could not be found
+        echo -e "${bold}${yellow}${stamp} -- [WARNING] 503 error page file" \
+            "specified could not be found --${normal}" >> "$logFile"
+        echo -e "${bold}${yellow} Web users will NOT be informed the server" \
+            "is down." | tee -a "$logFileNormal" "$logFileVerbose"
+        exitWarn+=('5032')
+    else
+        # 503 file found, copy it to the webroot
+        
 
 # This code should not be executed since the 'quit' function should terminate
 # this script.  Therefore, exit with code 99 if we get to this point.
