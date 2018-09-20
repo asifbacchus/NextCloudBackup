@@ -167,7 +167,7 @@ echo -e "${cyan}${stamp} Created temp dir for SQLdump: $sqlDumpDir" \
 sqlDumpFile="backup-`date +%Y%m%d_%H%M%S`.sql"
 echo -e "${normal}${stamp} mySQL dump file will be stored at:" \
     "${bold}${yellow}${sqlDumpDir}/${sqlDumpFile}${normal}" \
-    | tee -a "$logFileNormal" "$logFileVerbose"
+    | tee -a "$logFileNormal" "$logFileVerbose" > /dev/null
 
 
 ### 503 error page
@@ -178,7 +178,8 @@ if [ -z "$503Location" ]; then
     echo -e "${bold}${yellow}${stamp} -- [WARNING] No 503 error page file" \
         "specified --${normal}" >> "$logFile"
     echo -e "${bold}${yellow} Web users will NOT be informed the server" \
-        "is down." | tee -a "$logFileNormal" "$logFileVerbose"
+        "is down.${normal}" | tee -a "$logFileNormal" "$logFileVerbose" \
+        > /dev/null
     exitWarn+=('5031')
 else
     checkExist "$503Location"
@@ -188,11 +189,56 @@ else
         echo -e "${bold}${yellow}${stamp} -- [WARNING] 503 error page file" \
             "specified could not be found --${normal}" >> "$logFile"
         echo -e "${bold}${yellow} Web users will NOT be informed the server" \
-            "is down." | tee -a "$logFileNormal" "$logFileVerbose"
+            "is down.${normal}" | tee -a "$logFileNormal" "$logFileVerbose" \
+            > /dev/null
         exitWarn+=('5032')
     else
-        # 503 file found, copy it to the webroot
-        
+        # 503 file found, copy it to the webroot after verifying it exists
+        if [ -z "$webroot" ]; then
+            # no webroot path provided
+            echo -e "${bold}${yellow}${stamp} -- [WARNING] No webroot path" \
+                "specified --${normal}" >> "$logFile"
+            echo -e "${bold}${yellow} Web users will NOT be informed the" \
+                "server is down.${normal}" | tee -a "$logFileNormal" \
+                "$logFileVerbose" > /dev/null
+            exitWarn+=('5033')
+        else
+            checkExist "$webroot"
+            checkResult="$?"
+            if [ "$checkResult" = "1" ]; then
+                # webroot directory specified could not be found
+                echo -e "${bold}${yellow}${stamp} -- [WARNING] webroot path" \
+                    "specified could not be found --${normal}" >> "$logFile"
+                echo -e "${bold}${yellow} Web users will NOT be informed the" \
+                    "server is down.${normal}" | tee -a "$logFileNormal" \
+                    "$logFileVerbose" > /dev/null
+                exitWarn+=('5034')
+            else
+                # webroot exists and 503 exists, copy 503 to webroot
+                echo -e "${bold}${cyan}${stamp} Copying 503 error page to" \
+                    "webroot..." >> "$logFileVerbose"
+                cp "$503Location" "$webroot/" 2>&1 >> "$logFileVerbose"
+                copyResult=$( echo "$?" )
+                # verify copy was successful
+                    if [ "$copyResult" = "1" ]; then
+                        echo -e "${bold}${yellow}${stamp} -- [WARNING]" \
+                            "Error copying 503 error page file to webroot" \
+                            "--${normal}" >> "$logFile"
+                        echo -e "${bold}${yellow} Web users will NOT be" \
+                            "informed the server is down.${normal}" | tee -a \
+                            "$logFileNormal" "$logFileVerbose" > /dev/null
+                        exitWarn+=('5035')
+                    else
+                        # copy was successful
+                        echo -e "${bold}${cyan}${stamp} ...done" \
+                        >> "$logFileVerbose"
+                    fi
+            fi
+        fi
+    fi
+fi
+
+
 
 # This code should not be executed since the 'quit' function should terminate
 # this script.  Therefore, exit with code 99 if we get to this point.
