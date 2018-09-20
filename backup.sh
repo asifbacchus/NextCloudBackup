@@ -204,19 +204,24 @@ else
                 # webroot directory specified could not be found
                 echo -e "${yellow}${stamp} -- [WARNING] code 5034 --" \
                     "${normal}" >> "$logFile"
-                echo -e "$warn503" "$logFile"
+                echo -e "$warn503" >> "$logFile"
                 exitWarn+=('5034')
             else
                 # webroot exists and 503 exists, copy 503 to webroot
-                cp "${location503}" "$webroot/" >> "$logFileVerbose" 2>&1
+                cp "${location503}" "$webroot/" >> "$logFile" 2>&1
                 copyResult="$?"
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
+                        # copy was unsuccessful
                         echo -e "${yellow}${stamp} -- [WARNING] code" \
                             "5035 --${normal}" >> "$logFile"
                         echo -e "$warn503" >> "$logFile"
                         exitWarn+=('5035')
-                    fi  # copy was successful
+                    else
+                        # copy was successful
+                        echo -e "${bold}${cyan}${stamp} 503 error page" \
+                            "copied to webroot${normal}" >> "$logFile"
+                    fi
             fi
         fi
     fi
