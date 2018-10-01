@@ -9,7 +9,7 @@ red="\e[31m"
 green="\e[32m"
 yellow="\e[93m"
 magenta="\e[35m"
-cyan="\e[36m"
+cyan="\e[96m"
 stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 
 
