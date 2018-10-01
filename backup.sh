@@ -193,7 +193,7 @@ while getopts ':l:n:v5:w:' PARAMS; do
             ;;
         w)
             # path to webserver webroot to copy 503 error page
-            webroot="${OPTARG}"
+            webroot="${OPTARG%/}"
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
