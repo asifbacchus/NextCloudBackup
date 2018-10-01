@@ -116,9 +116,9 @@ function cleanup {
             # file still exists
             exitWarn+=('5030')
         else
-            # file removed
-            echo -e "${op}${stamp} Removed 503 error page" \
-                "from webroot${normal}" >> "$logFile"
+            # file removed or was never present
+            echo -e "${op}${stamp} 503 page no longer present (successfully" \
+                "deleted or it never existed)" >> "$logFile"
         fi
     fi
 }
@@ -157,7 +157,7 @@ warningExplain[111]="Could not remove SQL dump file and directory.  Please remov
 warningExplain[5030]="Could not remove 503 error page. This MUST be removed manually before NGINX will serve webclients!"
 warningExplain[5031]="Name of a 503 error page file was not specified (-5 parameter missing)"
 warningExplain[5032]="The specified 503 error page could not be found"
-warningExplain[5033]="No webroot path was specified (-r parameter missing)"
+warningExplain[5033]="No webroot path was specified (-w parameter missing)"
 warningExplain[5034]="The specified webroot could not be found"
 warningExplain[5035]="Error copying 503 error page to webroot"
 warn503="Web users will NOT be informed the server is down!"
@@ -265,6 +265,8 @@ else
                 exitWarn+=('5034')
             else
                 # webroot exists and 503 exists, copy 503 to webroot
+                echo -e "${op}${stamp} Copying 503 error page to webroot" \
+                    "${normal}" >> "$logFile"
                 cp "${err503File}" "$webroot/" >> "$logFile" 2>&1
                 copyResult="$?"
                 # verify copy was successful
