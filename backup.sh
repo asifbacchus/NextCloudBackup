@@ -163,7 +163,7 @@ warn503="   ${ltYellow}Web users will NOT be informed the server is down!${norma
 ### Process script parameters
 
 # if no parameters provided, then show the help page and exit with error
-if [ -z $1 ]; then
+if [ -z "$1" ] || [[ ! "$1" =~ ^- ]]; then
     # show script help page
     scriptHelp
 fi
