@@ -89,7 +89,7 @@ function ncMaint {
 
 ### cleanup - cleanup files and directories created by this script
 function cleanup {
-    # remove SQL dump file and directory
+    ## remove SQL dump file and directory
     rm -rf "$sqlDumpDir" >> "$logFile" 2>&1
     # verify directory is gone
     checkExist fd "$sqlDumpDir"
@@ -103,18 +103,22 @@ function cleanup {
             >> "$logFile"
     fi
 
-    # remove 503 error page
-    rm -f "$webroot/$err503File" >> "$logFile" 2>&1
-    # verify file is actually gone
-    checkExist ff "$webroot/$err503File"
-    checkResult="$?"
-    if [ "$checkResult" = "0" ]; then
-        # file still exists
-        exitWarn+=('5030')
-    else
-        # file removed
-        echo -e "${bold}${cyan}${stamp} Removed 503 error page from webroot" \
-            "${normal}" >> "$logFile"
+    ## remove 503 error page
+    # check if 503 page was specified to begin with
+    if [ -n "$err503File" ]; then
+        # proceed with cleanup
+        rm -f "$webroot/$err503File" >> "$logFile" 2>&1
+        # verify file is actually gone
+        checkExist ff "$webroot/$err503File"
+        checkResult="$?"
+        if [ "$checkResult" = "0" ]; then
+            # file still exists
+            exitWarn+=('5030')
+        else
+            # file removed
+            echo -e "${bold}${cyan}${stamp} Removed 503 error page" \
+                "from webroot${normal}" >> "$logFile"
+        fi
     fi
 }
 
