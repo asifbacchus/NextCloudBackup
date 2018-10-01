@@ -5,11 +5,12 @@
 normal="\e[0m"
 bold="\e[1m"
 default="\e[39m"
-red="\e[31m"
-green="\e[32m"
-yellow="\e[93m"
-magenta="\e[35m"
-cyan="\e[96m"
+err="\e[1;31m"
+warn="\e[1;93m"
+ok="\e[32m"
+lit="\e[93m"
+op="\e[35m"
+info="\e[96m"
 stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 
 
@@ -26,21 +27,21 @@ function scriptHelp {
 function quit {
     # list generated warnings, if any
     if [ ${#exitWarn[@]} -gt 0 ]; then
-        echo -e "${bold}${yellow}Script generated the following" \
-            "warnings:${normal}" >> "$logFile"
-        for warn in "${exitWarn[@]}"; do
-            echo -e "${yellow}-- [WARNING] ${warningExplain[$warn]}" \
-                "(code: ${warn}) --${normal}" >> "$logFile"
+        echo -e "${warn}${scriptName} generated the following warnings:" \
+            "${normal}" >> "$logFile"
+        for warnCode in "${exitWarn[@]}"; do
+            echo -e "${warn}-- [WARNING] ${warningExplain[$warnCode]}" \
+                "(code: ${warnCode}) --${normal}" >> "$logFile"
         done
     fi
     if [ -z "$1" ]; then
         # exit cleanly
-        echo -e "${bold}${magenta}${stamp} -- Script completed" \
-            "--$normal" >> "$logFile"
+        echo -e "${bold}${op}${stamp} -- ${scriptName} completed" \
+            "--${normal}" >> "$logFile"
         exit 0
     else
         # log error code and exit with said code
-        echo -e "${bold}${red}${stamp} -- [ERROR] ${errorExplain[$1]}" \
+        echo -e "${err}${stamp} -- [ERROR] ${errorExplain[$1]}" \
             "(code: $1) --$normal" >> "$logFile"
         exit "$1"
     fi
@@ -71,15 +72,15 @@ function checkExist {
 ### ncMaint - perform NextCloud maintenance mode entry and exit
 function ncMaint {
     if [ "$1" = "on" ]; then
-        echo -e "${bold}${cyan}${stamp}Putting NextCloud in maintenance" \
-            "mode..." >> "$logFile"
+        echo -e "${info}${stamp} -- [INFO] Putting NextCloud in maintenance" \
+            "mode --${normal}" >> "$logFile"
         su -c "php ${ncRoot}/occ maintenance:mode --on" - ${webUser} \
             >> "$logFile" 2>&1
         maintResult="$?"
         return "$maintResult"
     elif [ "$1" = "off" ]; then
-        echo -e "${bold}${cyan}${stamp}Exiting NextCloud maintenance mode..." \
-            >> "$logFile"
+        echo -e "${info}${stamp} -- [INFO] Exiting NextCloud maintenance" \
+            "mode --${normal}" >> "$logFile"
         su -c "php ${ncRoot}/occ maintenance:mode --off" - ${webUser} \
             >> "$logFile" 2>&1
         maintResult="$?"
@@ -99,7 +100,7 @@ function cleanup {
         exitWarn+=('111')
     else
         # directory removed
-        echo -e "${bold}${cyan}${stamp} Removed SQL temp directory${normal}" \
+        echo -e "${op}${stamp} Removed SQL temp directory${normal}" \
             >> "$logFile"
     fi
 
@@ -116,7 +117,7 @@ function cleanup {
             exitWarn+=('5030')
         else
             # file removed
-            echo -e "${bold}${cyan}${stamp} Removed 503 error page" \
+            echo -e "${op}${stamp} Removed 503 error page" \
                 "from webroot${normal}" >> "$logFile"
         fi
     fi
@@ -158,7 +159,7 @@ warningExplain[5032]="The specified 503 error page could not be found"
 warningExplain[5033]="No webroot path was specified (-r parameter missing)"
 warningExplain[5034]="The specified webroot could not be found"
 warningExplain[5035]="Error copying 503 error page to webroot"
-warn503="${cyan}${stamp}-- [INFO] Web users will NOT be informed the server is down! --${normal}"
+warn503="Web users will NOT be informed the server is down!"
 
 ### Process script parameters
 
@@ -205,17 +206,17 @@ done
 ### Verify script pre-requisties
 # If not running as root, display error on console and exit
 if [ $(id -u) -ne 0 ]; then
-    echo -e "${red}This script MUST be run as ROOT. Exiting.${normal}"
+    echo -e "${err}This script MUST be run as ROOT. Exiting.${normal}"
     exit 2
 elif [ -z "$webroot" ]; then
-    echo -e "\n${red}The NextCloud webroot must be specified (-r parameter)" \
+    echo -e "\n${err}The NextCloud webroot must be specified (-r parameter)" \
         "${normal}\n"
     exit 1
 fi
 
 
 ### Log start of script operations
-echo -e "${bold}${magenta}${stamp}-- Start $scriptName execution ---" >> "$logFile"
+echo -e "${bold}${op}${stamp}-- Start $scriptName execution ---" >> "$logFile"
 
 
 ### Export logFile variable for use by Borg
@@ -225,8 +226,8 @@ export logFile="$logFile"
 ### Create sqlDump temporary directory and sqlDumpFile name
 sqlDumpDir=$( mktemp -d )
 sqlDumpFile="backup-`date +%Y%m%d_%H%M%S`.sql"
-echo -e "${normal}${stamp} mySQL dump file will be stored at:" >> "$logFile"
-echo -e "${ltYellow}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
+echo -e "${info}${stamp} -- [INFO] mySQL dump file will be stored" \
+    "at: ${lit}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
 
 
 ### 503 error page
@@ -248,7 +249,8 @@ else
         # verify webroot exists
         if [ -z "$webroot" ]; then
             # no webroot path provided
-            echo -e "$warn503" >> "$logFile"
+            echo -e "${warn}${stamp} -- [WARNING] $warn503 --${normal}" \
+                >> "$logFile"
             exitWarn+=('5033')
         else
             # verify provided webroot path exists
@@ -256,7 +258,8 @@ else
             checkResult="$?"
             if [ "$checkResult" = "1" ]; then
                 # webroot directory specified could not be found
-                echo -e "$warn503" >> "$logFile"
+                echo -e "${warn}${stamp} -- [WARNING] $warn503 --${normal}" \
+                >> "$logFile"
                 exitWarn+=('5034')
             else
                 # webroot exists and 503 exists, copy 503 to webroot
@@ -265,11 +268,12 @@ else
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
                         # copy was unsuccessful
-                        echo -e "$warn503" >> "$logFile"
+                        echo -e "${warn}${stamp} -- [WARNING] $warn503" \
+                            "--${normal}" >> "$logFile"
                         exitWarn+=('5035')
                     else
                         # copy was successful
-                        echo -e "${bold}${cyan}${stamp} 503 error page" \
+                        echo -e "${op}${stamp} 503 error page" \
                             "copied to webroot${normal}" >> "$logFile"
                     fi
             fi
