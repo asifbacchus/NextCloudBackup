@@ -132,8 +132,6 @@ function cleanup {
 scriptPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 scriptName="$( basename ${0} )"
 logFile="$scriptPath/${scriptName%.*}.log"
-# set err503File default to '503.html' in same directory as script
-err503File="$scriptPath/503.html"
 # set borg parameters to 'normal' verbosity
 borgCreateParams='--stats'
 borgPruneParams='--list'
@@ -142,6 +140,7 @@ borgPruneParams='--list'
 ### Set script parameters to null and initialize array variables
 unset PARAMS
 unset sqlDumpDir
+unset err503File
 unset webroot
 errorExplain=()
 exitWarn=()
