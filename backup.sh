@@ -7,8 +7,7 @@ bold="\e[1m"
 default="\e[39m"
 red="\e[31m"
 green="\e[32m"
-yellow="\e[1;33m"
-ltYellow="\e[93m"
+yellow="\e[93m"
 magenta="\e[35m"
 cyan="\e[36m"
 stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
@@ -243,7 +242,6 @@ else
         exitWarn+=('5032')
     else
         # 503 file found
-        
         # verify webroot exists
         if [ -z "$webroot" ]; then
             # no webroot path provided
