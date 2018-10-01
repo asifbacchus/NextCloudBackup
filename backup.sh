@@ -9,7 +9,7 @@ err="\e[1;31m"
 warn="\e[1;93m"
 ok="\e[32m"
 lit="\e[93m"
-op="\e[35m"
+op="\e[39m"
 info="\e[96m"
 stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 
@@ -36,7 +36,7 @@ function quit {
     fi
     if [ -z "$1" ]; then
         # exit cleanly
-        echo -e "${bold}${op}${stamp} -- ${scriptName} completed" \
+        echo -e "\e[1;35m${stamp} -- ${scriptName} completed" \
             "--${normal}" >> "$logFile"
         exit 0
     else
@@ -216,7 +216,7 @@ fi
 
 
 ### Log start of script operations
-echo -e "${bold}${op}${stamp}-- Start $scriptName execution ---${normal}" \
+echo -e "\e[1;35m${stamp}-- Start $scriptName execution ---${normal}" \
     >> "$logFile"
 
 
