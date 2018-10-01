@@ -172,7 +172,7 @@ if [ -z "$1" ] || [[ ! "$1" =~ ^- ]]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:n:v5:r:' PARAMS; do
+while getopts ':l:n:v5:w:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -191,7 +191,7 @@ while getopts ':l:n:v5:r:' PARAMS; do
             # 503 error page name
             err503File="${OPTARG}"
             ;;
-        r)
+        w)
             # path to webserver webroot to copy 503 error page
             webroot="${OPTARG}"
             ;;
