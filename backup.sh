@@ -26,23 +26,22 @@ function scriptHelp {
 function quit {
     # list generated warnings, if any
     if [ ${#exitWarn[@]} -gt 0 ]; then
-        echo -e "${yellow}${stamp} Script generated the following" \
+        echo -e "${bold}${yellow}Script generated the following" \
             "warnings:${normal}" >> "$logFile"
         for warn in "${exitWarn[@]}"; do
-            echo -e "   ${ltYellow}${warn}: ${warningExplain[$warn]}${normal}" \
-                >> "$logFile"
+            echo -e "${yellow}-- [WARNING] ${warningExplain[$warn]}" \
+                "(code: ${warn}) --${normal}" >> "$logFile"
         done
     fi
     if [ -z "$1" ]; then
         # exit cleanly
-        echo -e "${bold}${green}${stamp} -- [SUCCESS] Script completed" \
+        echo -e "${bold}${magenta}${stamp} -- Script completed" \
             "--$normal" >> "$logFile"
         exit 0
     else
         # log error code and exit with said code
-        echo -e "${bold}${red}${stamp} -- [ERROR] Script exited with code $1" \
-            " --$normal" >> "$logFile"
-        echo -e "   ${red}${errorExplain[$1]}$normal" >> "$logFile"
+        echo -e "${bold}${red}${stamp} -- [ERROR] ${errorExplain[$1]}" \
+            "(code: $1) --$normal" >> "$logFile"
         exit "$1"
     fi
 }
