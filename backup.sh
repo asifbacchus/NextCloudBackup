@@ -172,7 +172,7 @@ if [ -z "$1" ] || [[ ! "$1" =~ ^- ]]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:nv5:r:' PARAMS; do
+while getopts ':l:n:v5:r:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -192,7 +192,7 @@ while getopts ':l:nv5:r:' PARAMS; do
             err503File="${OPTARG}"
             ;;
         r)
-            # path to webroot for NextCloud installation
+            # path to webserver webroot to copy 503 error page
             webroot="${OPTARG}"
             ;;
         ?)
