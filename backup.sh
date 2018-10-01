@@ -142,7 +142,6 @@ warningExplain=()
 
 
 ### Error codes
-errorExplain[2]="This script MUST be run as ROOT."
 errorExplain[100]="Could not put NextCloud into Maintenance mode."
 
 ### Warning codes & messages
@@ -196,9 +195,10 @@ while getopts ':l:nv5:r:' PARAMS; do
 done
 
 
-### Verify script running as root, otherwise exit
+### Verify script running as root, otherwise display error on console and exit
 if [ $(id -u) -ne 0 ]; then
-    quit 2
+    echo -e "${red}This script MUST be run as ROOT. Exiting.${normal}"
+    exit 2
 fi
 
 
