@@ -158,7 +158,7 @@ warningExplain[5032]="The specified 503 error page could not be found"
 warningExplain[5033]="No webroot path was specified (-r parameter missing)"
 warningExplain[5034]="The specified webroot could not be found"
 warningExplain[5035]="Error copying 503 error page to webroot"
-warn503="   ${ltYellow}Web users will NOT be informed the server is down!${normal}"
+warn503="${cyan}${stamp}-- [INFO] Web users will NOT be informed the server is down! --${normal}"
 
 ### Process script parameters
 
