@@ -162,7 +162,8 @@ warn503="${cyan}${stamp}-- [INFO] Web users will NOT be informed the server is d
 
 ### Process script parameters
 
-# if no parameters provided, then show the help page and exit with error
+# if no parameters provided, of if parameters do not start with a '-' then show
+# the help page and exit with error
 if [ -z "$1" ] || [[ ! "$1" =~ ^- ]]; then
     # show script help page
     scriptHelp
@@ -201,10 +202,15 @@ while getopts ':l:nv5:r:' PARAMS; do
 done
 
 
-### Verify script running as root, otherwise display error on console and exit
+### Verify script pre-requisties
+# If not running as root, display error on console and exit
 if [ $(id -u) -ne 0 ]; then
     echo -e "${red}This script MUST be run as ROOT. Exiting.${normal}"
     exit 2
+elif [ -z "$webroot" ]; then
+    echo -e "\n${red}The NextCloud webroot must be specified (-r parameter)" \
+        "${normal}\n"
+    exit 1
 fi
 
 
