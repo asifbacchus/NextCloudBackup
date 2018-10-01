@@ -235,21 +235,22 @@ echo -e "${info}${stamp} -- [INFO] mySQL dump file will be stored" \
 # Verify 503 existance
 if [ -z "$err503File" ]; then
     # no 503 file has been provided
-    echo -e "$warn503" >> "$logFile"
+    echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" >> "$logFile"
     exitWarn+=('5031')
 else
     checkExist ff "$err503File"
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # 503 file specified could not be found
-        echo -e "$warn503" >> "$logFile"
+        echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
+            >> "$logFile"
         exitWarn+=('5032')
     else
         # 503 file found
         # verify webroot exists
         if [ -z "$webroot" ]; then
             # no webroot path provided
-            echo -e "${warn}${stamp} -- [WARNING] $warn503 --${normal}" \
+            echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
                 >> "$logFile"
             exitWarn+=('5033')
         else
@@ -258,8 +259,8 @@ else
             checkResult="$?"
             if [ "$checkResult" = "1" ]; then
                 # webroot directory specified could not be found
-                echo -e "${warn}${stamp} -- [WARNING] $warn503 --${normal}" \
-                >> "$logFile"
+                echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
+                    >> "$logFile"
                 exitWarn+=('5034')
             else
                 # webroot exists and 503 exists, copy 503 to webroot
@@ -268,7 +269,7 @@ else
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
                         # copy was unsuccessful
-                        echo -e "${warn}${stamp} -- [WARNING] $warn503" \
+                        echo -e "${info}${stamp} -- [INFO] ${warn503}" \
                             "--${normal}" >> "$logFile"
                         exitWarn+=('5035')
                     else
