@@ -96,8 +96,6 @@ function cleanup {
     checkResult="$?"
     if [ "$checkResult" = "0" ]; then
         # directory still exists
-        echo -e "${yellow}${stamp} -- [WARNING] code 111 --${normal}" \
-            >> "$logFile"
         exitWarn+=('111')
     else
         # directory removed
@@ -112,8 +110,6 @@ function cleanup {
     checkResult="$?"
     if [ "$checkResult" = "0" ]; then
         # file still exists
-        echo -e "${yellow}${stamp} -- [WARNING] code 5030 --${normal}" \
-            >> $"$logFile"
         exitWarn+=('5030')
     else
         # file removed
@@ -226,8 +222,6 @@ echo -e "${ltYellow}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
 # Verify 503 existance
 if [ -z "$err503File" ]; then
     # no 503 file has been provided
-    echo -e "${yellow}${stamp} -- [WARNING] code 5031 --${normal}" \
-        >> "$logFile"
     echo -e "$warn503" >> "$logFile"
     exitWarn+=('5031')
 else
@@ -235,8 +229,6 @@ else
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # 503 file specified could not be found
-        echo -e "${yellow}${stamp} -- [WARNING] code 5032 --${normal}" \
-            >> "$logFile"
         echo -e "$warn503" >> "$logFile"
         exitWarn+=('5032')
     else
@@ -244,8 +236,6 @@ else
         # verify webroot exists
         if [ -z "$webroot" ]; then
             # no webroot path provided
-            echo -e "${yellow}${stamp} -- [WARNING] code 5033 --"\
-                "${normal}" >> "$logFile"
             echo -e "$warn503" >> "$logFile"
             exitWarn+=('5033')
         else
@@ -254,8 +244,6 @@ else
             checkResult="$?"
             if [ "$checkResult" = "1" ]; then
                 # webroot directory specified could not be found
-                echo -e "${yellow}${stamp} -- [WARNING] code 5034 --" \
-                    "${normal}" >> "$logFile"
                 echo -e "$warn503" >> "$logFile"
                 exitWarn+=('5034')
             else
@@ -265,8 +253,6 @@ else
                 # verify copy was successful
                     if [ "$copyResult" = "1" ]; then
                         # copy was unsuccessful
-                        echo -e "${yellow}${stamp} -- [WARNING] code" \
-                            "5035 --${normal}" >> "$logFile"
                         echo -e "$warn503" >> "$logFile"
                         exitWarn+=('5035')
                     else
