@@ -143,6 +143,7 @@ unset PARAMS
 unset sqlDumpDir
 unset err503File
 unset webroot
+unset ncRoot
 errorExplain=()
 exitWarn=()
 warningExplain=()
@@ -178,9 +179,8 @@ while getopts ':l:nv5:r:' PARAMS; do
             logFile="${OPTARG}"
             ;;
         n)
-            # normal output from Borg (default)
-            borgCreateParams='--stats'
-            borgPruneParams='--list'
+            # NextCloud webroot
+            ncRoot="${OPTARG}"
             ;;
         v)
             # verbose output from Borg
@@ -208,10 +208,10 @@ done
 if [ $(id -u) -ne 0 ]; then
     echo -e "${err}This script MUST be run as ROOT. Exiting.${normal}"
     exit 2
-elif [ -z "$webroot" ]; then
-    echo -e "\n${err}The NextCloud webroot must be specified (-r parameter)" \
-        "${normal}\n"
-    exit 1
+#elif [ -z "$ncRoot" ]; then
+#    echo -e "\n${err}The NextCloud webroot must be specified (-n parameter)" \
+#        "${normal}\n"
+#    exit 1
 fi
 
 
