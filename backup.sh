@@ -203,7 +203,7 @@ fi
 
 
 ### Log start of script operations
-echo -e "${bold}${stamp}-- Start $scriptName execution ---" >> "$logFile"
+echo -e "${bold}${magenta}${stamp}-- Start $scriptName execution ---" >> "$logFile"
 
 
 ### Export logFile variable for use by Borg
