@@ -161,10 +161,10 @@ warn503="   ${ltYellow}Web users will NOT be informed the server is down!${norma
 ### Process script parameters
 
 # if no parameters provided, then show the help page and exit with error
-#if [ -z $1 ]; then
-#    # show script help page
-#    scriptHelp
-#fi
+if [ -z $1 ]; then
+    # show script help page
+    scriptHelp
+fi
 
 # use GetOpts to process parameters
 while getopts ':l:nv5:r:' PARAMS; do
