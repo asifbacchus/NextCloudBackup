@@ -139,7 +139,8 @@ scriptName="$( basename ${0} )"
 logFile="$scriptPath/${scriptName%.*}.log"
 
 # set default 503 error page name and location in scriptPath
-err503File="$scriptPath/503.html"
+err503Path="$scriptPath/503.html"
+err503File="${err503Path##*/}"
 
 # set borg parameters to 'normal' verbosity
 borgCreateParams='--stats'
@@ -194,8 +195,8 @@ while getopts ':l:n:v5:w:' PARAMS; do
             borgPruneParams='--list'
             ;;
         5)
-            # 503 error page name
-            err503File="${OPTARG}"
+            # Full path to 503 error page
+            err503Path="${OPTARG%/}"
             ;;
         w)
             # path to webserver webroot to copy 503 error page
