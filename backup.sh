@@ -198,6 +198,7 @@ while getopts ':l:n:v5:w:' PARAMS; do
         5)
             # Full path to 503 error page
             err503Path="${OPTARG%/}"
+            err503File="${err503Path##*/}"
             ;;
         w)
             # path to webserver webroot to copy 503 error page
