@@ -231,14 +231,32 @@ echo -e "${info}${stamp} -- [INFO] mySQL dump file will be stored" \
     "at: ${lit}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
 
 
-### 503 error page
+### 503 error page: If you dont' plan on using the auto-copied 503 then comment
+### this entire section starting with '--- Begin 503 section ---' until
+### '--- End 503 section ---' to suppress generated warnings
 
-# Verify 503 existance
-if [ -z "$err503File" ]; then
-    # no 503 file has been provided
-    echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" >> "$logFile"
-    exitWarn+=('5031')
+### --- Begin 503 section ---
+
+## Check if webroot has been specified, if not, skip this entire section since there is nowhere to copy the 503 file.
+if [ -z "$webroot" ]; then
+    # no webroot path provided
+    echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
+        >> "$logFile"
+    exitWarn+=('5033')
 else
+    # verify webroot actually exists
+    checkExist fd "$webroot"
+    checkResult="$?"
+    if [ "$checkResult" = "1" ]; then
+        # webroot directory specified could not be found
+        echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
+            >> "$logFile"
+        exitWarn+=('5034')
+    else
+    # webroot exists
+    echo -e "${op}${stamp} Using webroot: ${lit}${webroot}${normal}" \
+        >> "$logFile"
+    # Verify 503 existance
     checkExist ff "$err503File"
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
@@ -247,13 +265,6 @@ else
             >> "$logFile"
         exitWarn+=('5032')
     else
-        # 503 file found
-        # verify webroot exists
-        if [ -z "$webroot" ]; then
-            # no webroot path provided
-            echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
-                >> "$logFile"
-            exitWarn+=('5033')
         else
             # verify provided webroot path exists
             checkExist fd "$webroot"
