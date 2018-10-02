@@ -263,8 +263,8 @@ else
         # webroot exists
         echo -e "${op}${stamp} Using webroot: ${lit}${webroot}${normal}" \
             >> "$logFile"
-        # Verify 503 file existance
-        checkExist ff "$err503File"
+        # Verify 503 file existance at given path
+        checkExist ff "$err503Path"
         checkResult="$?"
         if [ "$checkResult" = "1" ]; then
             # 503 file could not be found
@@ -276,7 +276,7 @@ else
             echo -e "${op}${stamp} ${err503File} found.${normal}" >> "$logFile"
             echo -e "${op}${stamp} Copying 503 error page to webroot..." \
                 "${normal}" >> "$logFile"
-            cp "${err503File}" "$webroot/" >> "$logFile" 2>&1
+            cp "${err503Path}" "$webroot/" >> "$logFile" 2>&1
             copyResult="$?"
             # verify copy was successful
                 if [ "$copyResult" = "1" ]; then
