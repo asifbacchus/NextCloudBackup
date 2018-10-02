@@ -105,8 +105,9 @@ function cleanup {
     fi
 
     ## remove 503 error page
-    # check if 503 page was specified to begin with
-    if [ -n "$err503File" ]; then
+    # check if webroot was specified, if not, then nothing was copied so we can
+    # skip this whole section
+    if [ -n "$webroot" ]; then
         # proceed with cleanup
         rm -f "$webroot/$err503File" >> "$logFile" 2>&1
         # verify file is actually gone
@@ -116,10 +117,13 @@ function cleanup {
             # file still exists
             exitWarn+=('5030')
         else
-            # file removed or was never present
-            echo -e "${op}${stamp} 503 page no longer present (successfully" \
-                "deleted or it never existed)" >> "$logFile"
+            # file removed
+            echo -e "${info}${stamp} -- [INFO] 503 page removed from webroot" \
+                "--${normal}" >> "$logFile"
         fi
+    else
+        echo -e "${op}${stamp} No webroot specified so no 503 file to remove." \
+            >> "$logFile"
     fi
 }
 
