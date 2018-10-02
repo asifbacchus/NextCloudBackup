@@ -123,7 +123,7 @@ function cleanup {
         fi
     else
         echo -e "${op}${stamp} 503 error page never copied to webroot," \
-            "nothing to cleanup." >> "$logFile"
+            "nothing to cleanup" >> "$logFile"
     fi
 }
 
@@ -159,14 +159,14 @@ warningExplain=()
 
 
 ### Error codes
-errorExplain[100]="Could not put NextCloud into Maintenance mode."
+errorExplain[100]="Could not put NextCloud into Maintenance mode"
 
 ### Warning codes & messages
-warningExplain[111]="Could not remove SQL dump file and directory.  Please remove manually."
+warningExplain[111]="Could not remove SQL dump file and directory, please remove manually"
 warningExplain[5030]="Could not remove 503 error page. This MUST be removed manually before NGINX will serve webclients!"
-warningExplain[5031]="No webroot path was specified (-w parameter missing)."
-warningExplain[5032]="The specified webroot (-w parameter) could not be found."
-warningExplain[5033]="No 503 error page could be found. If not using the default located in the script directory, then check your -5 parameter."
+warningExplain[5031]="No webroot path was specified (-w parameter missing)"
+warningExplain[5032]="The specified webroot (-w parameter) could not be found"
+warningExplain[5033]="No 503 error page could be found. If not using the default located in the script directory, then check your -5 parameter"
 warningExplain[5035]="Error copying 503 error page to webroot"
 warn503="Web users will NOT be informed the server is down!"
 
@@ -277,7 +277,8 @@ else
             clean503=0
         else
             # 503 file exists and webroot is valid. Let's copy it!
-            echo -e "${op}${stamp} ${err503File} found.${normal}" >> "$logFile"
+            echo -e "${op}${stamp} ${err503File} found at ${lit}${err503Path}" \
+                "${normal}" >> "$logFile"
             echo -e "${op}${stamp} Copying 503 error page to webroot..." \
                 "${normal}" >> "$logFile"
             cp "${err503Path}" "$webroot/" >> "$logFile" 2>&1
