@@ -253,48 +253,40 @@ else
             >> "$logFile"
         exitWarn+=('5034')
     else
-    # webroot exists
-    echo -e "${op}${stamp} Using webroot: ${lit}${webroot}${normal}" \
-        >> "$logFile"
-    # Verify 503 existance
-    checkExist ff "$err503File"
-    checkResult="$?"
-    if [ "$checkResult" = "1" ]; then
-        # 503 file specified could not be found
-        echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
+        # webroot exists
+        echo -e "${op}${stamp} Using webroot: ${lit}${webroot}${normal}" \
             >> "$logFile"
-        exitWarn+=('5032')
-    else
+        # Verify 503 file existance
+        checkExist ff "$err503File"
+        checkResult="$?"
+        if [ "$checkResult" = "1" ]; then
+            # 503 file could not be found
+            echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
+                >> "$logFile"
+            exitWarn+=('5032')
         else
-            # verify provided webroot path exists
-            checkExist fd "$webroot"
-            checkResult="$?"
-            if [ "$checkResult" = "1" ]; then
-                # webroot directory specified could not be found
-                echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
-                    >> "$logFile"
-                exitWarn+=('5034')
-            else
-                # webroot exists and 503 exists, copy 503 to webroot
-                echo -e "${op}${stamp} Copying 503 error page to webroot" \
-                    "${normal}" >> "$logFile"
-                cp "${err503File}" "$webroot/" >> "$logFile" 2>&1
-                copyResult="$?"
-                # verify copy was successful
-                    if [ "$copyResult" = "1" ]; then
-                        # copy was unsuccessful
-                        echo -e "${info}${stamp} -- [INFO] ${warn503}" \
-                            "--${normal}" >> "$logFile"
-                        exitWarn+=('5035')
-                    else
-                        # copy was successful
-                        echo -e "${op}${stamp} 503 error page" \
-                            "copied to webroot${normal}" >> "$logFile"
-                    fi
-            fi
+            # 503 file exists and webroot is valid. Let's copy it!
+            echo -e "${op}${stamp} ${err503File} found.${normal}" >> "$logFile"
+            echo -e "${op}${stamp} Copying 503 error page to webroot..." \
+                "${normal}" >> "$logFile"
+            cp "${err503File}" "$webroot/" >> "$logFile" 2>&1
+            copyResult="$?"
+            # verify copy was successful
+                if [ "$copyResult" = "1" ]; then
+                    # copy was unsuccessful
+                    echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
+                        >> "$logFile"
+                    exitWarn+=('5035')
+                else
+                # copy was successful
+                echo -e "${info}${stamp} -- [INFO] 503 error page" \
+                    "successfully copied to webroot --${normal}" >> "$logFile"
+                fi
         fi
     fi
 fi
+
+### --- End 503 section ---
 
 
 ### Put NextCloud in maintenance mode
