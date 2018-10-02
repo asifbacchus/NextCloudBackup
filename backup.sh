@@ -155,10 +155,9 @@ errorExplain[100]="Could not put NextCloud into Maintenance mode."
 ### Warning codes & messages
 warningExplain[111]="Could not remove SQL dump file and directory.  Please remove manually."
 warningExplain[5030]="Could not remove 503 error page. This MUST be removed manually before NGINX will serve webclients!"
-warningExplain[5031]="Name of a 503 error page file was not specified (-5 parameter missing)"
-warningExplain[5032]="The specified 503 error page could not be found"
-warningExplain[5033]="No webroot path was specified (-w parameter missing)"
-warningExplain[5034]="The specified webroot could not be found"
+warningExplain[5031]="No webroot path was specified (-w parameter missing)."
+warningExplain[5032]="The specified webroot (-w parameter) could not be found."
+warningExplain[5033]="No 503 error page could be found. If not using the default located in the script directory, then check your -5 parameter."
 warningExplain[5035]="Error copying 503 error page to webroot"
 warn503="Web users will NOT be informed the server is down!"
 
@@ -242,7 +241,7 @@ if [ -z "$webroot" ]; then
     # no webroot path provided
     echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
         >> "$logFile"
-    exitWarn+=('5033')
+    exitWarn+=('5031')
 else
     # verify webroot actually exists
     checkExist fd "$webroot"
@@ -251,7 +250,7 @@ else
         # webroot directory specified could not be found
         echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
             >> "$logFile"
-        exitWarn+=('5034')
+        exitWarn+=('5032')
     else
         # webroot exists
         echo -e "${op}${stamp} Using webroot: ${lit}${webroot}${normal}" \
@@ -263,7 +262,7 @@ else
             # 503 file could not be found
             echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
                 >> "$logFile"
-            exitWarn+=('5032')
+            exitWarn+=('5033')
         else
             # 503 file exists and webroot is valid. Let's copy it!
             echo -e "${op}${stamp} ${err503File} found.${normal}" >> "$logFile"
