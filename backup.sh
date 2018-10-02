@@ -166,9 +166,9 @@ warn503="Web users will NOT be informed the server is down!"
 
 ### Process script parameters
 
-# if no parameters provided, of if parameters do not start with a '-' then show
-# the help page and exit with error
-if [ -z "$1" ] || [[ ! "$1" =~ ^- ]]; then
+# If parameters are provided but don't start with '-' then show the help page
+# and exit with an error
+if [ -n "$1" ] && [[ ! "$1" =~ ^- ]]; then
     # show script help page
     scriptHelp
 fi
