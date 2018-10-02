@@ -105,10 +105,10 @@ function cleanup {
     fi
 
     ## remove 503 error page
-    # check if webroot was specified, if not, then nothing was copied so we can
-    # skip this whole section
-    if [ -n "$webroot" ]; then
+    # check value of 'clean503' to see if this is necessary (=1) otherwise, skip
+    if [ "$clean503" -eq 1 ]; then
         # proceed with cleanup
+        echo -e "${op}${stamp} Removing 503 error page..." >> "$logFile"
         rm -f "$webroot/$err503File" >> "$logFile" 2>&1
         # verify file is actually gone
         checkExist ff "$webroot/$err503File"
@@ -122,8 +122,8 @@ function cleanup {
                 "--${normal}" >> "$logFile"
         fi
     else
-        echo -e "${op}${stamp} No webroot specified so no 503 file to remove." \
-            >> "$logFile"
+        echo -e "${op}${stamp} 503 error page never copied to webroot," \
+            "nothing to cleanup." >> "$logFile"
     fi
 }
 
@@ -152,6 +152,7 @@ unset PARAMS
 unset sqlDumpDir
 unset webroot
 unset ncRoot
+unset clean503
 errorExplain=()
 exitWarn=()
 warningExplain=()
@@ -250,6 +251,7 @@ if [ -z "$webroot" ]; then
     echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
         >> "$logFile"
     exitWarn+=('5031')
+    clean503=0
 else
     # verify webroot actually exists
     checkExist fd "$webroot"
@@ -259,6 +261,7 @@ else
         echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
             >> "$logFile"
         exitWarn+=('5032')
+        clean503=0
     else
         # webroot exists
         echo -e "${op}${stamp} Using webroot: ${lit}${webroot}${normal}" \
@@ -271,6 +274,7 @@ else
             echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
                 >> "$logFile"
             exitWarn+=('5033')
+            clean503=0
         else
             # 503 file exists and webroot is valid. Let's copy it!
             echo -e "${op}${stamp} ${err503File} found.${normal}" >> "$logFile"
@@ -284,10 +288,12 @@ else
                     echo -e "${info}${stamp} -- [INFO] ${warn503} --${normal}" \
                         >> "$logFile"
                     exitWarn+=('5035')
+                    clean503=0
                 else
                 # copy was successful
                 echo -e "${info}${stamp} -- [INFO] 503 error page" \
                     "successfully copied to webroot --${normal}" >> "$logFile"
+                clean503=1
                 fi
         fi
     fi
