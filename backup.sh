@@ -74,14 +74,14 @@ function ncMaint {
     if [ "$1" = "on" ]; then
         echo -e "${info}${stamp} -- [INFO] Putting NextCloud in maintenance" \
             "mode --${normal}" >> "$logFile"
-        su -c "php ${ncRoot}/occ maintenance:mode --on" - ${webUser} \
+        su -c "php ${ncRoot}/occ maintenance:mode --on" - "${webUser}" \
             >> "$logFile" 2>&1
         maintResult="$?"
         return "$maintResult"
     elif [ "$1" = "off" ]; then
         echo -e "${info}${stamp} -- [INFO] Exiting NextCloud maintenance" \
             "mode --${normal}" >> "$logFile"
-        su -c "php ${ncRoot}/occ maintenance:mode --off" - ${webUser} \
+        su -c "php ${ncRoot}/occ maintenance:mode --off" - "${webUser}" \
             >> "$logFile" 2>&1
         maintResult="$?"
         return "$maintResult"
