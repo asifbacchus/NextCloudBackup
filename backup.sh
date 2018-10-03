@@ -143,6 +143,7 @@ unset webroot
 unset ncRoot
 unset webUser
 unset clean503
+unset sqlDetails
 errorExplain=()
 exitWarn=()
 warningExplain=()
@@ -171,7 +172,7 @@ if [ -n "$1" ] && [[ ! "$1" =~ ^- ]]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:n:u:v5:w:' PARAMS; do
+while getopts ':l:n:u:v5:w:s:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -198,6 +199,10 @@ while getopts ':l:n:u:v5:w:' PARAMS; do
         w)
             # path to webserver webroot to copy 503 error page
             webroot="${OPTARG%/}"
+            ;;
+        s)
+            # path to file containing SQL login details
+            sqlDetails="${OPTARG%/}"
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
