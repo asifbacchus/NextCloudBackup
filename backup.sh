@@ -217,10 +217,10 @@ done
 if [ $(id -u) -ne 0 ]; then
     echo -e "${err}This script MUST be run as ROOT. Exiting.${normal}"
     exit 2
-#elif [ -z "$ncRoot" ]; then
-#    echo -e "\n${err}The NextCloud webroot must be specified (-n parameter)" \
-#        "${normal}\n"
-#    exit 1
+elif [ -z "$ncRoot" ]; then
+    echo -e "\n${err}The NextCloud webroot must be specified (-n parameter)" \
+        "${normal}\n"
+    exit 1
 fi
 
 
