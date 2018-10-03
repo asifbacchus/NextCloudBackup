@@ -215,12 +215,16 @@ done
 
 
 ### Verify script pre-requisties
-# If not running as root, display error on console and exit
+
+## If not running as root, display error on console and exit
 if [ $(id -u) -ne 0 ]; then
     echo -e "\n${err}This script MUST be run as ROOT. Exiting.${normal}"
     exit 2
+fi
+
+## Check NextCloud webroot
 # Ensure NextCloud webroot is provided
-elif [ -z "$ncRoot" ]; then
+if [ -z "$ncRoot" ]; then
     echo -e "\n${err}The NextCloud webroot must be specified (-n parameter)" \
         "${normal}\n"
     exit 1
@@ -234,8 +238,11 @@ elif [ -n "$ncRoot" ]; then
             "(-n parameter) does not exist.${normal}\n"
         exit 1
     fi
+fi
+
+## Check NextCloud webuser account
 # Ensure NextCloud webuser account is provided
-elif [ -z "$webUser" ]; then
+if [ -z "$webUser" ]; then
     echo -e "\n${err}The webuser account running NextCloud must be provided" \
         "(-u parameter)${normal}\n"
     exit 1
