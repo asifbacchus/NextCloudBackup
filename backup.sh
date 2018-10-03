@@ -344,6 +344,8 @@ fi
 #fi
 
 ### Exit script
+echo -e "${bold}${default}${stamp} ***Normal exit process***${normal}" \
+    >> "$logFile"
 cleanup
 quit
 
