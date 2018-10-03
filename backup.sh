@@ -50,7 +50,7 @@ function quit {
 function checkExist {
     if [ "$1" = "ff" ]; then
         # find file
-        if [ -e "$2" ]; then
+        if [ -f "$2" ]; then
             # found
             return 0
         else
