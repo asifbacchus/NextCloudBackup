@@ -266,8 +266,6 @@ if [ "$checkResult" = "1" ]; then
     exit 1
 fi
 
-echo "using $sqlDetails"
-exit 99
 
 ### Log start of script operations
 echo -e "\e[1;35m${stamp}-- Start $scriptName execution ---${normal}" \
