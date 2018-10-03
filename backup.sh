@@ -146,6 +146,7 @@ unset webroot
 unset ncRoot
 unset webUser
 unset clean503
+unset sqlParams
 errorExplain=()
 exitWarn=()
 warningExplain=()
@@ -154,6 +155,7 @@ warningExplain=()
 ### Error codes
 errorExplain[100]="Could not put NextCloud into maintenance mode"
 errorExplain[101]="Could not exit NextCloud maintenance mode"
+errorExplain[200]="Could not dump NextCloud SQL database"
 
 ### Warning codes & messages
 warningExplain[111]="Could not remove SQL dump file and directory, please remove manually"
@@ -354,8 +356,28 @@ if [ "$maintResult" = "0" ]; then
     echo -e "${info}${stamp} -- [INFO] NextCloud now in maintenance mode --" \
         "${normal}" >> "$logFile"
 else
-    cleanup 503
+    cleanup
     quit 100
+fi
+
+
+### Get SQL info from sqlDetails
+mapfile -t sqlParams < "$sqlDetails"
+
+
+### Dump SQL
+echo -e "${op}${stamp} Dumping NextCloud SQL database...${normal}" >> "$logFile"
+mysqldump --single-transaction -h"${sqlParams[0]}" -u"${sqlParams[1]}" \
+    -p"${sqlParams[2]}" "${sqlParams[3]}" > "${sqlDumpDir}/${sqlDumpFile}" \
+    2>> "$logFile"
+# verify
+dumpResult="$?"
+if [ "$dumpResult" = "0" ]; then
+    echo -e "${ok}${stamp} -- [SUCCESS] SQL dumped successfully --${normal}" \
+        >> "$logFile"
+else
+    cleanup
+    quit 200;
 fi
 
 
@@ -366,7 +388,7 @@ if [ "$maintResult" = "0" ]; then
     echo -e "${info}${stamp} -- [INFO] NextCloud now in normal operating mode" \
         "--${normal}" >> "$logFile"
 else
-    cleanup 503
+    cleanup
     quit 101
 fi
 
