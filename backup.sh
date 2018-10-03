@@ -189,7 +189,7 @@ while getopts ':l:n:u:v5:w:' PARAMS; do
             ;;
         n)
             # NextCloud webroot
-            ncRoot="${OPTARG}"
+            ncRoot="${OPTARG%/}"
             ;;
         u)
             # webuser
@@ -222,10 +222,21 @@ done
 if [ $(id -u) -ne 0 ]; then
     echo -e "\n${err}This script MUST be run as ROOT. Exiting.${normal}"
     exit 2
+# Ensure NextCloud webroot is provided
 elif [ -z "$ncRoot" ]; then
     echo -e "\n${err}The NextCloud webroot must be specified (-n parameter)" \
         "${normal}\n"
     exit 1
+# Ensure NextCloud webroot directory exists
+elif [ -n "$ncRoot" ]; then
+    checkExist fd "$ncRoot"
+    checkResult="$?"
+    if [ "$checkResult" = "1" ]; then
+        # Specified NextCloud webroot directory could not be found
+        echo -e "\n${err}The provided NextCloud webroot directory" \
+            "(-n parameter) does not exist.${normal}\n"
+        exit 1
+    fi
 # Ensure NextCloud webuser account is provided
 elif [ -z "$webUser" ]; then
     echo -e "\n${err}The webuser account running NextCloud must be provided" \
