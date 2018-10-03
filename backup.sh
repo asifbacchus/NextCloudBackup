@@ -134,6 +134,9 @@ err503File="${err503Path##*/}"
 # set default sqlDetails path to scriptPath
 sqlDetails="$scriptPath/nc_sql.details"
 
+# set default borgDetails path to scriptPath
+borgDetails=$"scriptPath/nc_borg.details"
+
 # set borg parameters to 'normal' verbosity
 borgCreateParams='--stats'
 borgPruneParams='--list'
@@ -176,7 +179,7 @@ if [ -n "$1" ] && [[ ! "$1" =~ ^- ]]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:n:u:v5:w:s:' PARAMS; do
+while getopts ':l:n:u:v5:w:s:b:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -207,6 +210,10 @@ while getopts ':l:n:u:v5:w:s:' PARAMS; do
         s)
             # path to file containing SQL login details
             sqlDetails="${OPTARG%/}"
+            ;;
+        b)
+            # path to file containing borgbackup settings and details
+            borgDetails="${OPTARG%/}"
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
@@ -265,6 +272,16 @@ if [ "$checkResult" = "1" ]; then
     # sqlDetails file cannot be found
     echo -e "\n${err}The file containing your SQL details does not exist" \
         "(-s parameter)${normal}\n"
+    exit 1
+fi
+
+## Ensure borgDetails file exists
+checkExist ff "$borgDetails"
+checkResult="$?"
+if [ "$checkResult" = "1" ]; then
+    # sqlDetails file cannot be found
+    echo -e "\n${err}The file containing your borgbackup details does not" \
+        "exist (-b parameter)${normal}\n"
     exit 1
 fi
 
@@ -380,6 +397,11 @@ else
     quit 200;
 fi
 
+### Call borgbackup to copy actual files
+echo -e "${op}${stamp} Pre-backup tasks completed, calling borgbackup..."
+
+## Get borgbackup settings and repo details
+mapfile -t borgConfig < $borgDetails
 
 ### Exit NextCloud maintenance mode
 ncMaint off
