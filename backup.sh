@@ -152,6 +152,7 @@ unset PARAMS
 unset sqlDumpDir
 unset webroot
 unset ncRoot
+unset webUser
 unset clean503
 errorExplain=()
 exitWarn=()
@@ -180,7 +181,7 @@ if [ -n "$1" ] && [[ ! "$1" =~ ^- ]]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:n:v5:w:' PARAMS; do
+while getopts ':l:n:u:v5:w:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -189,6 +190,10 @@ while getopts ':l:n:v5:w:' PARAMS; do
         n)
             # NextCloud webroot
             ncRoot="${OPTARG}"
+            ;;
+        u)
+            # webuser
+            webUser="${OPTARG}"
             ;;
         v)
             # verbose output from Borg
@@ -215,12 +220,25 @@ done
 ### Verify script pre-requisties
 # If not running as root, display error on console and exit
 if [ $(id -u) -ne 0 ]; then
-    echo -e "${err}This script MUST be run as ROOT. Exiting.${normal}"
+    echo -e "\n${err}This script MUST be run as ROOT. Exiting.${normal}"
     exit 2
 elif [ -z "$ncRoot" ]; then
     echo -e "\n${err}The NextCloud webroot must be specified (-n parameter)" \
         "${normal}\n"
     exit 1
+# Ensure NextCloud webuser account is provided
+elif [ -z "$webUser" ]; then
+    echo -e "\n${err}The webuser account running NextCloud must be provided" \
+        "(-u parameter)${normal}\n"
+    exit 1
+# Check if supplied webUser account exists
+elif [ -n "$webUser" ]; then
+    user_exists=$(id -u $webUser > /dev/null 2>&1; echo $?)
+    if [ $user_exists -ne 0 ]; then        
+        echo -e "\n${err}The supplied webuser account (-u parameter) does not" \
+            "exist.${normal}\n"
+        exit 1
+    fi
 fi
 
 
