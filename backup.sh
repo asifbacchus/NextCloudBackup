@@ -257,15 +257,17 @@ elif [ -n "$webUser" ]; then
 fi
 
 ## Ensure sqlDetails file exists
-if [ ! -f "$sqlDetails" ]; then
+checkExist ff "$sqlDetails"
+checkResult="$?"
+if [ "$checkResult" = "1" ]; then
+    # sqlDetails file cannot be found
     echo -e "\n${err}The file containing your SQL details does not exist" \
         "(-s parameter)${normal}\n"
     exit 1
-elif [ ! -s "$sqlDetails" ]; then
-    echo -e "\n${err}The file containing your SQL details is empty.${normal}\n"
-    exit 1
 fi
 
+echo "using $sqlDetails"
+exit 99
 
 ### Log start of script operations
 echo -e "\e[1;35m${stamp}-- Start $scriptName execution ---${normal}" \
