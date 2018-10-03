@@ -69,23 +69,12 @@ function checkExist {
     fi
 }
 
-### ncMaint - perform NextCloud maintenance mode entry and exit
+### ncMaint - pass requested mode change type to NextCloud occ
 function ncMaint {
-    if [ "$1" = "on" ]; then
-        echo -e "${info}${stamp} -- [INFO] Putting NextCloud in maintenance" \
-            "mode --${normal}" >> "$logFile"
-        su -c "php ${ncRoot}/occ maintenance:mode --on" - "${webUser}" \
+    su -c "php ${ncRoot}/occ maintenance:mode --$1" - "${webUser}" \
             >> "$logFile" 2>&1
         maintResult="$?"
         return "$maintResult"
-    elif [ "$1" = "off" ]; then
-        echo -e "${info}${stamp} -- [INFO] Exiting NextCloud maintenance" \
-            "mode --${normal}" >> "$logFile"
-        su -c "php ${ncRoot}/occ maintenance:mode --off" - "${webUser}" \
-            >> "$logFile" 2>&1
-        maintResult="$?"
-        return "$maintResult"
-    fi
 }
 
 ### cleanup - cleanup files and directories created by this script
@@ -160,7 +149,8 @@ warningExplain=()
 
 
 ### Error codes
-errorExplain[100]="Could not put NextCloud into Maintenance mode"
+errorExplain[100]="Could not put NextCloud into maintenance mode"
+errorExplain[101]="Could not exit NextCloud maintenance mode"
 
 ### Warning codes & messages
 warningExplain[111]="Could not remove SQL dump file and directory, please remove manually"
@@ -334,14 +324,28 @@ fi
 
 
 ### Put NextCloud in maintenance mode
-#ncMaint on
+ncMaint on
 # check if successful
-#if [ "$maintResult" = "0" ]; then
-#    echo -e "${bold}${cyan}${stamp}...done${normal}" >> "$logFile"
-#else
-#    cleanup 503
-#    quit 100
-#fi
+if [ "$maintResult" = "0" ]; then
+    echo -e "${info}${stamp} -- [INFO] NextCloud now in maintenance mode --" \
+        "${normal}" >> "$logFile"
+else
+    cleanup 503
+    quit 100
+fi
+
+
+### Exit NextCloud maintenance mode
+ncMaint off
+# check if successful
+if [ "$maintResult" = "0" ]; then
+    echo -e "${info}${stamp} -- [INFO] NextCloud now in normal operating mode" \
+        "--${normal}" >> "$logFile"
+else
+    cleanup 503
+    quit 101
+fi
+
 
 ### Exit script
 echo -e "${bold}${default}${stamp} ***Normal exit process***${normal}" \
