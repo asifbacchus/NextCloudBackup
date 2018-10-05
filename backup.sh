@@ -150,10 +150,14 @@ unset ncRoot
 unset webUser
 unset clean503
 unset sqlParams
+unset borgXtra
+unset borgExclude
+unset borgPrune
 errorExplain=()
 exitWarn=()
 warningExplain=()
-
+borgConfig=()
+xtraFiles=()
 
 ### Error codes
 errorExplain[100]="Could not put NextCloud into maintenance mode"
@@ -168,6 +172,8 @@ warningExplain[5032]="The specified webroot (-w parameter) could not be found"
 warningExplain[5033]="No 503 error page could be found. If not using the default located in the script directory, then check your -5 parameter"
 warningExplain[5035]="Error copying 503 error page to webroot"
 warn503="Web users will NOT be informed the server is down!"
+warningExplain[borg111]="The specified file containing extra files for inclusion in borgbackup could not be found"
+
 
 ### Process script parameters
 
@@ -401,7 +407,36 @@ fi
 echo -e "${op}${stamp} Pre-backup tasks completed, calling borgbackup..."
 
 ## Get borgbackup settings and repo details
+# read definition file and map to array variable
 mapfile -t borgConfig < $borgDetails
+# map individual array items to variables and export where necessary
+export BORG_BASE_DIR="${borgConfig[0]}"
+export BORG_RSH="ssh -i ${borgConfig[1]}"
+export BORG_REPO="${borgConfig[2]}"
+export BORG_PASSPHRASE="${borgConfig[3]}"
+borgXtra="${borgConfig[4]}"
+borgExclude="${borgConfig[5]}"
+borgPrune="${borgConfig[6]}"
+export BORG_REMOTE_PATH="${borgConfig[7]}"
+
+## If borgXtra exists, map contents to an array variable
+if [ -n "$borgXtra" ]; then
+    echo -e "${op}${stamp} Processing referenced extra files list for" \
+        "borgbackup to include in backup${normal}" >> "$logFile"
+    checkExist ff "$borgXtra"
+    checkResult="$?"
+    if [ "$checkResult" = "0" ]; then
+        echo -e "${op}${stamp} Found ${lit}${borgXtra}${normal}" >> $"logFile"
+        mapfile -t xtraFiles < ${borgXtra}
+        echo -e "${info}${stamp} Processed extra files list for inclusion in" \
+            "borgbackup${normal}" >> "$logFile"
+    else
+        exitWarn+=('borg111')
+    fi
+fi
+
+
+
 
 ### Exit NextCloud maintenance mode
 ncMaint off
