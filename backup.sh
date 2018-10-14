@@ -513,11 +513,11 @@ if [ -z "${borgConfig[2]}" ]; then
     cleanup
     quit
 else
-    export BORG_REPO="{borgConfig[2]}"
+    export BORG_REPO="${borgConfig[2]}"
 fi
 # repo password
 if [ -n "${borgConfig[3]}" ]; then
-    export BORG_PASSPHRASE="{borgConfig[3]}"
+    export BORG_PASSPHRASE="${borgConfig[3]}"
 else
     exitWarn+=('2111')
     # if the password was omitted by mistake, export a dummy password so borg
