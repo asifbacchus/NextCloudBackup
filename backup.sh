@@ -619,18 +619,6 @@ echo -e "${op}${stamp} Borgbackup completed... begin cleanup" \
     "${normal}" >> "$logFile"
 
 
-### Exit NextCloud maintenance mode
-ncMaint off
-# check if successful
-if [ "$maintResult" = "0" ]; then
-    echo -e "${info}${stamp} -- [INFO] NextCloud now in normal operating mode" \
-        "--${normal}" >> "$logFile"
-else
-    cleanup
-    quit 101
-fi
-
-
 ### Exit script
 echo -e "${bold}${default}${stamp} ***Normal exit process***${normal}" \
     >> "$logFile"
