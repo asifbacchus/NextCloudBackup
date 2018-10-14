@@ -426,6 +426,15 @@ if [ -z "${borgConfig[0]}" ]; then
     cleanup
     quit 210
 else
+    # verify the path actually exists
+    checkExist fd "${borgConfig[0]}"
+    checkResult="$?"
+    if [ "$checkResult" = "1" ]; then
+        # borg base directory specified could not be found
+        cleanup
+        quit 210
+    fi
+    echo -e "${op}${stamp} Borg base dir... OK${normal}" >> "$logFile"
     export BORG_BASE_DIR="${borgConfig[0]}"
 fi
 # check: path to SSH keyfile
