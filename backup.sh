@@ -182,12 +182,15 @@ warningExplain[5032]="The specified webroot (-w parameter) could not be found"
 warningExplain[5033]="No 503 error page could be found. If not using the default located in the script directory, then check your -5 parameter"
 warningExplain[5035]="Error copying 503 error page to webroot"
 warn503="Web users will NOT be informed the server is down!"
-warningExplain[borg111]="No password used for SSH keys or access remote borg repo. This is an insecure configuration."
-warningExplain[borg112]="No remote borg instance specified. Operations will be slower in this configuration."
+warningExplain[borg111]="No password used for SSH keys or access remote borg repo. This is an insecure configuration"
+warningExplain[borg112]="No remote borg instance specified. Operations will be slower in this configuration"
 warningExplain[borg113]="The specified file containing extra files for inclusion in borgbackup could not be found"
-warningExplain[borg115]="No paramters provided for borg prune. No repo pruning has taken place. You should reconsider this decision to control the size/history of your backups."
-warningExplain[borg200]="Borg completed with warnings. Please check this script's logfile for details."
-warningExplain[borg201]="Borg exited with an unknown return-code. Please check this script's logfile for details."
+warningExplain[borg115]="No paramters provided for borg prune. No repo pruning has taken place. You should reconsider this decision to control the size/history of your backups"
+warningExplain[borg200]="Borg completed with warnings. Please check this script's logfile for details"
+warningExplain[borg201]="Borg exited with an unknown return-code. Please check this script's logfile for details"
+warningExplain[borg210]="Borg prune exited with warnings. Please check this script's logfile for details"
+warningExplain[borg211]="Borg prune exited with ERRORS. Please check this script's logfile for details"
+warningExplain[borg212]="Borg prune exited with an unknown return-code. Please check this script's logfile for details"
 
 
 ### Process script parameters
@@ -549,7 +552,20 @@ if [ -n "$borgPrune" ]; then
     # parameters defined
     echo -e "${op}${stamp} Executing borg prune operation${normal}" \
         >> "$logFile"
-    borg --show-rc prune -v ${borgPruneParams} "${borgPrune}"
+    borg --show-rc prune -v ${borgPruneParams} "${borgPrune}" \
+        2>> "$logFile"
+    # check return-status
+    borgResult="$?"
+    if [ "$borgResult" -eq 0 ]; then
+        echo -e "${ok}${stamp} -- [SUCCESS] Borg prune completed successfully" \
+            "--${normal}" >> "$logFile"
+    elif [ "$borgResult" -eq 1 ]; then
+        exitWarn+=('borg210')
+    elif [ "$borgResult" -ge 2 ]; then
+        exitWarn+=('borg211')
+    else
+        exitWarn+=('borg212')
+    fi
 else
     # parameters not defined... skip pruning
     exitWarn+=('borg115')
