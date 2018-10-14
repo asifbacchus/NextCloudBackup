@@ -559,7 +559,7 @@ if [ -z "$borgExclude" ]; then
     # borgExclude is empty
     echo -e "${op}${stamp} Executing borg without exclusions${normal}" \
         >> "$logFile"
-    borg --show-rc create ${borgCreateParams} :: `date +%Y-%m-%d_%H%M%S` \
+    borg --show-rc create ${borgCreateParams} ::`date +%Y-%m-%d_%H%M%S` \
         "${xtraFiles[@]}" \
         "${sqlDumpDir}" "${ncDataDir}" \
         2>> "$logFile"
@@ -568,7 +568,7 @@ else
     echo -e "${op}${stamp} Executing borg with exclusions${normal}" \
         >> "$logFile"
     borg --show-rc create ${borgCreateParams} --exclude-from "${borgExclude}" \
-        :: `date +%Y-%m-%d_%H%M%S` \
+        ::`date +%Y-%m-%d_%H%M%S` \
         "${xtraFiles[@]}" \
         "${sqlDumpDir}" "${ncDataDir}" \
         2>> "$logFile"
