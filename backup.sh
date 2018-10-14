@@ -184,7 +184,7 @@ warn503="Web users will NOT be informed the server is down!"
 warningExplain[borg111]="No password used for SSH keys or access remote borg repo. This is an insecure configuration."
 warningExplain[borg112]="No remote borg instance specified. Operations will be slower in this configuration."
 warningExplain[borg113]="The specified file containing extra files for inclusion in borgbackup could not be found"
-
+warningExplain[borg115]="No paramters provided for borg prune. No repo pruning has taken place. You should reconsider this decision to control the size/history of your backups."
 
 ### Process script parameters
 
@@ -521,6 +521,18 @@ else
         :: `date +%Y-%m-%d_%H%M%S` \
         "${xtraFiles[@]}" \
         "${sqlDumpDir}" "${ncDataDir}"
+fi
+
+## Generate and execute borg prune
+# command depends on whether or not parameters have been defined
+if [ -n "$borgPrune" ]; then
+    # parameters defined
+    echo -e "${op}${stamp} Executing borg prune operation${normal}" \
+        >> "$logFile"
+    borg --show-rc prune -v ${borgPruneParams} "${borgPrune}"
+else
+    # parameters not defined... skip pruning
+    exitWarn+=('borg115')
 fi
 
 
