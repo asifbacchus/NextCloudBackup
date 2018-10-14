@@ -180,7 +180,9 @@ warningExplain[5032]="The specified webroot (-w parameter) could not be found"
 warningExplain[5033]="No 503 error page could be found. If not using the default located in the script directory, then check your -5 parameter"
 warningExplain[5035]="Error copying 503 error page to webroot"
 warn503="Web users will NOT be informed the server is down!"
-warningExplain[borg111]="The specified file containing extra files for inclusion in borgbackup could not be found"
+warningExplain[borg111]="No password used for SSH keys or access remote borg repo. This is an insecure configuration."
+warningExplain[borg112]="No remote borg instance specified. Operations will be slower in this configuration."
+warningExplain[borg113]="The specified file containing extra files for inclusion in borgbackup could not be found"
 
 
 ### Process script parameters
@@ -463,8 +465,7 @@ fi
 if [ -n "${borgConfig[3]}" ]; then
     export BORG_PASSPHRASE="{borgConfig[3]}"
 else
-    echo -e "${info}${stamp} -- [INFO] No password will be used for SSH keys" \
-        "or when accessing remote borg repo --${normal}" >> "$logFile"
+    exitWarn+=('borg111')
     # if the password was omitted by mistake, export a dummy password so borg
     # fails with an error instead of sitting and waiting for input
     export BORG_PASSPHRASE="DummyPasswordSoBorgFails"
@@ -479,10 +480,8 @@ borgPrune="${borgConfig[6]}"
 if [ -n "${borgConfig[7]}" ]; then
     export BORG_REMOTE_PATH="${borgConfig[7]}"
 else
-    echo -e "${info}${stamp} -- [INFO] No remote borg instance specified" \
-        "--${normal}" >> "$logFile"
+    exitWarn+=('borg112')
 fi
-
 
 ## If borgXtra exists, map contents to an array variable
 if [ -n "$borgXtra" ]; then
@@ -492,11 +491,11 @@ if [ -n "$borgXtra" ]; then
     checkResult="$?"
     if [ "$checkResult" = "0" ]; then
         echo -e "${op}${stamp} Found ${lit}${borgXtra}${normal}" >> $"logFile"
-        mapfile -t xtraFiles < ${borgXtra}
+        mapfile -t xtraFiles < "$borgXtra"
         echo -e "${info}${stamp} Processed extra files list for inclusion in" \
             "borgbackup${normal}" >> "$logFile"
     else
-        exitWarn+=('borg111')
+        exitWarn+=('borg113')
     fi
 fi
 
