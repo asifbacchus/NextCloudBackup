@@ -126,7 +126,8 @@ function cleanup {
         echo -e "${info}${stamp} -- [INFO] NextCloud now in regular" \
                 "operating mode --${normal}" >> "$logFile"
         else
-            quit 101
+            exitError+=('101')
+            quit
     fi
 }
 
@@ -435,7 +436,8 @@ if [ "$maintResult" = "0" ]; then
         "${normal}" >> "$logFile"
 else
     cleanup
-    quit 100
+    exitError+=('100')
+    quit
 fi
 
 
@@ -455,7 +457,8 @@ if [ "$dumpResult" = "0" ]; then
         >> "$logFile"
 else
     cleanup
-    quit 200;
+    exitError+=('200')
+    quit
 fi
 
 ### Call borgbackup to copy actual files
@@ -471,7 +474,8 @@ mapfile -t borgConfig < "$borgDetails"
 echo -e "${op}${stamp} Verifying supplied borg configuration variables..."
 if [ -z "${borgConfig[0]}" ]; then
     cleanup
-    quit 210
+    exitError+=('210')
+    quit
 else
     # verify the path actually exists
     checkExist fd "${borgConfig[0]}"
@@ -479,7 +483,8 @@ else
     if [ "$checkResult" = "1" ]; then
         # borg base directory specified could not be found
         cleanup
-        quit 210
+        exitError+=('210')
+        quit
     fi
     echo -e "${op}${stamp} Borg base dir... OK${normal}" >> "$logFile"
     export BORG_BASE_DIR="${borgConfig[0]}"
@@ -487,14 +492,16 @@ fi
 # check: path to SSH keyfile
 if [ -z "${borgConfig[1]}" ]; then
     cleanup
-    quit 211
+    exitError+=('211')
+    quit
 else
     checkExist ff "${borgConfig[1]}"
     checkResult="$?"
     if [ "$checkResult" = 1 ]; then
         # SSH keyfile specified could not be found
         cleanup
-        quit 211
+        exitError+=('211')
+        quit
     fi
     echo -e "${op}${stamp} Borg SSH key... OK${normal}" >> "$logFile"
     export BORG_RSH="ssh -i ${borgConfig[1]}"
@@ -502,7 +509,8 @@ fi
 # check: name of borg repo
 if [ -z "${borgConfig[2]}" ]; then
     cleanup
-    quit 212
+    exitError+=('212')
+    quit
 else
     export BORG_REPO="{borgConfig[2]}"
 fi
@@ -574,7 +582,8 @@ elif [ "$borgResult" -eq 1 ]; then
     exitWarn+=('borg200')
 elif [ "$borgResult" -ge 2 ]; then
     cleanup
-    quit 220
+    exitError+=('220')
+    quit
 else
     exitWarn+=('borg201')
 fi
