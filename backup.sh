@@ -483,15 +483,6 @@ else
         "--${normal}" >> "$logFile"
 fi
 
-# map individual array items to variables and export where necessary
-export BORG_BASE_DIR="${borgConfig[0]}"
-export BORG_RSH="ssh -i ${borgConfig[1]}"
-export BORG_REPO="${borgConfig[2]}"
-export BORG_PASSPHRASE="${borgConfig[3]}"
-borgXtra="${borgConfig[4]}"
-borgExclude="${borgConfig[5]}"
-borgPrune="${borgConfig[6]}"
-export BORG_REMOTE_PATH="${borgConfig[7]}"
 
 ## If borgXtra exists, map contents to an array variable
 if [ -n "$borgXtra" ]; then
