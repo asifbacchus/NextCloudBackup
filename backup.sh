@@ -34,16 +34,20 @@ function quit {
                 "(code: ${warnCode}) --${normal}" >> "$logFile"
         done
     fi
-    if [ -z "$1" ]; then
+    if [ -z "${exitError}" ]; then
         # exit cleanly
         echo -e "\e[1;35m${stamp} -- ${scriptName} completed" \
             "--${normal}" >> "$logFile"
         exit 0
     else
-        # log error code and exit with said code
-        echo -e "${err}${stamp} -- [ERROR] ${errorExplain[$1]}" \
-            "(code: $1) --$normal" >> "$logFile"
-        exit "$1"
+        # list generated errors and explanations then exit script with code 2
+        echo -e "${err}${scriptName} generated the following errors:" \
+            "${normal}" >> "$logFile"
+        for errCode in "${exitError[@]}"; do
+            echo -e "${err}-- [ERROR] ${errorExplain[$errCode]}" \
+                "(code: ${errCode}) --$normal" >> "$logFile"
+        done
+        exit 2
     fi
 }
 
@@ -169,6 +173,7 @@ unset BORG_RSH
 unset BORG_REPO
 unset BORG_PASSPHRASE
 unset BORG_REMOTE_PATH
+exitError=()
 errorExplain=()
 exitWarn=()
 warningExplain=()
