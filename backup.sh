@@ -198,15 +198,15 @@ warningExplain[5032]="The specified webroot (-w parameter) could not be found"
 warningExplain[5033]="No 503 error page could be found. If not using the default located in the script directory, then check your -5 parameter"
 warningExplain[5035]="Error copying 503 error page to webroot"
 warn503="Web users will NOT be informed the server is down!"
-warningExplain[borg111]="No password used for SSH keys or access remote borg repo. This is an insecure configuration"
-warningExplain[borg112]="No remote borg instance specified. Operations will be slower in this configuration"
-warningExplain[borg113]="The specified file containing extra files for inclusion in borgbackup could not be found"
-warningExplain[borg115]="No paramters provided for borg prune. No repo pruning has taken place. You should reconsider this decision to control the size/history of your backups"
-warningExplain[borg200]="Borg completed with warnings. Please check this script's logfile for details"
-warningExplain[borg201]="Borg exited with an unknown return-code. Please check this script's logfile for details"
-warningExplain[borg210]="Borg prune exited with warnings. Please check this script's logfile for details"
-warningExplain[borg211]="Borg prune exited with ERRORS. Please check this script's logfile for details"
-warningExplain[borg212]="Borg prune exited with an unknown return-code. Please check this script's logfile for details"
+warningExplain[2111]="No password used for SSH keys or access remote borg repo. This is an insecure configuration"
+warningExplain[2112]="No remote borg instance specified. Operations will be slower in this configuration"
+warningExplain[2113]="The specified file containing extra files for inclusion in borgbackup could not be found"
+warningExplain[2115]="No paramters provided for borg prune. No repo pruning has taken place. You should reconsider this decision to control the size/history of your backups"
+warningExplain[2200]="Borg completed with warnings. Please check this script's logfile for details"
+warningExplain[2201]="Borg exited with an unknown return-code. Please check this script's logfile for details"
+warningExplain[2210]="Borg prune exited with warnings. Please check this script's logfile for details"
+warningExplain[2211]="Borg prune exited with ERRORS. Please check this script's logfile for details"
+warningExplain[2212]="Borg prune exited with an unknown return-code. Please check this script's logfile for details"
 
 
 ### Process script parameters
@@ -519,7 +519,7 @@ fi
 if [ -n "${borgConfig[3]}" ]; then
     export BORG_PASSPHRASE="{borgConfig[3]}"
 else
-    exitWarn+=('borg111')
+    exitWarn+=('2111')
     # if the password was omitted by mistake, export a dummy password so borg
     # fails with an error instead of sitting and waiting for input
     export BORG_PASSPHRASE="DummyPasswordSoBorgFails"
@@ -534,7 +534,7 @@ borgPrune="${borgConfig[6]}"
 if [ -n "${borgConfig[7]}" ]; then
     export BORG_REMOTE_PATH="${borgConfig[7]}"
 else
-    exitWarn+=('borg112')
+    exitWarn+=('2112')
 fi
 
 ## If borgXtra exists, map contents to an array variable
@@ -549,7 +549,7 @@ if [ -n "$borgXtra" ]; then
         echo -e "${info}${stamp} Processed extra files list for inclusion in" \
             "borgbackup${normal}" >> "$logFile"
     else
-        exitWarn+=('borg113')
+        exitWarn+=('2113')
     fi
 fi
 
@@ -580,13 +580,13 @@ if [ "$borgResult" -eq 0 ]; then
     echo -e "${ok}${stamp} -- [SUCCESS] Borg backup completed successfully --" \
         "${normal}" >> "$logFile"
 elif [ "$borgResult" -eq 1 ]; then
-    exitWarn+=('borg200')
+    exitWarn+=('2200')
 elif [ "$borgResult" -ge 2 ]; then
     exitError+=('220')
     cleanup
     quit
 else
-    exitWarn+=('borg201')
+    exitWarn+=('2201')
 fi
 
 ## Generate and execute borg prune
@@ -598,20 +598,20 @@ if [ -n "$borgPrune" ]; then
     borg --show-rc prune -v ${borgPruneParams} "${borgPrune}" \
         2>> "$logFile"
     # check return-status
-    borgResult="$?"
-    if [ "$borgResult" -eq 0 ]; then
+    pruneResult="$?"
+    if [ "$pruneResult" -eq 0 ]; then
         echo -e "${ok}${stamp} -- [SUCCESS] Borg prune completed successfully" \
             "--${normal}" >> "$logFile"
-    elif [ "$borgResult" -eq 1 ]; then
-        exitWarn+=('borg210')
-    elif [ "$borgResult" -ge 2 ]; then
-        exitWarn+=('borg211')
+    elif [ "$pruneResult" -eq 1 ]; then
+        exitWarn+=('2210')
+    elif [ "$pruneResult" -ge 2 ]; then
+        exitWarn+=('2211')
     else
-        exitWarn+=('borg212')
+        exitWarn+=('2212')
     fi
 else
     # parameters not defined... skip pruning
-    exitWarn+=('borg115')
+    exitWarn+=('2115')
 fi
 
 
