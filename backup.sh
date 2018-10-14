@@ -150,6 +150,7 @@ unset ncRoot
 unset webUser
 unset clean503
 unset sqlParams
+unset ncDataDir
 unset borgXtra
 unset borgExclude
 unset borgPrune
@@ -195,7 +196,7 @@ if [ -n "$1" ] && [[ ! "$1" =~ ^- ]]; then
 fi
 
 # use GetOpts to process parameters
-while getopts ':l:n:u:v5:w:s:b:' PARAMS; do
+while getopts ':l:n:u:v5:w:s:b:d:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
@@ -230,6 +231,10 @@ while getopts ':l:n:u:v5:w:s:b:' PARAMS; do
         b)
             # path to file containing borgbackup settings and details
             borgDetails="${OPTARG%/}"
+            ;;
+        d)
+            # nextcloud data directory
+            ncDataDir="${OPTARG%/}"
             ;;
         ?)
             # unrecognized parameters trigger scriptHelp
