@@ -544,9 +544,9 @@ if [ -n "$borgXtra" ]; then
     checkExist ff "$borgXtra"
     checkResult="$?"
     if [ "$checkResult" = "0" ]; then
-        echo -e "${op}${stamp} Found ${lit}${borgXtra}${normal}" >> $"logFile"
+        echo -e "${op}${stamp} Found ${lit}${borgXtra}${normal}" >> "$logFile"
         mapfile -t xtraFiles < "$borgXtra"
-        echo -e "${info}${stamp} Processed extra files list for inclusion in" \
+        echo -e "${op}${stamp} Processed extra files list for inclusion in" \
             "borgbackup${normal}" >> "$logFile"
     else
         exitWarn+=('2113')
