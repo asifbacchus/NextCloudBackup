@@ -189,6 +189,7 @@ errorExplain[210]="Invalid or non-existant borg base directory specified (borg b
 errorExplain[211]="Invalid or non-existant path to borg SSH keyfile (borg backup details file)"
 errorExplain[212]="Name of borg repo was not specified (borg backup details file)"
 errorExplain[220]="Borg exited with a critical error. Please check this script's logfile for details"
+errorExplain[221]="Borg prune exited with ERRORS. Please check this script's logfile for details"
 
 ### Warning codes & messages
 warningExplain[111]="Could not remove SQL dump file and directory, please remove manually"
@@ -205,7 +206,6 @@ warningExplain[2115]="No paramters provided for borg prune. No repo pruning has 
 warningExplain[2200]="Borg completed with warnings. Please check this script's logfile for details"
 warningExplain[2201]="Borg exited with an unknown return-code. Please check this script's logfile for details"
 warningExplain[2210]="Borg prune exited with warnings. Please check this script's logfile for details"
-warningExplain[2211]="Borg prune exited with ERRORS. Please check this script's logfile for details"
 warningExplain[2212]="Borg prune exited with an unknown return-code. Please check this script's logfile for details"
 
 
@@ -557,7 +557,7 @@ fi
 # commandline depends on whether borgExclude is empty or not
 if [ -z "$borgExclude" ]; then
     # borgExclude is empty
-    echo -e "${op}${stamp} Executing borg without exclusions${normal}" \
+    echo -e "${bold}${op}${stamp} Executing borg without exclusions${normal}" \
         >> "$logFile"
     borg --show-rc create ${borgCreateParams} ::`date +%Y-%m-%d_%H%M%S` \
         "${xtraFiles[@]}" \
@@ -565,7 +565,7 @@ if [ -z "$borgExclude" ]; then
         2>> "$logFile"
 else
     # borgExclude is not empty
-    echo -e "${op}${stamp} Executing borg with exclusions${normal}" \
+    echo -e "${bold}${op}${stamp} Executing borg with exclusions${normal}" \
         >> "$logFile"
     borg --show-rc create ${borgCreateParams} --exclude-from "${borgExclude}" \
         ::`date +%Y-%m-%d_%H%M%S` \
@@ -593,7 +593,7 @@ fi
 # command depends on whether or not parameters have been defined
 if [ -n "$borgPrune" ]; then
     # parameters defined
-    echo -e "${op}${stamp} Executing borg prune operation${normal}" \
+    echo -e "${bold}${op}${stamp} Executing borg prune operation${normal}" \
         >> "$logFile"
     borg --show-rc prune -v ${borgPruneParams} "${borgPrune}" \
         2>> "$logFile"
@@ -605,7 +605,7 @@ if [ -n "$borgPrune" ]; then
     elif [ "$pruneResult" -eq 1 ]; then
         exitWarn+=('2210')
     elif [ "$pruneResult" -ge 2 ]; then
-        exitWarn+=('2211')
+        exitError+=('221')
     else
         exitWarn+=('2212')
     fi
