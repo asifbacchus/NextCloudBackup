@@ -313,6 +313,24 @@ if [ "$checkResult" = "1" ]; then
     exit 1
 fi
 
+## Check NextCloud data directory
+# Ensure NextCloud data directory is provided
+if [ -z "$ncDataDir" ]; then
+    echo -e "\n${err}The NextCloud data directory must be specified" \
+        "(-d parameter)${normal}\n"
+    exit 1
+# Ensure NextCloud data directory exists
+elif [ -n "$ncDataDir" ]; then
+    checkExist fd "$ncDataDir"
+    checkResult="$?"
+    if [ "$checkResult" = "1" ]; then
+        # Specified NextCloud data directory could not be found
+        echo -e "\n${err}The provided NextCloud data directory" \
+            "(-d parameter) does not exist.${normal}\n"
+        exit 1
+    fi
+fi
+
 
 ### Log start of script operations
 echo -e "\e[1;35m${stamp}-- Start $scriptName execution ---${normal}" \
