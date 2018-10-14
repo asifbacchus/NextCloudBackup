@@ -135,7 +135,7 @@ err503File="${err503Path##*/}"
 sqlDetails="$scriptPath/nc_sql.details"
 
 # set default borgDetails path to scriptPath
-borgDetails=$"scriptPath/nc_borg.details"
+borgDetails="$scriptPath/nc_borg.details"
 
 # set borg parameters to 'normal' verbosity
 borgCreateParams='--stats'
