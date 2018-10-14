@@ -442,6 +442,14 @@ if [ -z "${borgConfig[1]}" ]; then
     cleanup
     quit 211
 else
+    checkExist ff "${borgConfig[1]}"
+    checkResult="$?"
+    if [ "$checkResult" = 1 ]; then
+        # SSH keyfile specified could not be found
+        cleanup
+        quit 211
+    fi
+    echo -e "${op}${stamp} Borg SSH key... OK${normal}" >> "$logFile"
     export BORG_RSH="ssh -i ${borgConfig[1]}"
 fi
 # check: name of borg repo
