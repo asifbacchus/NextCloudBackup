@@ -153,6 +153,11 @@ unset sqlParams
 unset borgXtra
 unset borgExclude
 unset borgPrune
+unset BORG_BASE_DIR
+unset BORG_RSH
+unset BORG_REPO
+unset BORG_PASSPHRASE
+unset BORG_REMOTE_PATH
 errorExplain=()
 exitWarn=()
 warningExplain=()
