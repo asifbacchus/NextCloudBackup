@@ -572,6 +572,11 @@ else
 fi
 
 
+### borgbackup completed
+echo -e "${op}${stamp} Borgbackup completed... begin cleanup" \
+    "${normal}" >> "$logFile"
+
+
 ### Exit NextCloud maintenance mode
 ncMaint off
 # check if successful
