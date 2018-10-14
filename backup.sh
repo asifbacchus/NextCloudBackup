@@ -122,7 +122,7 @@ function cleanup {
         echo -e "${info}${stamp} -- [INFO] NextCloud now in regular" \
                 "operating mode --${normal}" >> "$logFile"
         else
-            quit 100
+            quit 101
     fi
 }
 
