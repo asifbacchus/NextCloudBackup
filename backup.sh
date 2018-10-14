@@ -535,7 +535,7 @@ fi
 ## Check status of borg operation
 borgResult="$?"
 if [ "$borgResult" -eq 0 ]; then
-    echo "${ok}${stamp} -- [SUCCESS] Borg backup completed successfully --" \
+    echo -e "${ok}${stamp} -- [SUCCESS] Borg backup completed successfully --" \
         "${normal}" >> "$logFile"
 elif [ "$borgResult" -eq 1 ]; then
     exitWarn+=('borg200')
