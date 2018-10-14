@@ -435,8 +435,8 @@ if [ "$maintResult" = "0" ]; then
     echo -e "${info}${stamp} -- [INFO] NextCloud now in maintenance mode --" \
         "${normal}" >> "$logFile"
 else
-    cleanup
     exitError+=('100')
+    cleanup
     quit
 fi
 
@@ -456,8 +456,8 @@ if [ "$dumpResult" = "0" ]; then
     echo -e "${ok}${stamp} -- [SUCCESS] SQL dumped successfully --${normal}" \
         >> "$logFile"
 else
-    cleanup
     exitError+=('200')
+    cleanup
     quit
 fi
 
@@ -473,8 +473,8 @@ mapfile -t borgConfig < "$borgDetails"
 # check: borg base directory
 echo -e "${op}${stamp} Verifying supplied borg configuration variables..."
 if [ -z "${borgConfig[0]}" ]; then
-    cleanup
     exitError+=('210')
+    cleanup
     quit
 else
     # verify the path actually exists
@@ -482,8 +482,8 @@ else
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # borg base directory specified could not be found
-        cleanup
         exitError+=('210')
+        cleanup
         quit
     fi
     echo -e "${op}${stamp} Borg base dir... OK${normal}" >> "$logFile"
@@ -491,16 +491,16 @@ else
 fi
 # check: path to SSH keyfile
 if [ -z "${borgConfig[1]}" ]; then
-    cleanup
     exitError+=('211')
+    cleanup
     quit
 else
     checkExist ff "${borgConfig[1]}"
     checkResult="$?"
     if [ "$checkResult" = 1 ]; then
         # SSH keyfile specified could not be found
-        cleanup
         exitError+=('211')
+        cleanup
         quit
     fi
     echo -e "${op}${stamp} Borg SSH key... OK${normal}" >> "$logFile"
@@ -508,8 +508,8 @@ else
 fi
 # check: name of borg repo
 if [ -z "${borgConfig[2]}" ]; then
-    cleanup
     exitError+=('212')
+    cleanup
     quit
 else
     export BORG_REPO="{borgConfig[2]}"
@@ -581,8 +581,8 @@ if [ "$borgResult" -eq 0 ]; then
 elif [ "$borgResult" -eq 1 ]; then
     exitWarn+=('borg200')
 elif [ "$borgResult" -ge 2 ]; then
-    cleanup
     exitError+=('220')
+    cleanup
     quit
 else
     exitWarn+=('borg201')
