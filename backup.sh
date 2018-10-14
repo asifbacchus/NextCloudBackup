@@ -471,7 +471,8 @@ mapfile -t borgConfig < "$borgDetails"
 ## check if any required borg configuration variables in defintion file are
 ## empty and exit with error, otherwise, map array items to variables
 # check: borg base directory
-echo -e "${op}${stamp} Verifying supplied borg configuration variables..."
+echo -e "${op}${stamp} Verifying supplied borg configuration variables..." \
+    "${normal}" >> "$logFile"
 if [ -z "${borgConfig[0]}" ]; then
     exitError+=('210')
     cleanup
