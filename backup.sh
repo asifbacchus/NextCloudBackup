@@ -409,11 +409,60 @@ else
 fi
 
 ### Call borgbackup to copy actual files
-echo -e "${op}${stamp} Pre-backup tasks completed, calling borgbackup..."
+echo -e "${op}${stamp} Pre-backup tasks completed, calling borgbackup..." \
+    "${normal}" >> "$logFile"
 
 ## Get borgbackup settings and repo details
 # read definition file and map to array variable
-mapfile -t borgConfig < $borgDetails
+mapfile -t borgConfig < "$borgDetails"
+## check if any required borg configuration variables in defintion file are
+## empty and exit with error, otherwise, map array items to variables
+# check: borg base directory
+echo -e "${op}${stamp} Verifying supplied borg configuration variables..."
+if [ -z "${borgConfig[0]}" ]; then
+    cleanup
+    quit 210
+else
+    export BORG_BASE_DIR="${borgConfig[0]}"
+fi
+# check: path to SSH keyfile
+if [ -z "${borgConfig[1]}" ]; then
+    cleanup
+    quit 211
+else
+    export BORG_RSH="ssh -i ${borgConfig[1]}"
+fi
+# check: name of borg repo
+if [ -z "${borgConfig[2]}" ]; then
+    cleanup
+    quit 212
+else
+    export BORG_REPO="{borgConfig[2]}"
+fi
+# repo password
+if [ -n "${borgConfig[3]}" ]; then
+    export BORG_PASSPHRASE="{borgConfig[3]}"
+else
+    echo -e "${info}${stamp} -- [INFO] No password will be used for SSH keys" \
+        "or when accessing remote borg repo --${normal}" >> "$logFile"
+    # if the password was omitted by mistake, export a dummy password so borg
+    # fails with an error instead of sitting and waiting for input
+    export BORG_PASSPHRASE="DummyPasswordSoBorgFails"
+fi
+# additional files to be backed up
+borgXtra="${borgConfig[4]}"
+# file with pattern definition for excluded files
+borgExclude="${borgConfig[5]}"
+# parameters for borg prune
+borgPrune="${borgConfig[6]}"
+# export: borg remote path (if not blank)
+if [ -n "${borgConfig[7]}" ]; then
+    export BORG_REMOTE_PATH="${borgConfig[7]}"
+else
+    echo -e "${info}${stamp} -- [INFO] No remote borg instance specified" \
+        "--${normal}" >> "$logFile"
+fi
+
 # map individual array items to variables and export where necessary
 export BORG_BASE_DIR="${borgConfig[0]}"
 export BORG_RSH="ssh -i ${borgConfig[1]}"
