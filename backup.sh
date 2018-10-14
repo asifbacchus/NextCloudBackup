@@ -114,6 +114,16 @@ function cleanup {
         echo -e "${op}${stamp} 503 error page never copied to webroot," \
             "nothing to cleanup" >> "$logFile"
     fi
+
+    ## Exit NextCloud maintenance mode regardless of current status
+    ncMaint off
+    # check if successful
+    if [ "$maintResult" = "0" ]; then
+        echo -e "${info}${stamp} -- [INFO] NextCloud now in regular" \
+                "operating mode --${normal}" >> "$logFile"
+        else
+            quit 100
+    fi
 }
 
 ### End of Functions ###
