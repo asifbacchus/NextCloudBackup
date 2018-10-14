@@ -172,6 +172,7 @@ errorExplain[200]="Could not dump NextCloud SQL database"
 errorExplain[210]="Invalid or non-existant borg base directory specified (borg backup details file)"
 errorExplain[211]="Invalid or non-existant path to borg SSH keyfile (borg backup details file)"
 errorExplain[212]="Name of borg repo was not specified (borg backup details file)"
+errorExplain[220]="Borg exited with a critical error. Please check this script's logfile for details"
 
 ### Warning codes & messages
 warningExplain[111]="Could not remove SQL dump file and directory, please remove manually"
@@ -185,6 +186,9 @@ warningExplain[borg111]="No password used for SSH keys or access remote borg rep
 warningExplain[borg112]="No remote borg instance specified. Operations will be slower in this configuration."
 warningExplain[borg113]="The specified file containing extra files for inclusion in borgbackup could not be found"
 warningExplain[borg115]="No paramters provided for borg prune. No repo pruning has taken place. You should reconsider this decision to control the size/history of your backups."
+warningExplain[borg200]="Borg completed with warnings. Please check this script's logfile for details."
+warningExplain[borg201]="Borg exited with an unknown return-code. Please check this script's logfile for details."
+
 
 ### Process script parameters
 
@@ -521,6 +525,20 @@ else
         :: `date +%Y-%m-%d_%H%M%S` \
         "${xtraFiles[@]}" \
         "${sqlDumpDir}" "${ncDataDir}"
+fi
+
+## Check status of borg operation
+borgResult="$?"
+if [ "$borgResult" -eq 0 ]; then
+    echo "${ok}${stamp} -- [SUCCESS] Borg backup completed successfully --" \
+        "${normal}" >> "$logFile"
+elif [ "$borgResult" -eq 1 ]; then
+    exitWarn+=('borg200')
+elif [ "$borgResult" -ge 2 ]; then
+    cleanup
+    quit 220
+else
+    exitWarn+=('borg201')
 fi
 
 ## Generate and execute borg prune
