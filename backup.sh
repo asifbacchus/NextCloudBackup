@@ -202,6 +202,7 @@ warn503="Web users will NOT be informed the server is down!"
 warningExplain[2111]="No password used for SSH keys or access to remote borg repo. This is an insecure configuration"
 warningExplain[2112]="No remote borg instance specified. Operations will be slower in this configuration"
 warningExplain[2113]="The specified file containing extra files for inclusion in borgbackup could not be found"
+warningExplain[2114]="The specified file containing exclusion patterns for borgbackup could not be found. Backup was performed as though NO exclusions were defined"
 warningExplain[2115]="No paramters provided for borg prune. No repo pruning has taken place. You should reconsider this decision to control the size/history of your backups"
 warningExplain[2200]="Borg completed with warnings. Please check this script's logfile for details"
 warningExplain[2201]="Borg exited with an unknown return-code. Please check this script's logfile for details"
@@ -552,6 +553,19 @@ if [ -n "$borgXtra" ]; then
         exitWarn+=('2113')
     fi
 fi
+
+## Check if borgExclude exists since borg will throw an error if it's missing
+checkExist ff "$borgExclude"
+checkResult="$?"
+if [ "$checkResult" = "0" ]; then
+        echo -e "${op}${stamp} Found ${lit}${borgExclude}${normal}" \
+            >> "$logFile"
+    else
+        # file not found, unset the variable so it's like it was not specified
+        # in the first place and continue with backup
+        unset borgExclude
+        exitWarn+=('2114')
+    fi
 
 ## Generate and execute borg
 # commandline depends on whether borgExclude is empty or not
