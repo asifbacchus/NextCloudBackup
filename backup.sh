@@ -168,6 +168,9 @@ xtraFiles=()
 errorExplain[100]="Could not put NextCloud into maintenance mode"
 errorExplain[101]="Could not exit NextCloud maintenance mode"
 errorExplain[200]="Could not dump NextCloud SQL database"
+errorExplain[210]="Invalid or non-existant borg base directory specified (borg backup details file)"
+errorExplain[211]="Invalid or non-existant path to borg SSH keyfile (borg backup details file)"
+errorExplain[212]="Name of borg repo was not specified (borg backup details file)"
 
 ### Warning codes & messages
 warningExplain[111]="Could not remove SQL dump file and directory, please remove manually"
