@@ -595,7 +595,7 @@ if [ -n "$borgPrune" ]; then
     # parameters defined
     echo -e "${bold}${op}${stamp} Executing borg prune operation${normal}" \
         >> "$logFile"
-    borg prune --show-rc -v -n ${borgPruneParams} ${borgPrune} \
+    borg prune --show-rc -v ${borgPruneParams} ${borgPrune} \
         2>> "$logFile"
     # check return-status
     pruneResult="$?"
