@@ -504,7 +504,24 @@ if [ -n "$borgXtra" ]; then
     fi
 fi
 
-
+## Generate and execute borg
+# commandline depends on whether borgExclude is empty or not
+if [ -z "$borgExclude" ]; then
+    # borgExclude is empty
+    echo -e "${op}${stamp} Executing borg without exclusions${normal}" \
+        >> "$logFile"
+    borg --show-rc create ${borgCreateParams} :: `date +%Y-%m-%d_%H%M%S` \
+        "${xtraFiles[@]}" \
+        "${sqlDumpDir}" "${ncDataDir}"
+else
+    # borgExclude is not empty
+    echo -e "${op}${stamp} Executing borg with exclusions${normal}" \
+        >> "$logFile"
+    borg --show-rc create ${borgCreateParams} --exclude-from "${borgExclude}" \
+        :: `date +%Y-%m-%d_%H%M%S` \
+        "${xtraFiles[@]}" \
+        "${sqlDumpDir}" "${ncDataDir}"
+fi
 
 
 ### Exit NextCloud maintenance mode
