@@ -638,6 +638,8 @@ echo -e "${op}${stamp} Borgbackup completed... begin cleanup" \
 echo -e "${bold}${default}${stamp} ***Normal exit process***${normal}" \
     >> "$logFile"
 cleanup
+echo -e "${bold}${ok}${stamp} -- [SUCCESS] All processes completed" \
+    "successfully --${normal}" >> "$logFile" 
 quit
 
 # This code should not be executed since the 'quit' function should terminate
