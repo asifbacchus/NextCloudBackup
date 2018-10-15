@@ -11,6 +11,7 @@ ok="\e[32m"
 lit="\e[93m"
 op="\e[39m"
 info="\e[96m"
+note="\e[35m"
 stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 
 
@@ -18,7 +19,73 @@ stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 
 ### scriptHelp -- display usage information for this script
 function scriptHelp {
-    echo "In the future, I will be something helpful!"
+    echo -e "${bold}${note}\n${scriptName} usage instructions:\n${normal}"
+    echo -e "${default}This script performs a backup of your NextCloud system"
+    echo -e "assuming a fairly standard set up such as outlined at"
+    echo -e "${lit}https://mytechiethoughts.com${default}.  Full details about"
+    echo -e "this script can be found at that site."
+    echo -e "${bold}\nThe script performs the following tasks:${normal}${default}"
+    echo -e "1. Puts NextCloud in maintenance mode."
+    echo -e "2. Optionally copies a 503 error page to your webroot."
+    echo -e "3. Dumps SQL to a temporary directory."
+    echo -e "4. Invokes borgbackup to backup your SQL info, NextCloud program"
+    echo -e "\tand data files along with any other files you specify."
+    echo -e "5. Removes temp files, the 503 error page and restores"
+    echo -e "\tNextCloud to operational status."
+    echo -e "\nThe readme file included in this script's git contains detailed"
+    echo -e "usage information. The following is a brief summary:\n"
+    echo -e "${bold}${note}Mandatory parameters:${normal}${default}"
+    echo -e "${lit}\n-d, NextCloud data directory${default}"
+    echo -e "This is the physical location of your NextCloud data."
+    echo -e "${lit}\n-n, NextCloud webroot${default}"
+    echo -e "This is the location of the actual NextCloud web files (php & html"
+    echo -e ",etc.), usually within your NGINX or Apache webroot."
+    echo -e "${lit}\n-u, NGINX/Apache webuser account${default}"
+    echo -e "The webuser account NGINX/Apache (and thus, NextCloud) are running"
+    echo -e "under.  Some actions must run as this user due to file ownership"
+    echo -e "restrictions."
+    echo -e "${bold}${note}\nOptional parameters:${normal}${default}"
+    echo -e "${lit}\n-5, Location of 503 error page file${default}"
+    echo -e "FULL PATH to the 503 error page HTML file you want copied to your"
+    echo -e "webroot to inform users the server is down during the backup. If"
+    echo -e "you don't specify a path/file, the default will be used. If the"
+    echo -e "default cannot be found, a warning will be logged and the script"
+    echo -e "will continue."
+    echo -e "${info}Default: ScriptPath/503.html${default}"
+    echo -e "${lit}\n-b, Location of file with borg repo details${default}"
+    echo -e "FULL PATH to the plain text file containing all information needed"
+    echo -e "to connect and process your borg repo. Details on the structure of"
+    echo -e "this file are in the readme and on ${lit}https://mytechiethoughts.com${default}"
+    echo -e "${info}Default: ScriptPath/nc_borg.details${default}"
+    echo -e "${lit}\n-l, Location to save log file${default}"
+    echo -e "This script writes a detailed log file of all activities.  It is" 
+    echo -e "structured in an way easy for log parsers (like Logwatch) to read."
+    echo -e "${info}Default: ScriptPath/ScriptName.log${default}"
+    echo -e "${lit}\n-s, Location of file with mySQL details${default}"
+    echo -e "FULL PATH to the plain text file containing all information needed"
+    echo -e "to connect to your mySQL (mariaDB) server and NextCloud database."
+    echo -e "Details on the structure of this file are in the readme and on ${lit}"
+    echo -e "https://mytechiethoughts.com${default}"
+    echo -e "${info}Default: ScriptPath/nc_sql.details${default}"
+    echo -e "${lit}\n-v, Verbose output from borgbackup${default}"
+    echo -e "By default, this script will only log summary data from borg."
+    echo -e "If you need/want more detailed information, the verbose setting"
+    echo -e "will list every file processed along with their status. Note: Your"
+    echo -e "log file can quickly get very very large using this option!"
+    echo -e "${info}Default: NOT activated (standard logging)${default}"
+    echo -e "${lit}\n-w, webserver's webroot directory${default}"
+    echo -e "This is the location from which your webserver (NGINX, Apache,"
+    echo -e "etc.) physically stores files to be served.  This is NOT the"
+    echo -e "configuration directory for your webserver!  It is the place"
+    echo -e "where the actual HTML/PHP/CSS/JS/etc. files are stored."
+    echo -e "NOTE: If you omit this option, then the entire 503 copy process"
+    echo -e "will be skipped regardless of the presence of a 503.html file."
+    echo -e "If you don't want to use the 503 feature, omitting this is an easy"
+    echo -e "way to skip it!"
+    echo -e "${info}Default: NONE${default}"
+    echo -e "${lit}\n-?, This help screen${default}\n"
+    echo -e "${bold}Please refer to the readme file and/or ${lit}https://mytechiethoughts.com${default}"
+    echo -e "for more information on this script.${normal}\n"
     # exit with code 1 -- there is no use logging this
     exit 1
 }
@@ -36,7 +103,7 @@ function quit {
     fi
     if [ -z "${exitError}" ]; then
         # exit cleanly
-        echo -e "\e[1;35m${stamp} -- ${scriptName} completed" \
+        echo -e "${note}${stamp} -- ${scriptName} completed" \
             "--${normal}" >> "$logFile"
         exit 0
     else
@@ -350,7 +417,7 @@ fi
 
 
 ### Log start of script operations
-echo -e "\e[1;35m${stamp}-- Start $scriptName execution ---${normal}" \
+echo -e "${note}${stamp}-- Start $scriptName execution ---${normal}" \
     >> "$logFile"
 
 
@@ -635,7 +702,7 @@ echo -e "${op}${stamp} Borgbackup completed... begin cleanup" \
 
 
 ### Exit script
-echo -e "${bold}${default}${stamp} ***Normal exit process***${normal}" \
+echo -e "${bold}${op}${stamp} ***Normal exit process***${normal}" \
     >> "$logFile"
 cleanup
 echo -e "${bold}${ok}${stamp} -- [SUCCESS] All processes completed" \
