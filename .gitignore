@@ -1,7 +1,9 @@
 # ignore log files
 *.log
 
+# ignore all vscode settings files
+.vscode/
+
 # ignore reference files
 nc_sql.details
 nc_borg.details
-.vscode/settings.json
