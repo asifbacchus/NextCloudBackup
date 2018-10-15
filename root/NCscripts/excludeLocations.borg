@@ -1,0 +1,3 @@
+'/var/nc_data/cache'
+sh:/var/nc_data/appdata_*/preview/
+EOF
