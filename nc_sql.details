@@ -1,0 +1,4 @@
+<name of machine hosting mySQL>     localhost
+<name of authorized user>           nextcloud
+<password for above user>           pAsSwOrd
+<name of NextCloud database>        nextcloudDB
