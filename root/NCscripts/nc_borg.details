@@ -4,5 +4,5 @@
 <password for SSH key/repo>         pAsSwOrd
 <path to file listing extra files>  /root/NCscripts/xtraLocations.borg
 <path to file with exclusions>      /root/NCscripts/excludeLocations.borg
-<purge timeframe options>           --keep-within=1H --keep-last=5
+<purge timeframe options>           --keep-within=7 --keep-daily=30 --keep-weekly=12 --keep-monthly=-1
 <location of borg remote instance>  borg1
