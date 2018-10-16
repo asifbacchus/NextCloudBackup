@@ -685,7 +685,7 @@ else
         "${normal}" >> "$logFile"
 fi
 # export TMPDIR environment variable
-export TMPDIR="${BORG_BASE_DIR%/}/tmp"
+export TMPDIR="${BORG_BASE_DIR}/tmp"
 
 
 ## Generate and execute borg
