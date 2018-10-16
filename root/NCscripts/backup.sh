@@ -241,6 +241,7 @@ unset BORG_RSH
 unset BORG_REPO
 unset BORG_PASSPHRASE
 unset BORG_REMOTE_PATH
+unset TMPDIR
 exitError=()
 errorExplain=()
 exitWarn=()
@@ -255,6 +256,7 @@ errorExplain[200]="Could not dump NextCloud SQL database"
 errorExplain[210]="Invalid or non-existant borg base directory specified (borg backup details file)"
 errorExplain[211]="Invalid or non-existant path to borg SSH keyfile (borg backup details file)"
 errorExplain[212]="Name of borg repo was not specified (borg backup details file)"
+errorExplain[215]="Could not find/create 'tmp' directory within borg base directory. Please manually create it and ensure it's writable"
 errorExplain[220]="Borg exited with a critical error. Please check this script's logfile for details"
 errorExplain[221]="Borg prune exited with ERRORS. Please check this script's logfile for details"
 
@@ -633,6 +635,40 @@ else
     unset borgExclude
     exitWarn+=('2114')
 fi
+
+## Export TMPDIR environment variable for borg via python
+## Python requires a writable temporary directory when unpacking borg and
+## executing commands.  This defaults to /tmp but many systems mount /tmp with
+## the 'noexec' option for security.  Thus, we will use/create a 'tmp' folder
+## within the BORG_BASE_DIR and instruct python to use that instead of /tmp
+# check if BORG_BASE_DIR/tmp exists, if not, create it
+echo -e "${op}${stamp} Checking for tmp directory for borg..." \
+    "${normal}" >> "$logFile"
+checkExist fd "$BORG_BASE_DIR/tmp"
+checkResult="$?"
+if [ "$checkResult" = "1" ]; then
+    # folder not found
+    mkdir "$BORG_BASE_DIR/tmp" 2>> "$logFile"
+    # verify folder created
+    checkExist fd "$BORG_BASE_DIR/tmp"
+    if [ "$checkResult" = "0" ]; then
+        # folder exists
+        echo -e "${op}${stamp} tmp folder created within borg base directory" \
+            "${normal}" >> "$logFile"
+    else
+        # problem creating folder and script will exit
+        exitError+=('215')
+        cleanup
+        quit
+    fi
+else
+    # folder found
+    echo -e "${op}${stamp} tmp folder found within borg base directory" \
+        "${normal}" >> "$logFile"
+fi
+# export TMPDIR environment variable
+export TMPDIR="${BORG_BASE_DIR%/}/tmp"
+
 
 ## Generate and execute borg
 # commandline depends on whether borgExclude is empty or not
