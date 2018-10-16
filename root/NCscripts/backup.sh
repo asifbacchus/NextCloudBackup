@@ -627,17 +627,23 @@ if [ -n "$borgXtra" ]; then
 fi
 
 ## Check if borgExclude exists since borg will throw an error if it's missing
-checkExist ff "$borgExclude"
-checkResult="$?"
-if [ "$checkResult" = "0" ]; then
-        echo -e "${op}${stamp} Found ${lit}${borgExclude}${normal}" \
-            >> "$logFile"
+if [ -n "$borgExclude" ]; then
+    checkExist ff "$borgExclude"
+    checkResult="$?"
+    if [ "$checkResult" = "0" ]; then
+            echo -e "${op}${stamp} Found ${lit}${borgExclude}${normal}" \
+                >> "$logFile"
+    else
+        # file not found, unset the variable so it's like it was not specified
+        # in the first place and continue with backup
+        unset borgExclude
+        exitWarn+=('2114')
+    fi
 else
-    # file not found, unset the variable so it's like it was not specified
-    # in the first place and continue with backup
-    unset borgExclude
-    exitWarn+=('2114')
+    echo -e "${op}${stamp} Exclusion pattern file not specified." \
+        "No exclusions will be processed${normal}" >> "$logFile"
 fi
+
 
 ## Export TMPDIR environment variable for borg via python
 ## Python requires a writable temporary directory when unpacking borg and
