@@ -11,7 +11,7 @@ ok="\e[32m"
 lit="\e[93m"
 op="\e[39m"
 info="\e[96m"
-note="\e[35m"
+note="\e[95m"
 stamp="[`date +%Y-%m-%d` `date +%H:%M:%S`]"
 
 
