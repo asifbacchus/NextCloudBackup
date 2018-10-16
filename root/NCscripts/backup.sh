@@ -166,7 +166,7 @@ function cleanup {
 
     ## remove 503 error page
     # check value of 'clean503' to see if this is necessary (=1) otherwise, skip
-    if [ "$clean503" -eq 1 ]; then
+    if [ "$clean503" = "1" ]; then
         # proceed with cleanup
         echo -e "${op}${stamp} Removing 503 error page..." >> "$logFile"
         rm -f "$webroot/$err503File" >> "$logFile" 2>&1
@@ -559,7 +559,7 @@ else
         quit
     fi
     echo -e "${op}${stamp} Borg base dir... OK${normal}" >> "$logFile"
-    export BORG_BASE_DIR="${borgConfig[0]}"
+    export BORG_BASE_DIR="${borgConfig[0]%/}"
 fi
 # check: path to SSH keyfile
 if [ -z "${borgConfig[1]}" ]; then
@@ -628,7 +628,7 @@ if [ -n "$borgXtra" ]; then
 else
     # no extra locations specified
     echo -e "${op}${stamp} No additional locations specified for backup." \
-        "only NextCloud data files will be backed up${normal}" >> "$logFile"
+        "Only NextCloud data files will be backed up${normal}" >> "$logFile"
     exitWarn+=('2116')
 fi
 
@@ -663,7 +663,7 @@ checkExist fd "$BORG_BASE_DIR/tmp"
 checkResult="$?"
 if [ "$checkResult" = "1" ]; then
     # folder not found
-    echo -e "${op}${stamp} tmp folder not found... creating ${lit}" \
+    echo -e "${op}${stamp} tmp folder not found... creating${lit}" \
         "${BORG_BASE_DIR}/tmp${normal}" >> "$logFile"
     mkdir "$BORG_BASE_DIR/tmp" 2>> "$logFile"
     # verify folder created
