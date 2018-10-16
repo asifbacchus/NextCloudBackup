@@ -642,15 +642,18 @@ fi
 ## the 'noexec' option for security.  Thus, we will use/create a 'tmp' folder
 ## within the BORG_BASE_DIR and instruct python to use that instead of /tmp
 # check if BORG_BASE_DIR/tmp exists, if not, create it
-echo -e "${op}${stamp} Checking for tmp directory for borg..." \
+echo -e "${op}${stamp} Checking for tmp directory at ${lit}${BORG_BASE_DIR}" \
     "${normal}" >> "$logFile"
 checkExist fd "$BORG_BASE_DIR/tmp"
 checkResult="$?"
 if [ "$checkResult" = "1" ]; then
     # folder not found
+    echo -e "${op}${stamp} tmp folder not found... creating ${lit}" \
+        "${BORG_BASE_DIR}/tmp${normal}" >> "$logFile"
     mkdir "$BORG_BASE_DIR/tmp" 2>> "$logFile"
     # verify folder created
     checkExist fd "$BORG_BASE_DIR/tmp"
+    checkResult="$?"
     if [ "$checkResult" = "0" ]; then
         # folder exists
         echo -e "${op}${stamp} tmp folder created within borg base directory" \
