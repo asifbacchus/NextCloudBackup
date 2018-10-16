@@ -583,10 +583,12 @@ if [ -z "${borgConfig[2]}" ]; then
     cleanup
     quit
 else
+    echo -e "${op}${stamp} Borg REPO name... OK${normal}" >> "$logFile"
     export BORG_REPO="${borgConfig[2]}"
 fi
 # repo password
 if [ -n "${borgConfig[3]}" ]; then
+    echo -e "${op}${stamp} Borg SSH/REPO password... OK${normal}" >> "$logFile"
     export BORG_PASSPHRASE="${borgConfig[3]}"
 else
     exitWarn+=('2111')
@@ -602,6 +604,7 @@ borgExclude="${borgConfig[5]}"
 borgPrune="${borgConfig[6]}"
 # export: borg remote path (if not blank)
 if [ -n "${borgConfig[7]}" ]; then
+    echo -e "${op}${stamp} Borg REMOTE path... OK${normal}" >> "$logFile"
     export BORG_REMOTE_PATH="${borgConfig[7]}"
 else
     exitWarn+=('2112')
