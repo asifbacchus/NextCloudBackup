@@ -627,12 +627,12 @@ checkResult="$?"
 if [ "$checkResult" = "0" ]; then
         echo -e "${op}${stamp} Found ${lit}${borgExclude}${normal}" \
             >> "$logFile"
-    else
-        # file not found, unset the variable so it's like it was not specified
-        # in the first place and continue with backup
-        unset borgExclude
-        exitWarn+=('2114')
-    fi
+else
+    # file not found, unset the variable so it's like it was not specified
+    # in the first place and continue with backup
+    unset borgExclude
+    exitWarn+=('2114')
+fi
 
 ## Generate and execute borg
 # commandline depends on whether borgExclude is empty or not
