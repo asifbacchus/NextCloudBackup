@@ -41,13 +41,13 @@ if ($detailLevel == 0) {
 
     ### fill hash table with headings and summary counts
     if ($summarySuccess > 0) {
-        $reportHash{"All processes successfully completed:"} = $summarySuccess;
+        $reportHash{"All processes successfully completed"} = $summarySuccess;
     }
     if ($summaryWarn > 0) {
-        $reportHash{"Warnings issued:"} = $summaryStatusUpToDate;
+        $reportHash{"Warnings issued"} = $summaryWarn;
     }
     if ($summaryErr > 0) {
-        $reportHash{"Errors encountered:"} = $summaryErr;
+        $reportHash{"Errors encountered"} = $summaryErr;
     }
 
     ### print hash table
