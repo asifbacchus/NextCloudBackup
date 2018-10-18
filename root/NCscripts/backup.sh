@@ -58,7 +58,7 @@ function scriptHelp {
     echo -e "this file are in the readme and on ${lit}https://mytechiethoughts.com${default}"
     echo -e "${info}Default: ScriptPath/nc_borg.details${default}"
     echo -e "${lit}\n-l, Location to save log file${default}"
-    echo -e "This script writes a detailed log file of all activities.  It is" 
+    echo -e "This script writes a detailed log file of all activities.  It is"
     echo -e "structured in an way easy for log parsers (like Logwatch) to read."
     echo -e "${info}Default: ScriptPath/ScriptName.log${default}"
     echo -e "${lit}\n-s, Location of file with mySQL details${default}"
@@ -373,7 +373,7 @@ if [ -z "$webUser" ]; then
 # Check if supplied webUser account exists
 elif [ -n "$webUser" ]; then
     user_exists=$(id -u $webUser > /dev/null 2>&1; echo $?)
-    if [ $user_exists -ne 0 ]; then        
+    if [ $user_exists -ne 0 ]; then
         echo -e "\n${err}The supplied webuser account (-u parameter) does not" \
             "exist.${normal}\n"
         exit 1
@@ -420,8 +420,10 @@ fi
 
 
 ### Log start of script operations
-echo -e "${note}${stamp}-- Start $scriptName execution ---${normal}" \
+echo -e "${note}${stamp}--- Start $scriptName execution ---${normal}" \
     >> "$logFile"
+echo -e "${info}${stamp}-- [INFO] Log file located at ${lit}${logFile}${info}" \
+    "--${normal}" >> "$logFile"
 
 
 ### Export logFile variable for use by Borg
@@ -760,7 +762,7 @@ echo -e "${bold}${op}${stamp} ***Normal exit process***${normal}" \
     >> "$logFile"
 cleanup
 echo -e "${bold}${ok}${stamp} -- [SUCCESS] All processes completed" \
-    "successfully --${normal}" >> "$logFile" 
+    "successfully --${normal}" >> "$logFile"
 quit
 
 # This code should not be executed since the 'quit' function should terminate
