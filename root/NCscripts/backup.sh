@@ -103,8 +103,8 @@ function quit {
     fi
     if [ -z "${exitError}" ]; then
         # exit cleanly
-        echo -e "${note}${stamp} -- ${scriptName} completed" \
-            "--${normal}" >> "$logFile"
+        echo -e "${note}${stamp} --- ${scriptName} completed" \
+            "---${normal}" >> "$logFile"
         exit 0
     else
         # list generated errors and explanations then exit script with code 2
