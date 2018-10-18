@@ -694,16 +694,16 @@ export TMPDIR="${BORG_BASE_DIR}/tmp"
 # commandline depends on whether borgExclude is empty or not
 if [ -z "$borgExclude" ]; then
     # borgExclude is empty
-    echo -e "${bold}${op}${stamp} Executing borg without exclusions${normal}" \
-        >> "$logFile"
+    echo -e "${info}${stamp} --[INFO] Executing borg without exclusions --" \
+        "${normal}" >> "$logFile"
     borg --show-rc create ${borgCreateParams} ::`date +%Y-%m-%d_%H%M%S` \
         ${xtraFiles[@]} \
         ${sqlDumpDir} ${ncDataDir} \
         2>> "$logFile"
 else
     # borgExclude is not empty
-    echo -e "${bold}${op}${stamp} Executing borg with exclusions${normal}" \
-        >> "$logFile"
+    echo -e "${info}${stamp} --[INFO] Executing borg with exclusions --" \
+        "${normal}" >> "$logFile"
     borg --show-rc create ${borgCreateParams} --exclude-from ${borgExclude} \
         ::`date +%Y-%m-%d_%H%M%S` \
         ${xtraFiles[@]} \
@@ -730,8 +730,8 @@ fi
 # command depends on whether or not parameters have been defined
 if [ -n "$borgPrune" ]; then
     # parameters defined
-    echo -e "${bold}${op}${stamp} Executing borg prune operation${normal}" \
-        >> "$logFile"
+    echo -e "${info}${stamp} --[INFO] Executing borg prune operation --" \
+        "${normal}" >> "$logFile"
     borg prune --show-rc -v ${borgPruneParams} ${borgPrune} \
         2>> "$logFile"
     # check return-status
