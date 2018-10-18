@@ -437,7 +437,7 @@ echo -e "${info}${stamp} -- [INFO] mySQL dump file will be stored" \
     "at: ${lit}${sqlDumpDir}/${sqlDumpFile}${normal}" >> "$logFile"
 
 
-### 503 error page: If you dont' plan on using the auto-copied 503 then comment
+### 503 error page: If you don't plan on using the auto-copied 503 then comment
 ### this entire section starting with '--- Begin 503 section ---' until
 ### '--- End 503 section ---' to suppress generated warnings
 
