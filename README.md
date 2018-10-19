@@ -1,4 +1,4 @@
-# NextCloud Backup using borgbackup
+# NextCloud Backup Using borgbackup
 
 This script automates backing up your NextCloud installation using borgbackup
 and a remote ssh-capable storage system.  I suggest using rsync.net since they
@@ -17,8 +17,8 @@ This script automates the following tasks:
 - Allows you to specify files/directories to exclude from your backups (e.g.
   previews)
 - Runs 'borg prune' to make sure you are trimming old backups on your schedule
-- Creates an clear, easy to parse log file so you can easily keep an eye on your
-  backups and any errors/warnings
+- Creates a clear, easy to parse log file so you can keep an eye on your backups
+  and any errors/warnings
 
 ## Installation/copying
 
@@ -30,9 +30,9 @@ have to specify their locations when running the script.
 
 Remember to make the script executable!
 
-    ```Bash
-    chmod +x backup.sh
-    ```
+```Bash
+chmod +x backup.sh
+```
 
 In addition, you can rename this script file to anything you like.  The log file
 will use that same name by default when naming itself and any mention of this
@@ -41,11 +41,11 @@ file in the logs will automatically use whatever name you choose to give it.
 ## Environment notes
 
 The script is designed to be easy to use but still be flexible enough to
-accommodate a wide range of cn NextCloud setups.  I have tested it with
+accommodate a wide range of NextCloud setups.  I have tested it with
 NextCloud 13 and 14 using a standard LEMP setup (Debian Stretch, NGINX, mariaDB
 & PHP7).  The script accepts several parameters to provide it with the settings
 it requires to function.  In addition, it reads external files for SQL and borg
-settings, so you don't have to weed through the script code to supply things
+settings so you don't have to weed through the script code to supply things
 like passwords.
 
 ## Why this script must be run as root
@@ -59,7 +59,7 @@ permission/passwords.
 ## Script parameters
 
 You can run the script with the *'-?'* parameter to access the built-in help
-which explains the parameters.  However, the following is more detailed
+which explains the parameters.  However, the following is a more detailed
 explanation of each parameter and how to use them.
 **Note that any parameters needing a directory (webroot, nextcloud root, etc.)
 can be entered with or without the trailing / since it's stripped by the script
@@ -73,30 +73,30 @@ General usage:
 
 ### Required parameters
 
-#### -d _/path/to/data/_, NextCloud data directory
+#### NextCloud data directory: -d _/path/to/data/_
 
 This is the full path to the location where NextCloud actually stores data.  In
 a setup such as I recommend on my blog at
 [https://mytechiethoughts.com](https://www.mytechiethoughts.com), you would be
 using an entry such as *'/var/nc_data'*.  This directory and all subdirectories
-automatically included in the backup.
+are automatically included in the backup.
 
-#### -n _/path/to/nextcloud/_, NextCloud webroot
+#### NextCloud webroot: -n _/path/to/nextcloud/_
 
 This is the directory in which NextCloud's php and html files are located.  It
 is generally somewhere under your webroot directory.  This is required so the
 script can find the 'OCC' command to invoke maintenance mode.
 
-#### -w _accountName_, webuser account
+#### webuser account: -w _accountName_
 
 This is the account that NextCloud runs under via your webserver.  This is
 almost always *'www-data'*.  You would have to check your NGINX/Apache config to
 be sure.  'OCC' will not run as any other user thus, the script cannot
-enter/exit maintenance mode with knowing what user to emulate.
+enter/exit maintenance mode without knowing which user to emulate.
 
 ### Optional parameters
 
-#### -5 _/path/to/filename.html_, path to 503 html error page
+#### Path to 503 error page: -5 _/path/to/filename.html_
 
 The path to an html file for the script to copy to your webroot during the
 backup process.  This file can be scanned by your webserver and a 503 error can
@@ -108,7 +108,7 @@ be issued by the script but, it will continue executing.  More details on the
 503 notification can be found later in the [503 functionality](#503-functionality) section of this
 document. **Default: _scriptpath/503.html_**
 
-#### -b _/path/to/filename.file_, path to borg details file
+#### Path to borg details file: -b _/path/to/filename.file_
 
 This is a text file that lays out various borg options such as repo name,
 password, additional files to include, exclusion patters, etc.  A sample file is
@@ -117,32 +117,31 @@ entries can be found later in this document in the [borg details file](#borg-det
 section.
 **Default: _scriptpath/nc_borg.details_**
 
-#### -l _/path/to/filename.file_, log file location
+#### Desired log file location: -l _/path/to/filename.file_
 
-If you have a particular place you'd like this script to save it's log file,
-then you can specify it using this parameter.  I would recommend *'/var/log'*.
-By default, the script will name the log file *scriptname*.log and will save it
-in the same directory as the script itself.
+If you have a particular place and filename you'd like this script use for it's
+log, then you can specify it using this parameter.  I would recommend
+*'/var/log/backup.log'*. By default, the script will name the log file
+*scriptname*.log and will save it in the same directory as the script itself.
 **Default: _scriptpath/scriptname.log_**
 
-#### -s _/path/to/filename.file_, path to SQL details file
+#### Path to SQL details file: -s _/path/to/filename.file_
 
-This is text file containing the details needed to connect to NextCloud's SQL
-database.  For more information about the *required order* of entries can be
-found later in this document in the [sql details file](#sql-details-file) section.
+This is a text file containing the details needed to connect to NextCloud's SQL
+database.  More information about the *required order* of entries can be found
+later in this document in the [sql details file](#sql-details-file) section.
 **Default: _scriptpath/nc_sql.details_**
 
-#### -v, verbose output from borg
+#### Verbose output from borg: -v (no arguments)
 
 By default, the script will ask borg to generate summary only output and record
 that in the script's log file.  If you are running the backup for the first time
 or are troubleshooting, you may want a detailed output of all files and their
 changed/unchanged/excluded status from borg.  In that case, specify the -v
-switch.
-**Note: This will make your log file very large, very quickly since EVERY file
-being backed up is written to the log.**
+switch. **Note: This will make your log file very large very quickly since EVERY
+file being backed up is written to the log.**
 
-#### -w _/path/to/webroot/_, path to webroot
+#### Path to webroot: -w _/path/to/webroot/_
 
 This is the path to the directory your webserver is using as it's default root.
 In other words, this is the directory that contains the html files served when
@@ -175,14 +174,15 @@ order:
 ### Protect your borg details file
 
 This file contains information on how to access and decrypt your borg repo,
-therefore, you **must** protect it.  You should lock it out to your root user.
-Putting it in your root folder is not enough!  Run the following commands to
-restrict access to the root user only (assuming filename is *'nc_borg.details'*):
+therefore, you **must** protect it.  You should lock it out for everyone but
+your root user. Putting it in your root folder is not enough!  Run the following
+commands to restrict access to the root user only (assuming filename is
+*'nc_borg.details'*):
 
 ```Bash
 # make root the owner
 chown root:root nc_borg.details
-# restrict access to root only
+# restrict access to root only (read/write)
 chmod 600 nc_borg.details
 ```
 
@@ -190,7 +190,10 @@ chmod 600 nc_borg.details
 
 If you need help with these options, then you should consult the borg
 documentation or search my blog at
-[https://mytechiethoughts.com](https://mytechiethoughts.com) for borg.
+[https://mytechiethoughts.com](https://mytechiethoughts.com) for borg. This is
+especially true if you want to understand why an SSH key and passphrase are
+preferred and why just a passphrase on it's own presents problems automating
+borg backups.
 
 ### additional files/directories to backup
 
@@ -211,7 +214,8 @@ The following would include all files in the home folder for users *'foo'* and
 You can leave this line blank to tell borg to only backup your NextCloud data
 directory and the SQL dump.  However, this is pretty unusual since you would not
 be including any configuration files, webserver configurations, etc.  If you
-omit this line, the script will log a warning in your log.
+omit this line, the script will log a warning to remind you of this unusual
+situation.
 
 ### exclusion patterns
 
@@ -220,7 +224,11 @@ what files you'd like borg to ignore during the backup.  The sample file,
 *'excludeLocations.borg'* contains a list of directories to exclude assuming a
 standard NextCloud install -- the previews directory and the cache directory.
 You need to run *'borg help patterns'* for help on how to specify any additional
-exclusion patterns.
+exclusion patterns since the format is not your standard BASH format and only
+sometimes uses standard regex.
+
+If you leave this line blank, the script will note it is not processing any
+exclusions and will proceed with backing up all files specified.
 
 ### purge timeframe options
 
@@ -246,8 +254,9 @@ not run borg locally but your backups/restores will be slower.
 
 ### Examples
 
-All fields including pointers to additional files to backup, exclusion patterns
-and a remote borg path.  Prune: keep all backups made in the last 14 days.
+Repo in directory *'NCBackup'*, all fields including pointers to additional
+files to backup, exclusion patterns and a remote borg path.  Prune: keep all
+backups made in the last 14 days.
 
 ```Ini
 /var/borgbackup
@@ -260,7 +269,8 @@ myPaSsWoRd
 borg1
 ```
 
-No exclusions, keep 14 days end-of-day, 52 weeks end-of-week
+Repo in directory *'myBackup'*, no exclusions, keep 14 days end-of-day, 52 weeks
+end-of-week
 
 ```Ini
 /var/borgbackup
@@ -273,8 +283,8 @@ PaSsWoRd
 borg1
 ```
 
-Repo at root, no extra file locations, no exclusions, no remote borg installation. Keep last 30
-backups.
+Repo in directory *'backup'*, no extra file locations, no exclusions, no remote
+borg installation. Keep last 30 backups.
 
 ```Ini
 /root/.borg
@@ -286,6 +296,8 @@ pAsSw0rD
 --keep-within=30d
 
 ```
+
+**Notice that the blank lines are very important!**
 
 ## SQL details file
 
@@ -312,14 +324,14 @@ nextcloudDB
 ### Protect your sql details file
 
 This file contains information on how to access your SQL installation therefore,
-you **must** protect it.  You should lock it out to your root user.  Putting it
-in your root folder is not enough!  Run the following commands to restrict access
-to the root user only (assuming filename is *'nc_sql.details'*):
+you **must** protect it.  You should lock it out for all users except root.
+Putting it in your root folder is not enough!  Run the following commands to
+restrict access to the root user only (assuming filename is *'nc_sql.details'*):
 
 ```Bash
 # make root the owner
 chown root:root nc_sql.details
-# restrict access to root only
+# restrict access to root only (read/write)
 chmod 600 nc_sql.details
 ```
 
@@ -431,12 +443,17 @@ easiest with a simple cron job.
 
 The script creates a very detailed log file of all major operations along with
 any errors and warnings.  Everything is timestamped so you can see how long
-things take and when any errors tooks place.  The script includes debugging
+things take and when any errors took place.  The script includes debugging
 notes such as where temp files are located, where it's looking for data, whether
 it created/moved/copied files, etc.  All major operations are tagged *'-- [INFO]
 message here --'*.  Similarily, warnings are tagged *'-- [WARNING] message here
 (code: xxxx) --'* and errors are tagged *'-- [ERROR] message here (code: xxx)
 --'*.  Successful operations generate a *'-- [SUCCESS] message here --'* stamp.
+
+Sections of the script are all colour-coded to make viewing it easier.  This
+means you should use something like *'cat backup.log | more'* or *'tail -n
+numberOfLines backup.log'* to view the file since the ansi colour codes
+would make it difficult to read in nano or vi.
 
 This tagging makes it easy for you to set up a log screening program to make
 keeping an eye on your backup results easier.  If you plan on using Logwatch
@@ -460,7 +477,7 @@ readme in the *'/etc/logwatch'* folder of this git archive.
 
 The log file generated by this script is fairly detailed so it can grow quite
 large over time.  This is especially true if you are using verbose output from
-borg for any troubleshoot or for compliance/auditing.  I've included a sample
+borg for any troubleshooting or for compliance/auditing.  I've included a sample
 commented logrotate config file in this git archive at *'/etc/logrotate.d'*
 which you can modify and drop into that same directory on your Debian/Ubuntu
 system.  If you are using another log rotating solution, then please remember to
