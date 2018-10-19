@@ -254,3 +254,39 @@ pAsSw0rD
 --keep-within=30d
 
 ```
+
+### SQL details file
+
+This file contains all the information needed to access your NextCloud SQL
+database in order to dump it's contents into a file that can be easily
+backed-up. Each line must contain specific information in a specific order.  The
+sample file includes this data and example entries.  The file must have the
+following information in the following order (**all entries required**):
+
+    1. name of machine hosting mySQL (usually localhost)
+    2. name of authorized user
+    3. password for above user
+    4. name of NextCloud database
+
+For example:
+
+```Ini
+localhost
+nextcloud
+pAsSwOrD
+nextcloudDB
+```
+
+#### Protect this file!
+
+This file contains information on how to access your SQL installation therefore,
+you **must** protect it.  You should lock it out to your root user.  Putting it
+in your root folder is not enough!  Run the following commands to restrict access
+to the root user only (assuming filename is *'nc_sql.details'*):
+
+```Bash
+# make root the owner
+chown root:root nc_sql.details
+# restrict access to root only
+chmod 600 nc_sql.details
+```
