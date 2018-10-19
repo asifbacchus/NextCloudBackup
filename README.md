@@ -55,7 +55,7 @@ General usage:
 
 ### Required parameters
 
-#### -d, NextCloud data directory
+#### -d _/path/to/data/_, NextCloud data directory
 
 This is the full path to the location where NextCloud actually stores data.  In
 a setup such as I recommend on my blog at
@@ -63,13 +63,13 @@ a setup such as I recommend on my blog at
 using an entry such as *'/var/nc_data'*.  This directory and all subdirectories
 automatically included in the backup.
 
-#### -n, NextCloud webroot
+#### -n _/path/to/nextcloud/_, NextCloud webroot
 
 This is the directory in which NextCloud's php and html files are located.  It
 is generally somewhere under your webroot directory.  This is required so the
 script can find the 'OCC' command to invoke maintenance mode.
 
-#### -w, webuser account
+#### -w _accountName_, webuser account
 
 This is the account that NextCloud runs under via your webserver.  This is
 almost always *'www-data'*.  You would have to check your NGINX/Apache config to
@@ -78,7 +78,7 @@ enter/exit maintenance mode with knowing what user to emulate.
 
 ### Optional parameters
 
-#### -5 _path/to/filename.html_, path to 503 html error page
+#### -5 _/path/to/filename.html_, path to 503 html error page
 
 The path to an html file for the script to copy to your webroot during the
 backup process.  This file can be scanned by your webserver and a 503 error can
@@ -90,7 +90,7 @@ be issued by the script but, it will continue executing.  More details on the
 503 notification can be found later in the [503 functionality]() section of this
 document. **Default: _scriptpath/503.html_**
 
-#### -b _path/to/filename.file_, path to borg details file
+#### -b _/path/to/filename.file_, path to borg details file
 
 This is a text file that lays out various borg options such as repo name,
 password, additional files to include, exclusion patters, etc.  A sample file is
@@ -99,7 +99,7 @@ entries can be found later in this document in the [borg details file]()
 section.
 **Default: _scriptpath/nc_borg.details_**
 
-#### -l _path/to/filename.file_, log file location
+#### -l _/path/to/filename.file_, log file location
 
 If you have a particular place you'd like this script to save it's log file,
 then you can specify it using this parameter.  I would recommend *'/var/log'*.
@@ -107,7 +107,7 @@ By default, the script will name the log file *scriptname*.log and will save it
 in the same directory as the script itself.
 **Default: _scriptpath/scriptname.log_**
 
-#### -s _path/to/filename.file_, path to SQL details file
+#### -s _/path/to/filename.file_, path to SQL details file
 
 This is text file containing the details needed to connect to NextCloud's SQL
 database.  For more information about the *required order* of entries can be
@@ -124,7 +124,7 @@ switch.
 **Note: This will make your log file very large, very quickly since EVERY file
 being backed up is written to the log.**
 
-#### -w _path_, path to webroot
+#### -w _/path/to/webroot/_, path to webroot
 
 This is the path to the directory your webserver is using as it's default root.
 In other words, this is the directory that contains the html files served when
