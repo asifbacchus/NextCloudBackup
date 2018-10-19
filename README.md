@@ -111,7 +111,7 @@ in the same directory as the script itself.
 
 This is text file containing the details needed to connect to NextCloud's SQL
 database.  For more information about the *required order* of entries can be
-found later in this document in the [sql details file]() section.
+found later in this document in the [sql details file](#sql-details-file) section.
 **Default: _scriptpath/nc_sql.details_**
 
 #### -v, verbose output from borg
