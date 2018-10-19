@@ -1,4 +1,4 @@
-# NextCloud Backup Using borgbackup
+# NextCloud Backup Using borgbackup <!-- omit in toc -->
 
 This script automates backing up your NextCloud installation using borgbackup
 and a remote ssh-capable storage system.  I suggest using rsync.net since they
@@ -19,6 +19,43 @@ This script automates the following tasks:
 - Runs 'borg prune' to make sure you are trimming old backups on your schedule
 - Creates a clear, easy to parse log file so you can keep an eye on your backups
   and any errors/warnings
+
+## Contents <!-- omit in toc -->
+- [Installation/copying](#installationcopying)
+- [Environment notes](#environment-notes)
+- [Why this script must be run as root](#why-this-script-must-be-run-as-root)
+- [Script parameters](#script-parameters)
+    - [Required parameters](#required-parameters)
+        - [NextCloud data directory: -d _/path/to/data/_](#nextcloud-data-directory--d-_pathtodata_)
+        - [NextCloud webroot: -n _/path/to/nextcloud/_](#nextcloud-webroot--n-_pathtonextcloud_)
+        - [webuser account: -w _accountName_](#webuser-account--w-_accountname_)
+    - [Optional parameters](#optional-parameters)
+        - [Path to 503 error page: -5 _/path/to/filename.html_](#path-to-503-error-page--5-_pathtofilenamehtml_)
+        - [Path to borg details file: -b _/path/to/filename.file_](#path-to-borg-details-file--b-_pathtofilenamefile_)
+        - [Desired log file location: -l _/path/to/filename.file_](#desired-log-file-location--l-_pathtofilenamefile_)
+        - [Path to SQL details file: -s _/path/to/filename.file_](#path-to-sql-details-file--s-_pathtofilenamefile_)
+        - [Verbose output from borg: -v (no arguments)](#verbose-output-from-borg--v-no-arguments)
+        - [Path to webroot: -w _/path/to/webroot/_](#path-to-webroot--w-_pathtowebroot_)
+- [Borg details file](#borg-details-file)
+    - [Protect your borg details file](#protect-your-borg-details-file)
+    - [borg specific entries (lines 1-4)](#borg-specific-entries-lines-1-4)
+    - [additional files/directories to backup](#additional-filesdirectories-to-backup)
+    - [exclusion patterns](#exclusion-patterns)
+    - [purge timeframe options](#purge-timeframe-options)
+    - [borg remote location](#borg-remote-location)
+    - [Examples](#examples)
+- [SQL details file](#sql-details-file)
+    - [Protect your sql details file](#protect-your-sql-details-file)
+- [503 functionality](#503-functionality)
+    - [Conditional forwarding by your webserver](#conditional-forwarding-by-your-webserver)
+        - [NGINX](#nginx)
+        - [Apache](#apache)
+        - [Disabling 503 functionality altogether](#disabling-503-functionality-altogether)
+- [Scheduling: Cron](#scheduling-cron)
+- [The log file](#the-log-file)
+    - [Using Logwatch](#using-logwatch)
+    - [Remember to rotate your logs](#remember-to-rotate-your-logs)
+- [Final notes](#final-notes)
 
 ## Installation/copying
 
@@ -180,10 +217,8 @@ commands to restrict access to the root user only (assuming filename is
 *'nc_borg.details'*):
 
 ```Bash
-# make root the owner
-chown root:root nc_borg.details
-# restrict access to root only (read/write)
-chmod 600 nc_borg.details
+chown root:root nc_borg.details   # make root the owner
+chmod 600 nc_borg.details   # restrict access to root only (read/write)
 ```
 
 ### borg specific entries (lines 1-4)
@@ -329,10 +364,8 @@ Putting it in your root folder is not enough!  Run the following commands to
 restrict access to the root user only (assuming filename is *'nc_sql.details'*):
 
 ```Bash
-# make root the owner
-chown root:root nc_sql.details
-# restrict access to root only (read/write)
-chmod 600 nc_sql.details
+chown root:root nc_sql.details   # make root the owner
+chmod 600 nc_sql.details   # restrict access to root only (read/write)
 ```
 
 ## 503 functionality
