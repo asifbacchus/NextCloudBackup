@@ -28,6 +28,16 @@ the *'NCscripts'* folder to wherever you like.  I suggest putting it in your
 the 503.html, nc_borg.details and nc_sql.details files in place, then you don't
 have to specify their locations when running the script.
 
+Remember to make the script executable!
+
+    ```Bash
+    chmod +x backup.sh
+    ```
+
+In addition, you can rename this script file to anything you like.  The log file
+will use that same name by default when naming itself and any mention of this
+file in the logs will automatically use whatever name you choose to give it.
+
 ## Environment notes
 
 The script is designed to be easy to use but still be flexible enough to
@@ -456,3 +466,19 @@ which you can modify and drop into that same directory on your Debian/Ubuntu
 system.  If you are using another log rotating solution, then please remember to
 configure it so that your log files don't get overwhelmingly large should you
 need to parse them if something goes wrong with your backups.
+
+## Final notes
+
+I think that's everything. If I've forgotten to document something, please let
+me know. I know this readme is long but, I hate how much stuff for linux and
+open-source programs/scripts in general are so poorly documented especially for
+newbies and I didn't want to make that same mistake.
+
+I don't script too often and I'm a horrible programmer, so if you see anything
+that can be/should be improved, please let me know or submit your changes!  I
+love learning new ways of doing things and getting feedback, so suggestions and
+comments are more than welcome.
+
+If this has helped you out, then please visit my blog at
+[https://mytechiethoughts.com](https://mytechiethoughts.com) where I solve
+problems like this all the time on a shoe-string or zero budget.  Thanks!
