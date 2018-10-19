@@ -76,3 +76,63 @@ almost always *'www-data'*.  You would have to check your NGINX/Apache config to
 be sure.  'OCC' will not run as any other user thus, the script cannot
 enter/exit maintenance mode with knowing what user to emulate.
 
+### Optional parameters
+
+#### -5 _path/to/filename.html_, path to 503 html error page
+
+The path to an html file for the script to copy to your webroot during the
+backup process.  This file can be scanned by your webserver and a 503 error can
+be issued to users letting them know that your NextCloud is 'temporarily
+unavailable' while being backed up.  A sample 503 page is included for you.
+
+If you remove the default file or the one you specify is missing, a warning will
+be issued by the script but, it will continue executing.  More details on the
+503 notification can be found later in the [503 functionality]() section of this
+document. **Default: _scriptpath/503.html_**
+
+#### -b _path/to/filename.file_, path to borg details file
+
+This is a text file that lays out various borg options such as repo name,
+password, additional files to include, exclusion patters, etc.  A sample file is
+included for your reference.  More details, including the *required order* of
+entries can be found later in this document in the [borg details file]()
+section.
+**Default: _scriptpath/nc_borg.details_**
+
+#### -l _path/to/filename.file_, log file location
+
+If you have a particular place you'd like this script to save it's log file,
+then you can specify it using this parameter.  I would recommend *'/var/log'*.
+By default, the script will name the log file *scriptname*.log and will save it
+in the same directory as the script itself.
+**Default: _scriptpath/scriptname.log_**
+
+#### -s _path/to/filename.file_, path to SQL details file
+
+This is text file containing the details needed to connect to NextCloud's SQL
+database.  For more information about the *required order* of entries can be
+found later in this document in the [sql details file]() section.
+**Default: _scriptpath/nc_sql.details_**
+
+#### -v, verbose output from borg
+
+By default, the script will ask borg to generate summary only output and record
+that in the script's log file.  If you are running the backup for the first time
+or are troubleshooting, you may want a detailed output of all files and their
+changed/unchanged/excluded status from borg.  In that case, specify the -v
+switch.
+**Note: This will make your log file very large, very quickly since EVERY file
+being backed up is written to the log.**
+
+#### -w _path_, path to webroot
+
+This is the path to the directory your webserver is using as it's default root.
+In other words, this is the directory that contains the html files served when
+someone browses to your server.  Depending on your setup, this might be the same
+as your NextCloud webroot.
+
+This is used exclusively for 503 functionality since the script has to know
+where to copy the 503 file.  If you don't want to use this functionality, you
+can omit this parameter and the script will issue a warning and move on.  More
+details can be found in the [503 functionality]() section later in this
+document.
