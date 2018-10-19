@@ -95,7 +95,7 @@ document. **Default: _scriptpath/503.html_**
 This is a text file that lays out various borg options such as repo name,
 password, additional files to include, exclusion patters, etc.  A sample file is
 included for your reference.  More details, including the *required order* of
-entries can be found later in this document in the [borg details file]()
+entries can be found later in this document in the [borg details file](#borg-details-file)
 section.
 **Default: _scriptpath/nc_borg.details_**
 
@@ -136,3 +136,112 @@ where to copy the 503 file.  If you don't want to use this functionality, you
 can omit this parameter and the script will issue a warning and move on.  More
 details can be found in the [503 functionality]() section later in this
 document.
+
+### Borg details file
+
+This file contains all the data needed to access your borg remote data repo.
+Each line must contain specific information in a specific order or needs to be
+blank if that data is not required.  The sample file includes this data and
+example entries.  The file must have the following information in the following
+order:
+
+    1. path to borg base directory **(required)**
+    2. path to ssh private key for repo **(required)**
+    3. connection string to remote repo **(required)**
+    4. password for ssh key/repo **(required)**
+    5. path to file listing additional files/directories to backup
+    6. path to file containing borg-specific exclusion patterns
+    7. purge timeframe options
+    8. location of borg remote instance
+
+#### borg specific entries (lines 1-4)
+
+If you need help with these options, then you should consult the borg
+documentation or search my blog at
+[https://mytechiethoughts.com](https://mytechiethoughts.com) for borg.
+
+##### additional files/directories to backup
+
+This points to a plain-text file listing additional files and directories you'd
+like borg to include in the backup.  The sample file, *'xtraLocations.borg'*
+contains the most likely files you'd want to include assuming you're using a
+standard setup like it outline in my blog.
+
+You can leave this line blank to tell borg to only backup your NextCloud data
+directory and the SQL dump.  However, this is pretty unusual since you would not
+be including any configuration files, webserver configurations, etc.  If you
+omit this line, the script will log a warning in your log.
+
+##### exclusion patterns
+
+This points to a plain-text file containing borg-specific patterns describing
+what files you'd like borg to ignore during the backup.  The sample file,
+*'excludeLocations.borg'* contains a list of directories to exclude assuming a
+standard NextCloud install -- the previews directory and the cache directory.
+You need to consult the borg documentation to understand how to specify any
+additional exclusion patterns.
+
+##### purge timeframe options
+
+Here you can let borg purge know how you want to manage your backup history.
+Consult the borg documentation and then copy the relevant options directly into
+this line including any spaces, etc.  The example file contains the following as
+a staring point:
+
+```Ini
+--keep-within=7d --keep-daily=30 --keep-weekly=12 --keep-monthly=-1
+```
+
+This would tell borg prune to keep ALL backups made for any reason within the
+last 7 days, keep 30 days worth of daily backups, 12 weeks of end-of-week
+backups and then an infinite amount of end-of-month backups.
+
+##### borg remote location
+
+If you're using rsync, then just have this say *'borg1'*.  If you are using
+another provider, you'll have to reference their locally installed copy of borg
+relative to your repo path.  You can also leave this blank if your provider does
+not run borg locally but your backups/restores will be slower.
+
+##### Examples:
+
+All fields including pointers to additional files to backup, exclusion patterns
+and a remote borg path.  Prune: keep all backups made in the last 14 days.
+
+```Ini
+/var/borgbackup
+/var/borgbackup/SSHprivate.key
+myuser@server001.rsync.net:NCBackup/
+myPaSsWoRd
+/root/NCscripts/xtraLocations.borg
+/root/NCscripts/excludeLocations.borg
+--keep-within=14d
+borg1
+```
+
+No exclusions, keep 14 days end-of-day, 52 weeks end-of-week
+
+```Ini
+/var/borgbackup
+/root/keys/rsyncPrivate.key
+myuser@server001.rsync.net:myBackup/
+PaSsWoRd
+/var/borgbackup/include.list
+
+--keep-daily=14 --keep-weekly=52
+borg1
+```
+
+Repo at root, no extra file locations, no exclusions, no remote borg installation. Keep last 30
+backups.
+
+```Ini
+/root/.borg
+/root/.borg/private.key
+username@server.tld:backup/
+pAsSw0rD
+
+
+--keep-within=30d
+
+```
