@@ -20,10 +20,18 @@ This script automates the following tasks:
 - Creates an clear, easy to parse log file so you can easily keep an eye on your
   backups and any errors/warnings
 
+## Installation/copying
+
+Once you've either cloned this git or downloaded the release file, simply copy
+the *'NCscripts'* folder to wherever you like.  I suggest putting it in your
+*'/root'* directory since the root user must execute the script.  If you edit
+the 503.html, nc_borg.details and nc_sql.details files in place, then you don't
+have to specify their locations when running the script.
+
 ## Environment notes
 
 The script is designed to be easy to use but still be flexible enough to
-accommodate a wide range of common NextCloud setups.  I have tested it with
+accommodate a wide range of cn NextCloud setups.  I have tested it with
 NextCloud 13 and 14 using a standard LEMP setup (Debian Stretch, NGINX, mariaDB
 & PHP7).  The script accepts several parameters to provide it with the settings
 it requires to function.  In addition, it reads external files for SQL and borg
