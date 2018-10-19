@@ -387,4 +387,33 @@ the script file that starts with *'--- Begin 503 section ---'* and either
 comment all the lines (put a *'#'* at the beginning of each line) or delete all
 the lines until you get to *'--- End 503 section ---'*.
 
-##
+## Scheduling: Cron
+
+After running this script at least once manually to test your settings, you
+should schedule it to run automatically so things stay backed up.  This is
+easiest with a simple cron job.
+
+1. Open root's crontab:
+
+    ```Bash
+    sudo crontab -e
+    ```
+
+2. Add your script command line and set the time. I'm assuming your script is
+   located at *'/root/NCscripts'*, all files are at their default locations and
+   you want to run your backup at 1:07am daily.
+
+    ```Bash
+    7 1 * * * /root/NCscripts/backup.sh -d /var/nc_data -n /usr/share/nginx/html/nextcloud -u www-data -l /var/log/backup.log -w /usr/share/nginx/html > /dev/null 2>&1
+    ```
+
+    The last part redirects all output to 'null' and forwards any errors to
+    'null' also.  You don't need output because the script creates a wonderfully
+    detailed log file that you can review :-)
+3. Save the file and exit.
+4. Confirm by listing the root user's crontab:
+
+    ```Bash
+    sudo crontab -l
+    ```
+
