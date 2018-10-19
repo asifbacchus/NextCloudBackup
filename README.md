@@ -42,6 +42,37 @@ permission/passwords.
 
 You can run the script with the *'-?'* parameter to access the built-in help
 which explains the parameters.  However, the following is more detailed
-explanation of each parameter and how to use them:
+explanation of each parameter and how to use them.
+**Note that any parameters needing a directory (webroot, nextcloud root, etc.)
+can be entered with or without the trailing / since it's stripped by the script
+anyways.**
+
+General usage:
+
+```Bash
+/path/to/script/scriptname.sh -parameter argument -parameter argument ...
+```
 
 ### Required parameters
+
+#### -d, NextCloud data directory
+
+This is the full path to the location where NextCloud actually stores data.  In
+a setup such as I recommend on my blog at
+[https://mytechiethoughts.com](https://www.mytechiethoughts.com), you would be
+using an entry such as *'/var/nc_data'*.  This directory and all subdirectories
+automatically included in the backup.
+
+#### -n, NextCloud webroot
+
+This is the directory in which NextCloud's php and html files are located.  It
+is generally somewhere under your webroot directory.  This is required so the
+script can find the 'OCC' command to invoke maintenance mode.
+
+#### -w, webuser account
+
+This is the account that NextCloud runs under via your webserver.  This is
+almost always *'www-data'*.  You would have to check your NGINX/Apache config to
+be sure.  'OCC' will not run as any other user thus, the script cannot
+enter/exit maintenance mode with knowing what user to emulate.
+
