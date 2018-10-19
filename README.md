@@ -167,6 +167,15 @@ like borg to include in the backup.  The sample file, *'xtraLocations.borg'*
 contains the most likely files you'd want to include assuming you're using a
 standard setup like it outline in my blog.
 
+The following would include all files in the home folder for users *'foo'* and
+*'bar'* and any conf files in *'/etc/someProgram'*:
+
+```Bash
+/home/foo/
+/home/bar/
+/etc/someProgram/*.conf
+```
+
 You can leave this line blank to tell borg to only backup your NextCloud data
 directory and the SQL dump.  However, this is pretty unusual since you would not
 be including any configuration files, webserver configurations, etc.  If you
@@ -178,8 +187,8 @@ This points to a plain-text file containing borg-specific patterns describing
 what files you'd like borg to ignore during the backup.  The sample file,
 *'excludeLocations.borg'* contains a list of directories to exclude assuming a
 standard NextCloud install -- the previews directory and the cache directory.
-You need to consult the borg documentation to understand how to specify any
-additional exclusion patterns.
+You need to run *'borg help patterns'* for help on how to specify any additional
+exclusion patterns.
 
 ##### purge timeframe options
 
