@@ -154,13 +154,27 @@ order:
     7. purge timeframe options
     8. location of borg remote instance
 
+#### Protect this file!
+
+This file contains information on how to access and decrypt your borg repo,
+therefore, you **must** protect it.  You should lock it out to your root user.
+Putting it in your root folder is not enough!  Run the following commands to
+restrict access to the root user only (assuming filename is *'nc_borg.details'*):
+
+```Bash
+# make root the owner
+chown root:root nc_borg.details
+# restrict access to root only
+chmod 600 nc_borg.details
+```
+
 #### borg specific entries (lines 1-4)
 
 If you need help with these options, then you should consult the borg
 documentation or search my blog at
 [https://mytechiethoughts.com](https://mytechiethoughts.com) for borg.
 
-##### additional files/directories to backup
+#### additional files/directories to backup
 
 This points to a plain-text file listing additional files and directories you'd
 like borg to include in the backup.  The sample file, *'xtraLocations.borg'*
@@ -181,7 +195,7 @@ directory and the SQL dump.  However, this is pretty unusual since you would not
 be including any configuration files, webserver configurations, etc.  If you
 omit this line, the script will log a warning in your log.
 
-##### exclusion patterns
+#### exclusion patterns
 
 This points to a plain-text file containing borg-specific patterns describing
 what files you'd like borg to ignore during the backup.  The sample file,
@@ -190,7 +204,7 @@ standard NextCloud install -- the previews directory and the cache directory.
 You need to run *'borg help patterns'* for help on how to specify any additional
 exclusion patterns.
 
-##### purge timeframe options
+#### purge timeframe options
 
 Here you can let borg purge know how you want to manage your backup history.
 Consult the borg documentation and then copy the relevant options directly into
@@ -205,14 +219,14 @@ This would tell borg prune to keep ALL backups made for any reason within the
 last 7 days, keep 30 days worth of daily backups, 12 weeks of end-of-week
 backups and then an infinite amount of end-of-month backups.
 
-##### borg remote location
+#### borg remote location
 
 If you're using rsync, then just have this say *'borg1'*.  If you are using
 another provider, you'll have to reference their locally installed copy of borg
 relative to your repo path.  You can also leave this blank if your provider does
 not run borg locally but your backups/restores will be slower.
 
-##### Examples:
+#### Examples:
 
 All fields including pointers to additional files to backup, exclusion patterns
 and a remote borg path.  Prune: keep all backups made in the last 14 days.
