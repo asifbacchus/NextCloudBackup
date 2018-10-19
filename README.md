@@ -30,5 +30,18 @@ it requires to function.  In addition, it reads external files for SQL and borg
 settings, so you don't have to weed through the script code to supply things
 like passwords.
 
+## Why root?
+
+This script must be run by the root user and will exit with an error if you try
+running it otherwise.  This is because NextCloud's OCC command (needed to put
+NextCloud into maintenance mode) must be run as the web-user account and only
+the root account can switch users without needing to stop and ask for
+permission/passwords.
+
 ## Script parameters
 
+You can run the script with the *'-?'* parameter to access the built-in help
+which explains the parameters.  However, the following is more detailed
+explanation of each parameter and how to use them:
+
+### Required parameters
