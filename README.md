@@ -87,7 +87,7 @@ unavailable' while being backed up.  A sample 503 page is included for you.
 
 If you remove the default file or the one you specify is missing, a warning will
 be issued by the script but, it will continue executing.  More details on the
-503 notification can be found later in the [503 functionality]() section of this
+503 notification can be found later in the [503 functionality](#503-functionality) section of this
 document. **Default: _scriptpath/503.html_**
 
 #### -b _/path/to/filename.file_, path to borg details file
@@ -134,7 +134,7 @@ as your NextCloud webroot.
 This is used exclusively for 503 functionality since the script has to know
 where to copy the 503 file.  If you don't want to use this functionality, you
 can omit this parameter and the script will issue a warning and move on.  More
-details can be found in the [503 functionality]() section later in this
+details can be found in the [503 functionality](#503-functionality) section later in this
 document.
 
 ### Borg details file
@@ -304,3 +304,77 @@ chown root:root nc_sql.details
 # restrict access to root only
 chmod 600 nc_sql.details
 ```
+
+### 503 functionality
+
+This script includes an entire section dedicated to copying an html file to act
+as an error 503 notification page.  Error 503 is by definition "service
+temporarily unavailable" which is exactly the case for your NextCloud server
+during a backup since it is in maintenance mode and no logins are permitted.
+
+The script copies whatever file is defined by the *'-5'* parameter (or the
+default located at *'scriptpath/503.html'*) to whatever path is defined as the
+'webroot' by the *'-w'* parameter.  This means that if you omit the *'-w'*
+parameter, the script will necessarily skip this entire process and just issue a
+warning to let you know about it.
+
+#### Conditional forwarding by your webserver
+
+The script copying the file to the webroot is the easy part.  Your webserver has
+to look for the presence of that file and generate a 503 error in order for the
+magic to happen.  To do that, you have to include an instruction to that effect
+in your default server definition and/or your NextCloud virtual server
+definition file depending on your setup.
+
+##### NGINX
+
+You can copy the following code into the relevant server definition(s) on an
+NGINX server:
+
+```Perl
+server {
+    ...
+    if (-f /usr/share/nginx/html/503.html) {
+        return 503;
+    }
+...
+    error_page 530 @backup
+    location @backup {
+        root /usr/share/nginx/html;
+        rewrite ^(.*)$ /503.html break;
+    }
+}
+```
+
+This tells NGINX that if it finds the file *'503.html'* at the path
+*'/usr/share/nginx/html'* (webroot) then return an error code 503.  Next,
+rewrite any url to *'domain.tld/503.html'* and thus, display the custom 503
+error page.  On the other hand, if it can't find 503.html at the path specified
+(i.e. the script has deleted it because the backup is completed), then go about
+business as usual.
+
+##### Apache
+
+I don't use apache for anything, ever... so I'm not sure how exactly you'd do
+this but I think you'd have to use something like:
+
+```Perl
+RewriteEngine On
+RewriteCond %{ENV:REDIRECT_STATUS} !=503
+RewriteCond "/var/www/503.html" -f
+RewriteRule ^ - [R=503,L]
+...
+ErrorDocument 503 /503.html
+...
+```
+
+Let me know if that works and I'll update this document accordingly.  Like I
+said, I don't use Apache so I can't really test it very easily.
+
+#### Disabling 503 functionality altogether
+
+If you don't want to use the 503 functionality for whatever reason and don't
+want your log file junked up with warnings about it, then find the section of
+the script file that starts with *'--- Begin 503 section ---'* and either
+comment all the lines (put a *'#'* at the beginning of each line) or delete all
+the lines until you get to *'--- End 503 section ---'*.
