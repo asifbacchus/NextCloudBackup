@@ -145,7 +145,7 @@ can omit this parameter and the script will issue a warning and move on.  More
 details can be found in the [503 functionality](#503-functionality) section later in this
 document.
 
-### Borg details file
+## Borg details file
 
 This file contains all the data needed to access your borg remote data repo.
 Each line must contain specific information in a specific order or needs to be
@@ -162,7 +162,7 @@ order:
     7. purge timeframe options
     8. location of borg remote instance
 
-#### Protect this file!
+### Protect this file!
 
 This file contains information on how to access and decrypt your borg repo,
 therefore, you **must** protect it.  You should lock it out to your root user.
@@ -176,13 +176,13 @@ chown root:root nc_borg.details
 chmod 600 nc_borg.details
 ```
 
-#### borg specific entries (lines 1-4)
+### borg specific entries (lines 1-4)
 
 If you need help with these options, then you should consult the borg
 documentation or search my blog at
 [https://mytechiethoughts.com](https://mytechiethoughts.com) for borg.
 
-#### additional files/directories to backup
+### additional files/directories to backup
 
 This points to a plain-text file listing additional files and directories you'd
 like borg to include in the backup.  The sample file, *'xtraLocations.borg'*
@@ -203,7 +203,7 @@ directory and the SQL dump.  However, this is pretty unusual since you would not
 be including any configuration files, webserver configurations, etc.  If you
 omit this line, the script will log a warning in your log.
 
-#### exclusion patterns
+### exclusion patterns
 
 This points to a plain-text file containing borg-specific patterns describing
 what files you'd like borg to ignore during the backup.  The sample file,
@@ -212,7 +212,7 @@ standard NextCloud install -- the previews directory and the cache directory.
 You need to run *'borg help patterns'* for help on how to specify any additional
 exclusion patterns.
 
-#### purge timeframe options
+### purge timeframe options
 
 Here you can let borg purge know how you want to manage your backup history.
 Consult the borg documentation and then copy the relevant options directly into
@@ -227,14 +227,14 @@ This would tell borg prune to keep ALL backups made for any reason within the
 last 7 days, keep 30 days worth of daily backups, 12 weeks of end-of-week
 backups and then an infinite amount of end-of-month backups.
 
-#### borg remote location
+### borg remote location
 
 If you're using rsync, then just have this say *'borg1'*.  If you are using
 another provider, you'll have to reference their locally installed copy of borg
 relative to your repo path.  You can also leave this blank if your provider does
 not run borg locally but your backups/restores will be slower.
 
-#### Examples:
+### Examples:
 
 All fields including pointers to additional files to backup, exclusion patterns
 and a remote borg path.  Prune: keep all backups made in the last 14 days.
@@ -277,7 +277,7 @@ pAsSw0rD
 
 ```
 
-### SQL details file
+## SQL details file
 
 This file contains all the information needed to access your NextCloud SQL
 database in order to dump it's contents into a file that can be easily
@@ -299,7 +299,7 @@ pAsSwOrD
 nextcloudDB
 ```
 
-#### Protect this file!
+### Protect this file!
 
 This file contains information on how to access your SQL installation therefore,
 you **must** protect it.  You should lock it out to your root user.  Putting it
@@ -313,7 +313,7 @@ chown root:root nc_sql.details
 chmod 600 nc_sql.details
 ```
 
-### 503 functionality
+## 503 functionality
 
 This script includes an entire section dedicated to copying an html file to act
 as an error 503 notification page.  Error 503 is by definition "service
@@ -326,7 +326,7 @@ default located at *'scriptpath/503.html'*) to whatever path is defined as the
 parameter, the script will necessarily skip this entire process and just issue a
 warning to let you know about it.
 
-#### Conditional forwarding by your webserver
+### Conditional forwarding by your webserver
 
 The script copying the file to the webroot is the easy part.  Your webserver has
 to look for the presence of that file and generate a 503 error in order for the
@@ -334,7 +334,7 @@ magic to happen.  To do that, you have to include an instruction to that effect
 in your default server definition and/or your NextCloud virtual server
 definition file depending on your setup.
 
-##### NGINX
+#### NGINX
 
 You can copy the following code into the relevant server definition(s) on an
 NGINX server:
@@ -361,7 +361,7 @@ error page.  On the other hand, if it can't find 503.html at the path specified
 (i.e. the script has deleted it because the backup is completed), then go about
 business as usual.
 
-##### Apache
+#### Apache
 
 I don't use apache for anything, ever... so I'm not sure how exactly you'd do
 this but I think you'd have to use something like:
@@ -386,3 +386,5 @@ want your log file junked up with warnings about it, then find the section of
 the script file that starts with *'--- Begin 503 section ---'* and either
 comment all the lines (put a *'#'* at the beginning of each line) or delete all
 the lines until you get to *'--- End 503 section ---'*.
+
+##
