@@ -22,6 +22,7 @@
 /etc/fail2ban/jail.d/
 /root/.bashrc
 /root/NCscripts/
+/root/.ssh/
 /etc/mysql/my.cnf
 /etc/nginx/
 /etc/php/7.0/cli/php.ini
