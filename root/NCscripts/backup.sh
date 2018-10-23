@@ -299,7 +299,7 @@ while getopts ':l:n:u:v5:w:s:b:d:' PARAMS; do
     case "$PARAMS" in
         l)
             # use provided location for logFile
-            logFile="${OPTARG}"
+            logFile="${OPTARG%/}"
             ;;
         n)
             # NextCloud webroot
