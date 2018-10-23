@@ -147,7 +147,7 @@ function checkExist {
 
 ### ncMaint - pass requested mode change type to NextCloud occ
 function ncMaint {
-    sudo -u ${webUser} php ${ncroot}/occ maintenance:mode --$1 \
+    sudo -u ${webUser} php ${ncRoot}/occ maintenance:mode --$1 \
         >> "$logFile" 2>&1
     maintResult="$?"
     return "$maintResult"
