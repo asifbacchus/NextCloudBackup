@@ -10,7 +10,7 @@ This script automates the following tasks:
 - Optionally copies a 503 error page to your webserver so users know when your
   server is unavailable due to backups being performed. The 503 file is removed
   when the backup is completed so users can login again
-- Dumps mySQL database and adds it to the backup
+- Dumps the NextCloud mySQL database and adds it to the backup
 - Handles entering and exiting NextCloud's maintenance mode to 'lock' accounts
   so changes are not made during the backup process
 - Allows you to specify additional files you want backed up
@@ -41,7 +41,7 @@ This script automates the following tasks:
     - [borg specific entries (lines 1-4)](#borg-specific-entries-lines-1-4)
     - [additional files/directories to backup](#additional-filesdirectories-to-backup)
     - [exclusion patterns](#exclusion-patterns)
-    - [purge timeframe options](#purge-timeframe-options)
+    - [prune timeframe options](#prune-timeframe-options)
     - [borg remote location](#borg-remote-location)
     - [Examples](#examples)
 - [SQL details file](#sql-details-file)
@@ -71,19 +71,19 @@ Remember to make the script executable!
 chmod +x backup.sh
 ```
 
-In addition, you can rename this script file to anything you like.  The log file
+In addition, you can rename the script file to anything you like.  The log file
 will use that same name by default when naming itself and any mention of this
 file in the logs will automatically use whatever name you choose to give it.
 
 ## Environment notes
 
 The script is designed to be easy to use but still be flexible enough to
-accommodate a wide range of NextCloud setups.  I have tested it with
-NextCloud 13 and 14 using a standard LEMP setup (Debian Stretch, NGINX, mariaDB
-& PHP7).  The script accepts several parameters to provide it with the settings
-it requires to function.  In addition, it reads external files for SQL and borg
-settings so you don't have to weed through the script code to supply things
-like passwords.
+accommodate a wide range of NextCloud setups.  I have tested it with NextCloud
+13 and 14 using a standard LEMP setup (Debian Stretch, NGINX, mariaDB & PHP7).
+The script accepts several parameters to provide it with the settings it
+requires to function.  In addition, it reads external plain-text files for SQL
+and borg settings so you don't have to weed through the script code to supply
+things like passwords.
 
 ## Why this script must be run as root
 
@@ -99,7 +99,7 @@ You can run the script with the *'-?'* parameter to access the built-in help
 which explains the parameters.  However, the following is a more detailed
 explanation of each parameter and how to use them.
 **Note that any parameters needing a directory (webroot, nextcloud root, etc.)
-can be entered with or without the trailing / since it's stripped by the script
+can be entered with or without the trailing '/' since it's stripped by the script
 anyways.**
 
 General usage:
@@ -143,7 +143,8 @@ unavailable' while being backed up.  A sample 503 page is included for you.
 If you remove the default file or the one you specify is missing, a warning will
 be issued by the script but, it will continue executing.  More details on the
 503 notification can be found later in the [503 functionality](#503-functionality) section of this
-document. **Default: _scriptpath/503.html_**
+document.\
+**Default: _scriptpath/503.html_**
 
 #### Path to borg details file: -b _/path/to/filename.file_
 
@@ -151,22 +152,22 @@ This is a text file that lays out various borg options such as repo name,
 password, additional files to include, exclusion patters, etc.  A sample file is
 included for your reference.  More details, including the *required order* of
 entries can be found later in this document in the [borg details file](#borg-details-file)
-section.
+section.\
 **Default: _scriptpath/nc_borg.details_**
 
 #### Desired log file location: -l _/path/to/filename.file_
 
-If you have a particular place and filename you'd like this script use for it's
-log, then you can specify it using this parameter.  I would recommend
+If you have a particular place and filename you'd like this script to use for
+it's log, then you can specify it using this parameter.  I would recommend
 *'/var/log/backup.log'*. By default, the script will name the log file
-*scriptname*.log and will save it in the same directory as the script itself.
+*scriptname*.log and will save it in the same directory as the script itself.\
 **Default: _scriptpath/scriptname.log_**
 
 #### Path to SQL details file: -s _/path/to/filename.file_
 
 This is a text file containing the details needed to connect to NextCloud's SQL
 database.  More information about the *required order* of entries can be found
-later in this document in the [sql details file](#sql-details-file) section.
+later in this document in the [sql details file](#sql-details-file) section.\
 **Default: _scriptpath/nc_sql.details_**
 
 #### Verbose output from borg: -v (no arguments)
@@ -194,8 +195,8 @@ document.
 ## Borg details file
 
 This file contains all the data needed to access your borg remote data repo.
-Each line must contain specific information in a specific order or needs to be
-blank if that data is not required.  The sample file includes this data and
+Each line must contain specific information in a specific order or *needs to be
+blank if that data is not required*.  The sample file includes this data and
 example entries.  The file must have the following information in the following
 order:
 
@@ -205,7 +206,7 @@ order:
     4. password for ssh key/repo **(required)**
     5. path to file listing additional files/directories to backup
     6. path to file containing borg-specific exclusion patterns
-    7. purge timeframe options
+    7. prune timeframe options
     8. location of borg remote instance
 
 ### Protect your borg details file
@@ -259,15 +260,15 @@ what files you'd like borg to ignore during the backup.  The sample file,
 *'excludeLocations.borg'* contains a list of directories to exclude assuming a
 standard NextCloud install -- the previews directory and the cache directory.
 You need to run *'borg help patterns'* for help on how to specify any additional
-exclusion patterns since the format is not your standard BASH format and only
+exclusion patterns since the format is not standard BASH format and only
 sometimes uses standard regex.
 
 If you leave this line blank, the script will note it is not processing any
 exclusions and will proceed with backing up all files specified.
 
-### purge timeframe options
+### prune timeframe options
 
-Here you can let borg purge know how you want to manage your backup history.
+Here you can let borg prune know how you want to manage your backup history.
 Consult the borg documentation and then copy the relevant options directly into
 this line including any spaces, etc.  The example file contains the following as
 a staring point:
@@ -284,8 +285,8 @@ backups and then an infinite amount of end-of-month backups.
 
 If you're using rsync, then just have this say *'borg1'*.  If you are using
 another provider, you'll have to reference their locally installed copy of borg
-relative to your repo path.  You can also leave this blank if your provider does
-not run borg locally but your backups/restores will be slower.
+relative to your home directory.  You can also leave this blank if your provider
+does not run borg locally but your backups/restores will be slower.
 
 ### Examples
 
@@ -296,7 +297,7 @@ backups made in the last 14 days.
 ```Ini
 /var/borgbackup
 /var/borgbackup/SSHprivate.key
-myuser@server001.rsync.net:NCBackup/
+myuser@usw-s001.rsync.net:NCBackup/
 myPaSsWoRd
 /root/NCscripts/xtraLocations.borg
 /root/NCscripts/excludeLocations.borg
@@ -310,7 +311,7 @@ end-of-week
 ```Ini
 /var/borgbackup
 /root/keys/rsyncPrivate.key
-myuser@server001.rsync.net:myBackup/
+myuser@usw-s001.rsync.net:myBackup/
 PaSsWoRd
 /var/borgbackup/include.list
 
@@ -401,7 +402,7 @@ server {
         return 503;
     }
 ...
-    error_page 530 @backup
+    error_page 503 @backup
     location @backup {
         root /usr/share/nginx/html;
         rewrite ^(.*)$ /503.html break;
@@ -410,11 +411,11 @@ server {
 ```
 
 This tells NGINX that if it finds the file *'503.html'* at the path
-*'/usr/share/nginx/html'* (webroot) then return an error code 503.  Next,
-rewrite any url to *'domain.tld/503.html'* and thus, display the custom 503
-error page.  On the other hand, if it can't find 503.html at the path specified
-(i.e. the script has deleted it because the backup is completed), then go about
-business as usual.
+*'/usr/share/nginx/html'* (webroot) then return an error code 503.  When it
+encounters an error 503, rewrite any url to *'domain.tld/503.html'* and thus,
+display the custom 503 error page.  On the other hand, if it can't find 503.html
+at the path specified (i.e. the script has deleted it because the backup is
+completed), then go about business as usual.
 
 #### Apache
 
@@ -506,6 +507,11 @@ level as follows:
 A detailed breakdown of the files and all options are included in a separate
 readme in the *'/etc/logwatch'* folder of this git archive.
 
+If you don't really care how it works, then you can just copy the
+*/etc/logwatch* folder to the appropriate Logwatch configuration directory for
+your system.  The file directory layout in this git archive is already correct
+for Debian/Ubuntu systems.  You will have to update the log-group file to
+reflect the path to your script's log file.
 ### Remember to rotate your logs
 
 The log file generated by this script is fairly detailed so it can grow quite
