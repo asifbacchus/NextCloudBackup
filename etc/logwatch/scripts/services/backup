@@ -11,7 +11,7 @@
 
 use strict;
 
-### Get Logwatch detail level
+### Get Logwatch detail level (default to 0)
 my $detailLevel = $ENV{'LOGWATCH_DETAIL_LEVEL'} || 0;
 
 
