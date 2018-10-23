@@ -198,7 +198,7 @@ function cleanup {
         echo -e "${info}${stamp} -- [INFO] NextCloud now in regular" \
                 "operating mode --${normal}" >> "$logFile"
         else
-            exitError+=('101')
+            exitError+=("${stamp}_101")
             quit
     fi
 }
@@ -513,7 +513,7 @@ if [ "$maintResult" = "0" ]; then
     echo -e "${info}${stamp} -- [INFO] NextCloud now in maintenance mode --" \
         "${normal}" >> "$logFile"
 else
-    exitError+=('100')
+    exitError+=("${stamp}_100")
     cleanup
     quit
 fi
@@ -534,7 +534,7 @@ if [ "$dumpResult" = "0" ]; then
     echo -e "${ok}${stamp} -- [SUCCESS] SQL dumped successfully --${normal}" \
         >> "$logFile"
 else
-    exitError+=('200')
+    exitError+=("${stamp}_200")
     cleanup
     quit
 fi
@@ -552,7 +552,7 @@ mapfile -t borgConfig < "$borgDetails"
 echo -e "${op}${stamp} Verifying supplied borg configuration variables..." \
     "${normal}" >> "$logFile"
 if [ -z "${borgConfig[0]}" ]; then
-    exitError+=('210')
+    exitError+=("${stamp}_210")
     cleanup
     quit
 else
@@ -561,7 +561,7 @@ else
     checkResult="$?"
     if [ "$checkResult" = "1" ]; then
         # borg base directory specified could not be found
-        exitError+=('210')
+        exitError+=("${stamp}_210")
         cleanup
         quit
     fi
@@ -570,7 +570,7 @@ else
 fi
 # check: path to SSH keyfile
 if [ -z "${borgConfig[1]}" ]; then
-    exitError+=('211')
+    exitError+=("${stamp}_211")
     cleanup
     quit
 else
@@ -578,7 +578,7 @@ else
     checkResult="$?"
     if [ "$checkResult" = 1 ]; then
         # SSH keyfile specified could not be found
-        exitError+=('211')
+        exitError+=("${stamp}_211")
         cleanup
         quit
     fi
@@ -587,7 +587,7 @@ else
 fi
 # check: name of borg repo
 if [ -z "${borgConfig[2]}" ]; then
-    exitError+=('212')
+    exitError+=("${stamp}_212")
     cleanup
     quit
 else
@@ -682,7 +682,7 @@ if [ "$checkResult" = "1" ]; then
             "${normal}" >> "$logFile"
     else
         # problem creating folder and script will exit
-        exitError+=('215')
+        exitError+=("${stamp}_215")
         cleanup
         quit
     fi
@@ -724,7 +724,7 @@ if [ "$borgResult" -eq 0 ]; then
 elif [ "$borgResult" -eq 1 ]; then
     exitWarn+=("${stamp}_2200")
 elif [ "$borgResult" -ge 2 ]; then
-    exitError+=('220')
+    exitError+=("${stamp}_220")
     cleanup
     quit
 else
@@ -747,7 +747,7 @@ if [ -n "$borgPrune" ]; then
     elif [ "$pruneResult" -eq 1 ]; then
         exitWarn+=("${stamp}_2210")
     elif [ "$pruneResult" -ge 2 ]; then
-        exitError+=('221')
+        exitError+=("${stamp}_221")
     else
         exitWarn+=("${stamp}_2212")
     fi
