@@ -97,8 +97,11 @@ function quit {
         echo -e "${warn}${scriptName} generated the following warnings:" \
             "${normal}" >> "$logFile"
         for warnCode in "${exitWarn[@]}"; do
-            echo -e "${warn}-- [WARNING] ${warningExplain[$warnCode]}" \
-                "(code: ${warnCode}) --${normal}" >> "$logFile"
+            warnStamp="${warnCode%%_*}"
+            warnValue="${warnCode##*_}"
+            echo -e "${warn}${warnStamp} -- [WARNING]" \
+                "${warningExplain[$warnValue]} (code: ${warnValue}) --" \
+                "${normal}" >> "$logFile"
         done
     fi
     if [ -z "${exitError}" ]; then
@@ -111,8 +114,10 @@ function quit {
         echo -e "${err}${scriptName} generated the following errors:" \
             "${normal}" >> "$logFile"
         for errCode in "${exitError[@]}"; do
-            echo -e "${err}-- [ERROR] ${errorExplain[$errCode]}" \
-                "(code: ${errCode}) --$normal" >> "$logFile"
+            errStamp="${errCode%%_*}"
+            errValue="${errCode##*_}"
+            echo -e "${err}${errStamp}-- [ERROR] ${errorExplain[$errValue]}" \
+                "(code: ${errValue}) --${normal}" >> "$logFile"
         done
         exit 2
     fi
