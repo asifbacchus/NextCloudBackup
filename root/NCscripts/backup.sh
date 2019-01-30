@@ -120,7 +120,7 @@ function quit {
         for errCode in "${exitError[@]}"; do
             errStamp="${errCode%%_*}"
             errValue="${errCode##*_}"
-            echo -e "${err}${errStamp}-- [ERROR] ${errorExplain[$errValue]}" \
+            echo -e "${err}${errStamp} -- [ERROR] ${errorExplain[$errValue]}" \
                 "(code: ${errValue}) --${normal}" >> "$logFile"
         done
         exit 2
@@ -429,9 +429,9 @@ fi
 
 
 ### Log start of script operations
-echo -e "${note}[$(stamp)]--- Start $scriptName execution ---${normal}" \
+echo -e "${note}[$(stamp)] --- Start $scriptName execution ---${normal}" \
     >> "$logFile"
-echo -e "${info}[$(stamp)]-- [INFO] Log file located at ${lit}${logFile}${info}" \
+echo -e "${info}[$(stamp)] -- [INFO] Log file located at ${lit}${logFile}${info}" \
     "--${normal}" >> "$logFile"
 
 
