@@ -277,7 +277,7 @@ warningExplain[5032]="The specified webroot (-w parameter) could not be found"
 warningExplain[5033]="No 503 error page could be found. If not using the default located in the script directory, then check your -5 parameter"
 warningExplain[5035]="Error copying 503 error page to webroot"
 warn503="Web users will NOT be informed the server is down!"
-warningExplain[2111]="No password used for SSH keys or access to remote borg repo. This is an insecure configuration"
+warningExplain[2111]="No password used for access to remote borg repo. This is an insecure configuration"
 warningExplain[2112]="No remote borg instance specified. Operations will be slower in this configuration"
 warningExplain[2113]="The specified file containing extra files for inclusion in borgbackup could not be found"
 warningExplain[2114]="The specified file containing exclusion patterns for borgbackup could not be found. Backup was performed as though NO exclusions were defined"
@@ -600,7 +600,7 @@ else
 fi
 # repo password
 if [ -n "${borgConfig[3]}" ]; then
-    echo -e "${op}[$(stamp)] Borg SSH/REPO password... OK${normal}" >> "$logFile"
+    echo -e "${op}[$(stamp)] Borg REPO password... OK${normal}" >> "$logFile"
     export BORG_PASSPHRASE="${borgConfig[3]}"
 else
     exitWarn+=("[$(stamp)]_2111")
