@@ -151,7 +151,7 @@ function checkExist {
 
 ### ncMaint - pass requested mode change type to NextCloud occ
 function ncMaint {
-    sudo -u ${webUser} php ${ncRoot}/occ maintenance:mode --$1 \
+    sudo -u "${webUser}" php "${ncRoot}/occ maintenance:mode" --"$1" \
         >> "$logFile" 2>&1
     maintResult="$?"
     return "$maintResult"
@@ -381,8 +381,8 @@ if [ -z "$webUser" ]; then
     exit 1
 # Check if supplied webUser account exists
 elif [ -n "$webUser" ]; then
-    user_exists=$(id -u $webUser > /dev/null 2>&1; echo $?)
-    if [ $user_exists -ne 0 ]; then
+    user_exists=$(id -u "$webUser" > /dev/null 2>&1; echo $?)
+    if [ "$user_exists" -ne 0 ]; then
         echo -e "\n${err}The supplied webuser account (-u parameter) does not" \
             "exist.${normal}\n"
         exit 1
@@ -705,18 +705,18 @@ if [ -z "$borgExclude" ]; then
     # borgExclude is empty
     echo -e "${info}[$(stamp)] --[INFO] Executing borg without exclusions --" \
         "${normal}" >> "$logFile"
-    borg --show-rc create ${borgCreateParams} ::`date +%Y-%m-%d_%H%M%S` \
-        ${xtraFiles[@]} \
-        ${sqlDumpDir} ${ncDataDir} \
+    borg --show-rc create "${borgCreateParams}" ::`date +%Y-%m-%d_%H%M%S` \
+        "${xtraFiles[@]}" \
+        "${sqlDumpDir}" "${ncDataDir}" \
         2>> "$logFile"
 else
     # borgExclude is not empty
     echo -e "${info}[$(stamp)] --[INFO] Executing borg with exclusions --" \
         "${normal}" >> "$logFile"
-    borg --show-rc create ${borgCreateParams} --exclude-from ${borgExclude} \
+    borg --show-rc create "${borgCreateParams}" --exclude-from "${borgExclude}" \
         ::`date +%Y-%m-%d_%H%M%S` \
-        ${xtraFiles[@]} \
-        ${sqlDumpDir} ${ncDataDir} \
+        "${xtraFiles[@]}" \
+        "${sqlDumpDir}" "${ncDataDir}" \
         2>> "$logFile"
 fi
 
@@ -741,7 +741,7 @@ if [ -n "$borgPrune" ]; then
     # parameters defined
     echo -e "${info}[$(stamp)] --[INFO] Executing borg prune operation --" \
         "${normal}" >> "$logFile"
-    borg prune --show-rc -v ${borgPruneParams} ${borgPrune} \
+    borg prune --show-rc -v ${borgPruneParams} "${borgPrune}" \
         2>> "$logFile"
     # check return-status
     pruneResult="$?"
