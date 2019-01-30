@@ -25,9 +25,9 @@
 /root/.ssh/
 /etc/mysql/my.cnf
 /etc/nginx/
-/etc/php/7.0/cli/php.ini
-/etc/php/7.0/fpm/php-fpm.conf
-/etc/php/7.0/fpm/php.ini
-/etc/php/7.0/fpm/pool.d/www.conf
+/etc/php/7.2/cli/php.ini
+/etc/php/7.2/fpm/php-fpm.conf
+/etc/php/7.2/fpm/php.ini
+/etc/php/7.2/fpm/pool.d/www.conf
 /etc/redis/redis.conf
 /usr/share/nginx/html/
