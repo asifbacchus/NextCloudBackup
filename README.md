@@ -128,7 +128,7 @@ This is the directory in which NextCloud's php and html files are located.  It
 is generally somewhere under your webroot directory.  This is required so the
 script can find the 'OCC' command to invoke maintenance mode.
 
-#### webuser account: -w _accountName_
+#### webuser account: -u _accountName_
 
 This is the account that NextCloud runs under via your webserver.  This is
 almost always *'www-data'*.  You would have to check your NGINX/Apache config to
