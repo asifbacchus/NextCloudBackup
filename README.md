@@ -28,7 +28,7 @@ This script automates the following tasks:
   - [Required parameters](#required-parameters)
     - [NextCloud data directory: -d _/path/to/data/_](#nextcloud-data-directory--d-pathtodata)
     - [NextCloud webroot: -n _/path/to/nextcloud/_](#nextcloud-webroot--n-pathtonextcloud)
-    - [webuser account: -w _accountName_](#webuser-account--w-accountname)
+    - [webuser account: -u _accountName_](#webuser-account--u-accountname)
   - [Optional parameters](#optional-parameters)
     - [Path to 503 error page: -5 _/path/to/filename.html_](#path-to-503-error-page--5-pathtofilenamehtml)
     - [Path to borg details file: -b _/path/to/filename.file_](#path-to-borg-details-file--b-pathtofilenamefile)
