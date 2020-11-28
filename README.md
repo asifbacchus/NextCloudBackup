@@ -1,5 +1,7 @@
 # NextCloud Backup Using borgbackup <!-- omit in toc -->
 
+**THIS SCRIPT IS NO LONGER ACTIVELY MAINTAINED. I DO NOT USE NEXTCLOUD OFTEN ANYMORE. IF YOU REALLY WANT ME TO DO AN UPDATE TO THIS SCRIPT, PLEASE CONTACT ME**
+
 This script automates backing up your NextCloud installation using borgbackup
 and a remote ssh-capable storage system.  I suggest using rsync.net since they
 have great speeds and a special pricing structure for borgbackup/attic users
